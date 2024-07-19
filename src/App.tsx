@@ -1,7 +1,15 @@
-import "./App.css";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MainPage from './pages/MainPage';
 
-function App() {
-  return <h1>후 드디어 된다</h1>;
-}
+const App: React.FC = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" Component={MainPage} />
+      </Routes>
+    </Router>
+  );
+};
 
 export default App;

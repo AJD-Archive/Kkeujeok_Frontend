@@ -9,13 +9,21 @@ export const Container = styled.div`
   background-size: cover;
   background-position: center; */
 
-  background: linear-gradient(90deg, #bfd6ff 0%, #4c8cff 100%);
+  background: linear-gradient(180deg, #9847ff 0%, #00d1ff 50%, #4c8cff 100%);
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  .loginBox {
+  .threeScene {
+    height: 100vh;
+    position: absolute;
+    right: 0;
+
+    overflow: hidden;
+  }
+
+  /* .loginBox {
     padding: 5rem 5rem;
 
     display: flex;
@@ -28,6 +36,22 @@ export const Container = styled.div`
     box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(40px);
     border-radius: 32px;
+  } */
+  .loginBox {
+    width: 40vw;
+    height: 50vh;
+
+    position: absolute;
+    left: 0;
+
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 0 100px 100px 0;
+    backdrop-filter: blur(1rem);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .logo {
@@ -37,7 +61,7 @@ export const Container = styled.div`
   .subTitle {
     margin-top: 1.5rem;
     font-size: 1rem;
-    color: white;
+    color: #4c8cff;
   }
 
   .socialLogin {
@@ -50,6 +74,7 @@ export const Container = styled.div`
   .socialLogin > img {
     width: 15rem;
     margin: 0.5rem 0;
+    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.03));
 
     cursor: pointer;
   }

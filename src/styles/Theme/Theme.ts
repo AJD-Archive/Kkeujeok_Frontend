@@ -19,8 +19,7 @@ const theme = {
       caption: '12px',
     },
     weight: {
-      light: 300,
-      regular: 400,
+      light: 400,
       medium: 500,
       semiBold: 600,
       bold: 700,

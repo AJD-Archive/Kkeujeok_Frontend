@@ -33,6 +33,7 @@ export default Navbar;
 
 const NavBarLayout = styled.nav`
   width: 12.5rem;
+  min-width: 12.5rem;
   background: ${theme.color.navbar};
   padding: 2.5625rem 1.625rem;
 `;
@@ -59,8 +60,15 @@ const UserDetailContainer = styled.div`
   }
 
   a {
+    display: flex;
+    align-items: center;
     font-size: ${theme.font.size.caption};
     font-weight: ${theme.font.weight.light};
+    color: ${theme.color.gray};
+  }
+
+  img {
+    width: 12px;
   }
 `;
 

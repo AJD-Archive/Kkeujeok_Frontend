@@ -15,8 +15,8 @@ const MainPage = () => {
     <MainDashBoardLayout>
       <Navbar />
       <MainDashBoardContainer>
-        <Flex justifyContent="space-between">
-          <div>
+        <Flex justifyContent="space-between" gap={100}>
+          <HeaderContentContainer>
             <Flex margin="0px 0px 6px 0px">
               <TitleWrapper>개인 대시보드 1</TitleWrapper>
               <SettingImgWrapper>
@@ -24,7 +24,7 @@ const MainPage = () => {
               </SettingImgWrapper>
             </Flex>
             <SubtitleWrapper>개인 대시보드를 설명하는 자리입니다.</SubtitleWrapper>
-          </div>
+          </HeaderContentContainer>
           <Flex>
             <Graph />
             <TeamDocButton>팀문서</TeamDocButton>
@@ -72,12 +72,15 @@ const MainDashBoardLayout = styled.div`
 const MainDashBoardContainer = styled.section`
   width: 100%;
   padding: 4.3125rem 2.5rem;
-
+  overflow: hidden;
   hr {
     border: 1px solid #f4f4f4;
   }
 `;
 
+const HeaderContentContainer = styled.div`
+  flex-shrink: 0;
+`;
 const TitleWrapper = styled.h1`
   font-size: 24px;
   font-weight: ${theme.font.weight.bold};
@@ -104,7 +107,7 @@ const CardContainer = styled.section`
   padding: 4.5rem 3.8125rem;
   gap: 39px;
 
-  @media screen and (min-width: 1000px) {
+  @media screen and (min-width: 1700px) {
     justify-content: center;
   }
 `;

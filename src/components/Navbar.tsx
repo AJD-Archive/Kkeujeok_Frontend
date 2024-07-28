@@ -7,21 +7,23 @@ import Dashboard from './Dashboard';
 const Navbar = () => {
   return (
     <NavBarLayout>
-      <UserInfoContainer>
-        <ProfileImageWrapper>
-          <img />
-        </ProfileImageWrapper>
-        <UserDetailContainer>
-          <p>홍길동님</p>
-          <a>
-            마이페이지 <img src={rightarrow} alt="마이페이지 이동 화살표" />
-          </a>
-        </UserDetailContainer>
-      </UserInfoContainer>
-      <ButtonContainer>
-        <NavButton variant="primary">대시보드 생성</NavButton>
-        <NavButton variant="secondary">도전! 챌린지</NavButton>
-      </ButtonContainer>
+      <div>
+        <UserInfoContainer>
+          <ProfileImageWrapper>
+            <img />
+          </ProfileImageWrapper>
+          <UserDetailContainer>
+            <p>홍길동님</p>
+            <a>
+              마이페이지 <img src={rightarrow} alt="마이페이지 이동 화살표" />
+            </a>
+          </UserDetailContainer>
+        </UserInfoContainer>
+        <ButtonContainer>
+          <NavButton variant="primary">대시보드 생성</NavButton>
+          <NavButton variant="secondary">도전! 챌린지</NavButton>
+        </ButtonContainer>
+      </div>
       <DashboardsContainer>
         <Dashboard text="개인" />
         <Dashboard text="팀" />
@@ -34,6 +36,8 @@ export default Navbar;
 const NavBarLayout = styled.nav`
   width: 12.5rem;
   min-width: 12.5rem;
+  display: flex;
+  flex-direction: column;
   background: ${theme.color.navbar};
   padding: 2.5625rem 1.625rem;
 `;
@@ -78,4 +82,6 @@ const ButtonContainer = styled.div`
   margin-bottom: 1.875rem;
 `;
 
-const DashboardsContainer = styled.div``;
+const DashboardsContainer = styled.div`
+  overflow-y: auto;
+`;

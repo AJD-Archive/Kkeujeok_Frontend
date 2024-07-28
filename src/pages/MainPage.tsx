@@ -71,7 +71,7 @@ const MainDashBoardLayout = styled.div`
 
 const MainDashBoardContainer = styled.section`
   width: 100%;
-  padding: 4.3125rem 1.875rem;
+  padding: 4.3125rem 2.5rem;
 
   hr {
     border: 1px solid #f4f4f4;

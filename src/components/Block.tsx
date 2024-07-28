@@ -71,7 +71,7 @@ const BlockContainer = styled.div`
 
   &:hover {
     img {
-      display: block;
+      visibility: visible;
     }
   }
 `;
@@ -79,19 +79,21 @@ const BlockContainer = styled.div`
 const ImageIconWrapper = styled.div`
   width: 10px;
   height: 10px;
-  margin-bottom: 9px;
+
   img {
-    display: none;
+    visibility: hidden;
     width: inherit;
     height: auto;
   }
 `;
 
 const ProfileImageWrapper = styled.div`
+  width: 21px;
+  height: 21px;
+  margin-right: 5px;
   img {
     width: 21px;
     height: 21px;
     border-radius: 50%;
-    margin-right: 5px;
   }
 `;

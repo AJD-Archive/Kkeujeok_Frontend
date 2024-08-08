@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 import theme from '../styles/Theme/Theme';
+import TextareaAutosize, { TextareaAutosizeProps } from 'react-textarea-autosize';
+interface StyledTextareaProps extends TextareaAutosizeProps {
+  width?: string;
+}
 
 export const CreateDashBoardLayout = styled.div`
   width: 100vw;
@@ -41,6 +45,8 @@ export const CreateBoardWrapper = styled.div`
   border-radius: 1rem;
   border: 1px solid ${theme.color.stroke2};
   box-shadow: ${theme.boxShadow.default};
+
+  cursor: pointer;
 `;
 
 export const PersonalIconImgWrapper = styled.div`
@@ -68,4 +74,118 @@ export const BoardTitle = styled.p`
   font-size: ${theme.font.size.main};
   font-weight: ${theme.font.weight.bold};
   color: ${theme.color.text};
+`;
+
+/* 개인 대시보드 css */
+export const CreateDashBoardModal = styled.div`
+  padding: 5rem;
+  border-radius: 1rem;
+  border: 1px solid ${theme.color.stroke2};
+  box-shadow: ${theme.boxShadow.default};
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CreateForm = styled.form`
+  margin: 3rem;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const RowWrapper = styled.div`
+  margin: 0.5rem 0;
+
+  display: flex;
+  align-items: center;
+`;
+
+export const Label = styled.label`
+  width: 5.2rem;
+  text-align: right;
+  margin-right: 1rem;
+  color: ${theme.color.black};
+  font-size: 1rem;
+`;
+
+export const Input = styled.input`
+  width: ${props => props.width};
+  padding: 0.5rem 1rem;
+  /* font-size: 1rem; */
+  border-radius: 0.3rem;
+  border: 1px solid ${theme.color.stroke2};
+  color: ${theme.color.black};
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: ${theme.color.lightGray};
+  }
+`;
+
+export const Scope = styled.div`
+  padding: 0.55rem 1rem;
+  margin-left: 1rem;
+  font-size: 0.8rem;
+  border-radius: 0.3rem;
+  border: 1px solid ${theme.color.stroke2};
+  color: ${theme.color.lightGray};
+  cursor: pointer;
+  display: flex;
+
+  p {
+    color: ${theme.color.gray};
+    margin-right: 0.2rem;
+  }
+`;
+
+export const Textarea = styled(TextareaAutosize)<StyledTextareaProps>`
+  width: 27.1rem;
+  min-width: 27.1rem;
+  max-width: 27.1rem;
+  min-height: 2rem;
+  padding: 0.55rem 1rem;
+
+  overflow-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
+  resize: none;
+
+  border-radius: 0.3rem;
+  border: 1px solid ${theme.color.stroke2};
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: ${theme.color.lightGray};
+  }
+`;
+
+export const Select = styled.select`
+  width: 14rem;
+  margin-right: 0.3rem;
+  padding: 0.44rem 1rem;
+  /* font-size: 1rem; */
+  border-radius: 0.3rem;
+  border: 1px solid ${theme.color.stroke2};
+
+  color: ${props => (props.value ? `${theme.color.black}` : `${theme.color.lightGray}`)};
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const SubmitBtn = styled.button`
+  padding: 0.65rem 3rem;
+  border-radius: 0.625rem;
+  background: ${theme.color.gradation};
+  font-size: 1rem;
+  color: ${theme.color.white};
 `;

@@ -81,6 +81,7 @@ const CreatePersonalBoard: React.FC = () => {
               <Label>설명</Label>
               <Textarea
                 placeholder="대시보드 설명을 설정해주세요."
+                width="27.1rem"
                 maxLength={300}
                 value={inputIntroduction}
                 onChange={handleIntroduction}

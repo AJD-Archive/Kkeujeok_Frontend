@@ -12,11 +12,6 @@ const globalCss = () => css`
     font-family: Pretendard;
 
     body {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-
       .draggable {
         -webkit-user-select: all;
         -moz-user-select: all;

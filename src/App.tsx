@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
+import CreateBoard from './pages/CreateBoardPage';
+import CreatePersonalBoard from './pages/CreatePersonalBoardPage';
+import CreateTeamBoard from './pages/CreateTeamBoardPage';
 import OAuthRedirectHandler from './contexts/OAuthRedirectHandler';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -12,6 +15,9 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" Component={MainPage} />
           <Route path="/login" Component={LoginPage} />
+          <Route path="/createBoard" Component={CreateBoard} />
+          <Route path="/createPersonalBoard" Component={CreatePersonalBoard} />
+          <Route path="/createTeamBoard" Component={CreateTeamBoard} />
           <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
         </Routes>
       </AuthProvider>

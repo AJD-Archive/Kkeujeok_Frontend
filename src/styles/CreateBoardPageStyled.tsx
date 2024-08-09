@@ -144,9 +144,9 @@ export const Scope = styled.div`
 `;
 
 export const Textarea = styled(TextareaAutosize)<StyledTextareaProps>`
-  width: 27.1rem;
-  min-width: 27.1rem;
-  max-width: 27.1rem;
+  width: ${props => props.width};
+  min-width: ${props => props.width};
+  max-width: ${props => props.width};
   min-height: 2rem;
   padding: 0.55rem 1rem;
 
@@ -188,4 +188,46 @@ export const SubmitBtn = styled.button`
   background: ${theme.color.gradation};
   font-size: 1rem;
   color: ${theme.color.white};
+`;
+
+/* 팀 대시보드 생성 */
+export const InvitedBtn = styled.button`
+  padding: 0.3rem 0.5rem;
+  margin-left: 0.7rem;
+  border-radius: 0.26rem;
+  background: ${theme.color.lightGray};
+  font-size: 0.75rem;
+  color: ${theme.color.gray};
+`;
+
+export const MemberWrapper = styled.div`
+  margin-left: 3.3rem;
+  max-height: 11rem;
+  overflow-y: scroll;
+`;
+
+export const Member = styled.div`
+  width: 15rem;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+`;
+
+export const MemberImage = styled.image`
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: ${theme.color.stroke2};
+`;
+
+export const MemberEmail = styled.p`
+  width: 10rem;
+  font-size: 0.75rem;
+  color: ${theme.color.black};
+`;
+
+export const MemberState = styled.p`
+  font-size: 0.75rem;
+  color: ${theme.color.gray};
 `;

@@ -1,7 +1,7 @@
 import Flex from './Flex';
-import edit from '../assets/images/edit.png';
-import deleteicon from '../assets/images/delete.png';
-import profile from '../assets/images/kakoprofileimage.png';
+import edit from '../img/edit.png';
+import deleteicon from '../img/delete.png';
+import profile from '../img/kakaoprofileimage.png';
 import * as S from '../styles/DashboardStyled';
 
 const Block = () => {

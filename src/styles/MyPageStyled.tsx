@@ -11,18 +11,6 @@ export const ChanllengeBlockContainer = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 1.0625rem;
 `;
-export const ProfileImageWrapper = styled.div`
-  width: 12.5rem;
-  height: 12.5rem;
-  border-radius: 50%;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
 
 export const MainText = styled.span`
   font-size: ${theme.font.size.main};

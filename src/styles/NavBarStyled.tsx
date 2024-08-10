@@ -18,13 +18,6 @@ export const UserInfoContainer = styled.div`
   margin-bottom: 2.5rem;
 `;
 
-export const ProfileImageWrapper = styled.div`
-  width: 45px;
-  height: 45px;
-  background-color: ${theme.color.black};
-  border-radius: 50%;
-`;
-
 export const UserDetailContainer = styled.div`
   p {
     font-size: ${theme.font.size.main};

@@ -1,20 +1,21 @@
-import rightarrow from '../assets/images/rightarrow.png';
+import { Link } from 'react-router-dom';
+import rightarrow from '../img/rightarrow.png';
 import * as S from '../styles/NavBarStyled';
 import Dashboard from './Dashboard';
+import Profile from './Profile';
 
 const Navbar = () => {
   return (
     <S.NavBarLayout>
       <div>
         <S.UserInfoContainer>
-          <S.ProfileImageWrapper>
-            <img />
-          </S.ProfileImageWrapper>
+          <Profile width="45px" height="45px" />
           <S.UserDetailContainer>
             <p>홍길동님</p>
-            <a>
+
+            <Link to="/mypage">
               마이페이지 <img src={rightarrow} alt="마이페이지 이동 화살표" />
-            </a>
+            </Link>
           </S.UserDetailContainer>
         </S.UserInfoContainer>
         <S.ButtonContainer>

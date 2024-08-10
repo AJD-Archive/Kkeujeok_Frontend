@@ -2,8 +2,16 @@ import React, { useState } from 'react';
 
 import ErrorIcon from '../img/error.png';
 import Flex from './Flex';
-import { SubTitle, Title } from '../styles/CreateBoardPageStyled';
-import { StyledModal, customStyles, ErrorImg, BtnYes, BtnNo } from '../styles/ModalStyled';
+import {} from '../styles/CreateBoardPageStyled';
+import {
+  StyledModal,
+  customStyles,
+  ErrorImg,
+  SubTitle,
+  Title,
+  BtnYes,
+  BtnNo,
+} from '../styles/ModalStyled';
 
 interface CustomModalProps {
   title: string;

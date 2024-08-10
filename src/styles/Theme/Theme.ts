@@ -10,6 +10,7 @@ const theme = {
     lightGray: '#D1D1D1',
     navbar: '#F5F5F5',
     gradation: 'linear-gradient(90deg, #4C8CFF 0%, #9847FF 100%)',
+    border: '#B0B0B0',
   },
   borderRadius: {},
   font: {

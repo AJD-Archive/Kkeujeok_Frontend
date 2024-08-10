@@ -4,6 +4,7 @@ import theme from '../styles/Theme/Theme';
 export const NavBarLayout = styled.nav`
   width: 12.5rem;
   min-width: 12.5rem;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background: ${theme.color.navbar};

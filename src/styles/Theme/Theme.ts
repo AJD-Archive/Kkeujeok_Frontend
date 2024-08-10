@@ -11,6 +11,7 @@ const theme = {
     navbar: '#F5F5F5',
     gradation: 'linear-gradient(90deg, #4C8CFF 0%, #9847FF 100%)',
     border: '#B0B0B0',
+    stroke2: '#F4F4F4',
   },
   borderRadius: {},
   font: {
@@ -26,6 +27,9 @@ const theme = {
       bold: 700,
       extraBold: 800,
     },
+  },
+  boxShadow: {
+    default: '0px 0px 10px rgba(0, 0, 0, 0.03)',
   },
 };
 

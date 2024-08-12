@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import ErrorIcon from '../img/error.png';
 import Flex from './Flex';
@@ -12,11 +12,7 @@ import {
   BtnYes,
   BtnNo,
 } from '../styles/ModalStyled';
-
-interface CustomModalProps {
-  title: string;
-  subTitle: string;
-}
+import { CustomModalProps } from '../types/CustomModal';
 
 /*
 >>>>> 모달창 사용 방법
@@ -26,14 +22,12 @@ interface CustomModalProps {
 추후 기능에 맞춰 다른 함수를 받아 사용할 수 있도록 수정할 예정입니다.
 */
 
-const CustomModal: React.FC<CustomModalProps> = ({ title, subTitle }) => {
-  const [isModal, setIsModal] = useState<boolean>(true);
-
+const CustomModal: React.FC<CustomModalProps> = ({ title, subTitle, onClose }) => {
   return (
     <StyledModal
-      isOpen={isModal}
+      isOpen={true}
       shouldFocusAfterRender={false}
-      onRequestClose={() => setIsModal(false)}
+      onRequestClose={onClose}
       style={customStyles}
     >
       <ErrorImg src={ErrorIcon} alt="error_icon"></ErrorImg>
@@ -42,8 +36,8 @@ const CustomModal: React.FC<CustomModalProps> = ({ title, subTitle }) => {
         <Title>{title}</Title>
       </Flex>
       <Flex>
-        <BtnYes onClick={() => setIsModal(false)}>예</BtnYes>
-        <BtnNo onClick={() => setIsModal(false)}>아니오</BtnNo>
+        <BtnYes onClick={onClose}>예</BtnYes>
+        <BtnNo onClick={onClose}>아니오</BtnNo>
       </Flex>
     </StyledModal>
   );

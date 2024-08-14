@@ -22,7 +22,7 @@ import {
 } from '../styles/CreateBoardPageStyled';
 import Flex from '../components/Flex';
 
-const CreateTeamBoard: React.FC = () => {
+const CreateTeamBoard = () => {
   const [inputIntroduction, setInputIntroduction] = useState<string | undefined>(''); // 팀 소개글 저장
   const [emailInput, setEmailInput] = useState<string>(''); // 팀원 이메일 저장 (input)
   const [members, setMembers] = useState<string[]>([]); // 팀원 이메일 리스트

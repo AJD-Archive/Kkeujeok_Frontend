@@ -19,7 +19,7 @@ import {
   Title,
 } from '../styles/CreateBoardPageStyled';
 
-const CreateBoard: React.FC = () => {
+const CreateBoard = () => {
   return (
     <CreateDashBoardLayout>
       <Navbar />

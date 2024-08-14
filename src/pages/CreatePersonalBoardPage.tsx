@@ -23,7 +23,7 @@ import {
   Textarea,
 } from '../styles/CreateBoardPageStyled';
 
-const CreatePersonalBoard: React.FC = () => {
+const CreatePersonalBoard = () => {
   const {
     formData,
     customCategory,

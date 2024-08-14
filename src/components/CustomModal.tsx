@@ -22,7 +22,7 @@ import { CustomModalProps } from '../types/CustomModal';
 추후 기능에 맞춰 다른 함수를 받아 사용할 수 있도록 수정할 예정입니다.
 */
 
-const CustomModal: React.FC<CustomModalProps> = ({ title, subTitle, onClose }) => {
+const CustomModal = ({ title, subTitle, onClose }: CustomModalProps) => {
   return (
     <StyledModal
       isOpen={true}

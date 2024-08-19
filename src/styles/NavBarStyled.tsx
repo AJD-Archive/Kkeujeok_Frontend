@@ -9,6 +9,7 @@ export const NavBarLayout = styled.nav`
   flex-direction: column;
   background: ${theme.color.navbar};
   padding: 2.5625rem 1.625rem;
+  z-index: 1;
 `;
 
 export const UserInfoContainer = styled.div`

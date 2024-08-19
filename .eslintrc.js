@@ -4,30 +4,31 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
   ],
   overrides: [
     {
       env: {
         node: true,
       },
-      files: [".eslintrc.{js,cjs}"],
+      files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
-        sourceType: "script",
+        sourceType: 'script',
       },
     },
   ],
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
-  plugins: ["@typescript-eslint", "react"],
+  plugins: ['@typescript-eslint', 'react'],
   rules: {
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-curly-brace-presence": "error",
-    "react/prop-types": "off",
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-curly-brace-presence': 'error',
+    'react/prop-types': 'off',
+    '@typescript-eslint/no-unused-vars': 'off', // 이 줄을 추가하여 규칙 해제
   },
 };

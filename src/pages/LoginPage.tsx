@@ -5,7 +5,7 @@ import kakaoLogin from '../img/kakaoLogin.png';
 import googleLogin from '../img/googleLogin.png';
 import ThreeScene from '../components/ThreeScene';
 
-const LoginPage: React.FC = () => {
+const LoginPage = () => {
   const kakaoHandleLogin = () => {
     localStorage.setItem('provider', 'kakao');
     window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}`;

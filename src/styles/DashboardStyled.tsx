@@ -70,6 +70,8 @@ export const StatusBarContainer = styled.div<Props>`
 export const AddButtonWrapper = styled.div`
   width: 1.1875rem;
   height: 1.1875rem;
+  cursor: pointer;
+
   img {
     width: 100%;
     height: 100%;

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Flex from '../components/Flex';
 
-import personalDashboardIcon from '../assets/images/personalDashboardIcon.png';
-import teamDashboardIcon from '../assets/images/teamDashboardIcon.png';
+import personalDashboardIcon from '../img/personalDashboardIcon.png';
+import teamDashboardIcon from '../img/teamDashboardIcon.png';
 
 import {
   CreateDashBoardLayout,

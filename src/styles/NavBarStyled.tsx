@@ -4,10 +4,12 @@ import theme from '../styles/Theme/Theme';
 export const NavBarLayout = styled.nav`
   width: 12.5rem;
   min-width: 12.5rem;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background: ${theme.color.navbar};
   padding: 2.5625rem 1.625rem;
+  z-index: 1;
 `;
 
 export const UserInfoContainer = styled.div`
@@ -15,13 +17,6 @@ export const UserInfoContainer = styled.div`
   align-items: center;
   justify-content: space-evenly;
   margin-bottom: 2.5rem;
-`;
-
-export const ProfileImageWrapper = styled.div`
-  width: 45px;
-  height: 45px;
-  background-color: ${theme.color.black};
-  border-radius: 50%;
 `;
 
 export const UserDetailContainer = styled.div`

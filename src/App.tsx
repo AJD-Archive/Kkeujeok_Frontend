@@ -10,12 +10,15 @@ import OAuthRedirectHandler from './contexts/OAuthRedirectHandler';
 import { AuthProvider } from './contexts/AuthContext';
 import TeamDocument from './pages/TeamDocument';
 import TeamFileBoard from './pages/TeamFileBoard';
+import SidePage from './pages/SidePage';
 
 const App: React.FC = () => (
   <Router>
     <AuthProvider>
       <Routes>
-        <Route path="/" Component={MainPage} />
+        <Route path="/" Component={MainPage}>
+          <Route path="/side/:id" Component={SidePage} />
+        </Route>
         <Route path="/login" Component={LoginPage} />
         <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
         <Route path="/createBoard" Component={CreateBoard} />

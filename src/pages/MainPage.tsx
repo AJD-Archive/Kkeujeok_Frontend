@@ -18,19 +18,19 @@ const MainPage = () => {
           <DashboardCard
             backGroundColor="#E8FBFF"
             highlightColor={theme.color.main3}
-            state="시작 전"
+            progress="시작 전"
             imgSrc={main3}
           />
           <DashboardCard
             backGroundColor="#EDF3FF"
             highlightColor={theme.color.main}
-            state="진행 중"
+            progress="진행 중"
             imgSrc={main}
           />
           <DashboardCard
             backGroundColor="#F7F1FF"
             highlightColor={theme.color.main2}
-            state="완료"
+            progress="완료"
             imgSrc={main2}
           />
         </S.CardContainer>

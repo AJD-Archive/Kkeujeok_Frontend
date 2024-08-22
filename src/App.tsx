@@ -17,7 +17,7 @@ const App: React.FC = () => (
     <AuthProvider>
       <Routes>
         <Route path="/" Component={MainPage}>
-          <Route path="/side/:id" Component={SidePage} />
+          <Route path="/personalBlock/:id" Component={SidePage} />
         </Route>
         <Route path="/login" Component={LoginPage} />
         <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />

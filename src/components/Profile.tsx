@@ -1,14 +1,14 @@
-import profileimg from '../img/kakaoprofileimage.png';
 import * as S from '../styles/ProfileStyled';
 
 export type Props = {
   width?: string;
   height?: string;
+  profile?: string;
 };
-const Profile = ({ width, height }: Props) => {
+const Profile = ({ width, height, profile }: Props) => {
   return (
     <S.ProfileImgWrapper width={width} height={height}>
-      <img src={profileimg} alt="프로필 이미지" />
+      <img src={profile} alt="프로필 이미지" />
     </S.ProfileImgWrapper>
   );
 };

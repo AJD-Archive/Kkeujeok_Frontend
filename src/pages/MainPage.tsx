@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import * as S from '../styles/MainPageStyled';
 import NotStartedDashboard from '../components/NotStartedDashboard';
 import InProgressDashboard from '../components/InProgressDashboard';
-import DoneDashboard from '../components/DoneDashboard';
+import CompletedDashboard from '../components/CompletedDashboard';
 
 const MainPage = () => {
   return (
@@ -29,7 +29,7 @@ const MainPage = () => {
             progress="진행 중"
             imgSrc={main}
           />
-          <DoneDashboard
+          <CompletedDashboard
             backGroundColor="#F7F1FF"
             highlightColor={theme.color.main2}
             progress="완료"

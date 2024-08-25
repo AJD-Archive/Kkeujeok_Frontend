@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import * as S from '../styles/MainPageStyled';
 import NotStartedDashboard from '../components/NotStartedDashboard';
 import InProgressDashboard from '../components/InProgressDashboard';
-import DoneDashboard from '../components/DoneDashboard';
+import CompletedDashboard from '../components/CompletedDashboard';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useState } from 'react';
 import { handleAutoScroll } from '../utils/handleAutoScroll';
@@ -38,7 +38,7 @@ const MainPage = () => {
     done: {
       id: 'done',
       list: [],
-      component: DoneDashboard,
+      component: CompletedDashboard,
       backGroundColor: '#F7F1FF',
       highlightColor: theme.color.main2,
       progress: '완료',

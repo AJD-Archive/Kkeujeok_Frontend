@@ -1,6 +1,7 @@
 import { useNavigate, Outlet } from 'react-router-dom';
 import Block from './Block';
 import * as S from '../styles/DashboardStyled';
+import { createPersonalBlock } from '../api/PersonalBlockApi';
 import { useAtom } from 'jotai';
 import { visibleAtom } from '../contexts/sideScreenAtom';
 import SidePage from '../pages/SidePage';
@@ -15,7 +16,6 @@ type Props = {
 
 const NotStartedDashboard = ({ list, id }: Props) => {
   const navigate = useNavigate();
-  const [visibleValue, _] = useAtom(visibleAtom);
 
   const settings = {
     backGroundColor: '#E8FBFF',
@@ -24,10 +24,25 @@ const NotStartedDashboard = ({ list, id }: Props) => {
     imgSrc: main3,
   };
 
-  const handleAddBtn = () => {
+  // + 버튼 누르면 사이드 페이지로 이동
+  const handleAddBtn = async () => {
+    // 초기 post 요청은 빈 내용으로 요청. 추후 patch로 자동 저장.
+    const now = new Date();
+    const deadLine = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 23:59`;
+
+    const data = {
+      dashboardId: 1,
+      title: '',
+      contents: '',
+      progress: 'NOT_STARTED',
+      deadLine: deadLine,
+    };
+
+    const blockId = await createPersonalBlock(data);
+    // console.log(blockId);
+
     const { highlightColor, progress } = settings;
-    console.log(settings.progress);
-    navigate(`/side/1`, { state: { highlightColor, progress } });
+    navigate(`/personalBlock/${blockId}`, { state: { highlightColor, progress } });
   };
 
   return (

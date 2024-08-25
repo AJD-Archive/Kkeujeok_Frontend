@@ -2,28 +2,15 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import Block from './Block';
 import * as S from '../styles/DashboardStyled';
 import { createPersonalBlock } from '../api/PersonalBlockApi';
-import { useAtom } from 'jotai';
-import { visibleAtom } from '../contexts/sideScreenAtom';
-import SidePage from '../pages/SidePage';
-import { Droppable } from 'react-beautiful-dnd';
 
 type Props = {
   backGroundColor?: string;
   highlightColor?: string;
   progress?: string;
   imgSrc?: string;
-  list: string[];
-  id: string;
 };
 
-const InProgressDashboard = ({
-  backGroundColor,
-  highlightColor,
-  progress,
-  imgSrc,
-  id,
-  list,
-}: Props) => {
+const CompletedDashboard = ({ backGroundColor, highlightColor, progress, imgSrc }: Props) => {
   const navigate = useNavigate();
 
   // + 버튼 누르면 사이드 페이지로 이동
@@ -36,7 +23,7 @@ const InProgressDashboard = ({
       dashboardId: 1,
       title: '',
       contents: '',
-      progress: 'IN_PROGRESS',
+      progress: 'COMPLETED',
       deadLine: deadLine,
     };
 
@@ -56,18 +43,11 @@ const InProgressDashboard = ({
           <img src={imgSrc} alt="블록 더하는 버튼" />
         </S.AddButtonWrapper>
       </header>
-      <Droppable droppableId={id}>
-        {provided => (
-          <S.BoxContainer ref={provided.innerRef} className={id} {...provided.droppableProps}>
-            {list.map((text, index) => (
-              <Block key={text} index={index} text={text} />
-            ))}
-            {provided.placeholder}
-          </S.BoxContainer>
-        )}
-      </Droppable>
+      <section>
+        <Block />
+      </section>
       <Outlet />
     </S.CardContainer>
   );
 };
-export default InProgressDashboard;
+export default CompletedDashboard;

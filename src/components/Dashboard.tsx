@@ -1,16 +1,17 @@
 import * as S from '../styles/DashboardStyled';
+import { DashboardItem } from '../types/PersonalDashBoard';
+import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 
 interface Props {
   text: string;
+  dashboard?: DashboardItem[] | TeamDashboardInfoResDto[];
 }
-const Dashboard = ({ text }: Props) => {
+const Dashboard = ({ text, dashboard }: Props) => {
   return (
     <S.DashboardContainer>
       <h6>{text} 대시보드</h6>
-      {Array.from({ length: 7 }, (_, index) => (
-        <S.DashboardItem key={index}>
-          {text} 대시보드 {index + 1}
-        </S.DashboardItem>
+      {dashboard?.map((value, index) => (
+        <S.DashboardItem key={index}>{value.title}</S.DashboardItem>
       ))}
     </S.DashboardContainer>
   );

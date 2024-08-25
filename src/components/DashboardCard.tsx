@@ -31,9 +31,7 @@ const DashboardCard = ({ backGroundColor, highlightColor, progress, imgSrc }: Pr
           <img src={imgSrc} alt="블록 더하는 버튼" />
         </S.AddButtonWrapper>
       </header>
-      <section>
-        <Block />
-      </section>
+      <section>{/* <Block /> */}</section>
       <Outlet />
     </S.CardContainer>
   );

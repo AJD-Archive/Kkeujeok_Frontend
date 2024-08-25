@@ -1,10 +1,29 @@
 import { axiosInstance } from '../utils/apiConfig';
-import { PersonalDashBoard } from '../types/PersonalDashBoard';
+import { PersonalDashBoard, PersonalSearchDashBoard } from '../types/PersonalDashBoard';
+import { TeamDashboardResponse } from '../types/TeamDashBoard';
 
 export const createDashBoard = async (data: PersonalDashBoard): Promise<void> => {
   try {
     const response = await axiosInstance.post('/dashboards/personal/', data);
     console.log(response.data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+export const searchPersonalDashBoard = async (): Promise<PersonalSearchDashBoard | undefined> => {
+  try {
+    const response = await axiosInstance.get('/dashboards/personal/');
+    return response.data as PersonalSearchDashBoard;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+export const searchTeamDashBoard = async (): Promise<TeamDashboardResponse | undefined> => {
+  try {
+    const response = await axiosInstance.get('/dashboards/team/');
+    return response.data as TeamDashboardResponse;
   } catch (error) {
     console.error('Error fetching data:', error);
   }

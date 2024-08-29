@@ -10,6 +10,8 @@ type Props = {
 
 export const DashboardContainer = styled.section`
   margin-bottom: 3.3125rem;
+  height: 100%;
+
   h6 {
     font-size: 10px;
     font-weight: ${theme.font.weight.medium};
@@ -111,6 +113,7 @@ export const BlockContainer = styled.div`
   padding: 0.625rem 1.375rem 1.25rem 1.375em;
   border: 1px solid #f4f4f4;
   border-radius: 10px;
+  margin-bottom: 1rem;
   cursor: pointer;
 
   h3 {
@@ -171,4 +174,9 @@ export const ProfileImageWrapper = styled.div`
     height: 100%;
     border-radius: 50%;
   }
+`;
+
+export const BoxContainer = styled.section`
+  height: calc(100% - 35px);
+  overflow: auto;
 `;

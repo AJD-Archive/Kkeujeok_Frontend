@@ -2,27 +2,26 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import Block from './Block';
 import * as S from '../styles/DashboardStyled';
 import { createPersonalBlock } from '../api/PersonalBlockApi';
-import { useAtom } from 'jotai';
-import { visibleAtom } from '../contexts/sideScreenAtom';
-import SidePage from '../pages/SidePage';
 import { Droppable } from 'react-beautiful-dnd';
-import theme from '../styles/Theme/Theme';
-import main3 from '../img/main3.png';
 
 type Props = {
+  backGroundColor?: string;
+  highlightColor?: string;
+  progress?: string;
+  imgSrc?: string;
   list: string[];
   id: string;
 };
 
-const NotStartedDashboard = ({ list, id }: Props) => {
+const CompletedDashboard = ({
+  backGroundColor,
+  highlightColor,
+  progress,
+  imgSrc,
+  id,
+  list,
+}: Props) => {
   const navigate = useNavigate();
-
-  const settings = {
-    backGroundColor: '#E8FBFF',
-    highlightColor: theme.color.main3,
-    progress: '시작 전',
-    imgSrc: main3,
-  };
 
   // + 버튼 누르면 사이드 페이지로 이동
   const handleAddBtn = async () => {
@@ -34,34 +33,29 @@ const NotStartedDashboard = ({ list, id }: Props) => {
       dashboardId: 1,
       title: '',
       contents: '',
-      progress: 'NOT_STARTED',
+      progress: 'COMPLETED',
       deadLine: deadLine,
     };
 
     const blockId = await createPersonalBlock(data);
     // console.log(blockId);
 
-    const { highlightColor, progress } = settings;
     navigate(`/personalBlock/${blockId}`, { state: { highlightColor, progress } });
   };
 
   return (
-    <S.CardContainer backGroundColor={settings.backGroundColor}>
+    <S.CardContainer backGroundColor={backGroundColor}>
       <header>
-        <S.StatusBarContainer highlightColor={settings.highlightColor}>
-          <span>{settings.progress}</span>
+        <S.StatusBarContainer highlightColor={highlightColor}>
+          <span>{progress}</span>
         </S.StatusBarContainer>
         <S.AddButtonWrapper onClick={handleAddBtn}>
-          <img src={settings.imgSrc} alt="블록 더하는 버튼" />
+          <img src={imgSrc} alt="블록 더하는 버튼" />
         </S.AddButtonWrapper>
       </header>
       <Droppable droppableId={id}>
         {provided => (
-          <S.BoxContainer
-            ref={provided.innerRef}
-            className="container"
-            {...provided.droppableProps}
-          >
+          <S.BoxContainer ref={provided.innerRef} className={id} {...provided.droppableProps}>
             {list.map((text, index) => (
               <Block key={text} index={index} text={text} />
             ))}
@@ -73,4 +67,4 @@ const NotStartedDashboard = ({ list, id }: Props) => {
     </S.CardContainer>
   );
 };
-export default NotStartedDashboard;
+export default CompletedDashboard;

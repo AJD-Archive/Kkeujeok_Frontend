@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import theme from './Theme/Theme';
 
 export const MainDashBoardLayout = styled.div`
   width: 100vw;
@@ -28,7 +29,31 @@ export const CardContainer = styled.section`
   }
 `;
 
-export const DeleteIcon = styled.div`
+export const DeleteContainer = styled.div`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+`;
+
+export const DeleteDiv = styled.div`
+  width: 18.4375rem;
+  height: 34.8125rem;
+  padding: 1.625rem 1.3125rem;
+  color: ${theme.color.gray};
+  font-size: 20px;
+  background: white;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 10%);
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 0.625rem;
+
+  &:hover {
+    background: red;
+  }
+`;
+
+export const DeleteIconWrapper = styled.div`
   width: 3.375rem;
   height: 3.375rem;
 
@@ -37,8 +62,8 @@ export const DeleteIcon = styled.div`
   align-items: center;
 
   position: absolute;
-  right: 30px;
-  bottom: 20px;
+  right: 0px;
+  bottom: 0px;
 
   background: #f4f4f4;
   border-radius: 50%;

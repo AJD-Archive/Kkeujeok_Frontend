@@ -1,6 +1,5 @@
 import Navbar from '../components/Navbar';
 import theme from '../styles/Theme/Theme';
-import deleteicon from '../img/delete2.png';
 import main from '../img/main.png';
 import main2 from '../img/main2.png';
 import main3 from '../img/main3.png';
@@ -100,9 +99,6 @@ const MainPage = () => {
             })}
           </S.CardContainer>
         </DragDropContext>
-        <S.DeleteIcon>
-          <img src={deleteicon} alt="휴지통아이콘" />
-        </S.DeleteIcon>
       </S.MainDashBoardContainer>
     </S.MainDashBoardLayout>
   );

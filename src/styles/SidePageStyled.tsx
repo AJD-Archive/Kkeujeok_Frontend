@@ -93,7 +93,7 @@ export const D_Day = styled.p`
 `;
 
 export const StyledDatePicker = styled.div`
-  width: 50vw;
+  width: 40vw;
   display: flex;
   align-items: center;
 

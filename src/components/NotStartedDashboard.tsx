@@ -8,14 +8,19 @@ import SidePage from '../pages/SidePage';
 import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main3 from '../img/main3.png';
+import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
 
 type Props = {
-  list: string[];
+  // list: StatusPersonalBlock | undefined;
+  list: BlockListResDto[];
   id: string;
+  dashboardId: string;
 };
 
-const NotStartedDashboard = ({ list, id }: Props) => {
+const NotStartedDashboard = ({ list, id, dashboardId }: Props) => {
   const navigate = useNavigate();
+  // const blocks = list.flatMap((item: StatusPersonalBlock) => item.blockListResDto);
+  // const blocks = list?.blockListResDto;
 
   const settings = {
     backGroundColor: '#E8FBFF',
@@ -28,13 +33,15 @@ const NotStartedDashboard = ({ list, id }: Props) => {
   const handleAddBtn = async () => {
     // 초기 post 요청은 빈 내용으로 요청. 추후 patch로 자동 저장.
     const now = new Date();
+    const startDate = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 00:00`;
     const deadLine = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 23:59`;
 
     const data = {
-      dashboardId: 1,
+      dashboardId: dashboardId,
       title: '',
       contents: '',
       progress: 'NOT_STARTED',
+      startDate: startDate,
       deadLine: deadLine,
     };
 
@@ -42,7 +49,9 @@ const NotStartedDashboard = ({ list, id }: Props) => {
     // console.log(blockId);
 
     const { highlightColor, progress } = settings;
-    navigate(`/personalBlock/${blockId}`, { state: { highlightColor, progress } });
+    navigate(`personalBlock/${blockId}`, {
+      state: { highlightColor, progress, blockId },
+    });
   };
 
   return (
@@ -62,8 +71,16 @@ const NotStartedDashboard = ({ list, id }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
-            {list.map((text, index) => (
-              <Block key={text} index={index} text={text} />
+            {list?.map((block, index) => (
+              <Block
+                dashboardId={dashboardId}
+                key={block.blockId}
+                index={index}
+                title={block.title ?? ''}
+                dDay={block.dDay ?? 0}
+                contents={block.contents ?? ''}
+                blockId={block.blockId ?? '0'}
+              />
             ))}
             {provided.placeholder}
           </S.BoxContainer>

@@ -1,6 +1,19 @@
 import { axiosInstance } from '../utils/apiConfig';
 import { PersonalDashBoard, PersonalSearchDashBoard } from '../types/PersonalDashBoard';
 import { TeamDashboardResponse } from '../types/TeamDashBoard';
+import { StatusPersonalBlock } from '../types/PersonalBlock';
+
+export const getDashBoard = async (
+  id: number | string
+): Promise<StatusPersonalBlock | undefined> => {
+  try {
+    const response = await axiosInstance.get(`/blocks?dashboardId=${id}&progress=NOT_STARTED`);
+    // console.log(response.data.data);
+    return response.data.data as StatusPersonalBlock;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
 
 export const createDashBoard = async (data: PersonalDashBoard): Promise<void> => {
   try {

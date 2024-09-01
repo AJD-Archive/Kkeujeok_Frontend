@@ -25,6 +25,7 @@ export const DashboardItem = styled.article`
   color: ${theme.color.gray};
   font-weight: ${theme.font.weight.medium};
   margin-bottom: 0.8125rem;
+  cursor: pointer;
 `;
 
 export const CardContainer = styled.div<Props>`

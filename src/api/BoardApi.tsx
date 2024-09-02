@@ -4,10 +4,14 @@ import { TeamDashboardResponse } from '../types/TeamDashBoard';
 import { StatusPersonalBlock } from '../types/PersonalBlock';
 
 export const getDashBoard = async (
-  id: number | string
+  id: number | string,
+  page: number = 0, // default 페이지 0으로 설정
+  size: number = 10
 ): Promise<StatusPersonalBlock | undefined> => {
   try {
-    const response = await axiosInstance.get(`/blocks?dashboardId=${id}&progress=NOT_STARTED`);
+    const response = await axiosInstance.get(
+      `/blocks?dashboardId=${id}&progress=NOT_STARTED&page=${page}&size=${size}`
+    );
     // console.log(response.data.data);
     return response.data.data as StatusPersonalBlock;
   } catch (error) {

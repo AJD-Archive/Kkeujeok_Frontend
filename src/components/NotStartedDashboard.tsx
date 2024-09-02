@@ -9,15 +9,18 @@ import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main3 from '../img/main3.png';
 import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
 
 type Props = {
   // list: StatusPersonalBlock | undefined;
   list: BlockListResDto[];
   id: string;
   dashboardId: string;
+  onLoadMore: () => void;
 };
 
-const NotStartedDashboard = ({ list, id, dashboardId }: Props) => {
+const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
   const navigate = useNavigate();
   // const blocks = list.flatMap((item: StatusPersonalBlock) => item.blockListResDto);
   // const blocks = list?.blockListResDto;
@@ -54,6 +57,17 @@ const NotStartedDashboard = ({ list, id, dashboardId }: Props) => {
     });
   };
 
+  // 세로 무한 스크롤
+  const { ref: lastBlockRef, inView } = useInView({
+    threshold: 0, // 마지막 블록이 0% 보였을 때를 감지
+  });
+
+  useEffect(() => {
+    if (inView) {
+      onLoadMore(); // 부모 컴포넌트에 새로운 데이터 요청
+    }
+  }, [inView]);
+
   return (
     <S.CardContainer backGroundColor={settings.backGroundColor}>
       <header>
@@ -71,7 +85,7 @@ const NotStartedDashboard = ({ list, id, dashboardId }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
-            {list?.map((block, index) => (
+            {/* {list?.map((block, index) => (
               <Block
                 dashboardId={dashboardId}
                 key={block.blockId}
@@ -81,7 +95,22 @@ const NotStartedDashboard = ({ list, id, dashboardId }: Props) => {
                 contents={block.contents ?? ''}
                 blockId={block.blockId ?? '0'}
               />
-            ))}
+            ))} */}
+            {list?.map((block, index) => {
+              const isLastBlock = index === list.length - 1;
+              return (
+                <div key={block.blockId} ref={isLastBlock ? lastBlockRef : null}>
+                  <Block
+                    dashboardId={dashboardId}
+                    index={index}
+                    title={block.title ?? ''}
+                    dDay={block.dDay ?? 0}
+                    contents={block.contents ?? ''}
+                    blockId={block.blockId ?? '0'}
+                  />
+                </div>
+              );
+            })}
             {provided.placeholder}
           </S.BoxContainer>
         )}

@@ -21,6 +21,7 @@ const MainPage = () => {
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[1];
 
+  const [page, setPage] = useState<number>(0);
   const [notStartedBlocks, setNotStartedBlocks] = useState<StatusPersonalBlock | undefined>(
     undefined
   );
@@ -28,7 +29,8 @@ const MainPage = () => {
   const [columns, setColumns] = useState<{
     [key in TItemStatus]: {
       id: string;
-      list: StatusPersonalBlock['blockListResDto']; // Use the specific type here
+      list: StatusPersonalBlock['blockListResDto'];
+      pageInfo: StatusPersonalBlock['pageInfoResDto'];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       component: React.ComponentType<any>;
       backGroundColor?: string;
@@ -39,7 +41,8 @@ const MainPage = () => {
   }>({
     todo: {
       id: 'todo',
-      list: [], // Initialize as an empty array
+      list: [],
+      pageInfo: { currentPage: 1, totalPages: 1, totalItems: 1 },
       component: NotStartedDashboard,
       backGroundColor: '#E8FBFF',
       highlightColor: theme.color.main3,
@@ -48,7 +51,8 @@ const MainPage = () => {
     },
     doing: {
       id: 'doing',
-      list: [], // Initialize as an empty array
+      list: [],
+      pageInfo: { currentPage: 1, totalPages: 1, totalItems: 1 },
       component: InProgressDashboard,
       backGroundColor: '#EDF3FF',
       highlightColor: theme.color.main,
@@ -57,7 +61,8 @@ const MainPage = () => {
     },
     done: {
       id: 'done',
-      list: [], // Initialize as an empty array
+      list: [],
+      pageInfo: { currentPage: 1, totalPages: 1, totalItems: 1 },
       component: CompletedDashboard,
       backGroundColor: '#F7F1FF',
       highlightColor: theme.color.main2,
@@ -67,28 +72,63 @@ const MainPage = () => {
   });
 
   // 블록 데이터 불러오기
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getDashBoard(dashboardId);
-      console.log(data);
+  const fetchData = async (page: number = 0) => {
+    const data = await getDashBoard(dashboardId, page, 10);
+    console.log('옛다 데이터!', data);
+
+    if (data) {
       setNotStartedBlocks(data);
-    };
 
-    fetchData();
-  }, [location.pathname]); // 데이터 불러오는 기준 : 다시 이 url에 접속했을 때 (dashboardId로 업데이트하게 되면, 사이드 페이지 자동 저장 후 바로 반영되지 않아 locaton 객체로 감지)
+      // columns 확인하기
+      // console.log(JSON.stringify(columns) === JSON.stringify(data));
+
+      setColumns(prevColumns => {
+        console.log('받아온 데이터를 마지막으로 확인하고 추가하겠습니다.', data.blockListResDto);
+        const updatedColumns = {
+          ...prevColumns,
+          todo: {
+            ...prevColumns.todo,
+            list: [...prevColumns.todo.list, ...data.blockListResDto],
+            pageInfo: data.pageInfoResDto,
+          },
+        };
+
+        // 상태 업데이트 후의 동작은 이 내부에서 처리할 수 있음
+        console.log('colums 업데이트 후 상태 확인:', updatedColumns);
+
+        return updatedColumns;
+      });
+    }
+  };
 
   useEffect(() => {
-    if (notStartedBlocks) {
-      // Update the columns based on notStartedBlocks
-      setColumns(prevColumns => ({
-        ...prevColumns,
-        todo: {
-          ...prevColumns.todo,
-          list: notStartedBlocks.blockListResDto, // Update list with new data
-        },
-      }));
-    }
-  }, [notStartedBlocks]);
+    console.log(`${page} 페이지를 요청합니다!`);
+    fetchData(page);
+  }, [location.pathname, page]); // 데이터 불러오는 기준 : 다시 이 url에 접속했을 때 (dashboardId로 업데이트하게 되면, 사이드 페이지 자동 저장 후 바로 반영되지 않아 locaton 객체로 감지)
+
+  // props로 넘겨주기 위한 columns 업데이트
+  // const updateClums = () => {
+  //   if (notStartedBlocks) {
+  //     setColumns(prevColumns => ({
+  //       ...prevColumns,
+  //       todo: {
+  //         ...prevColumns.todo,
+  //         list: [...prevColumns.todo.list, ...notStartedBlocks.blockListResDto],
+  //         pageInfo: notStartedBlocks.pageInfoResDto,
+  //       },
+  //     }));
+  //   }
+  // };
+
+  useEffect(
+    () => console.log(`진짜 columns 업데이트 확인할거임~~~~~~~~~~~~~~~~~~`, columns.todo.list),
+    [columns]
+  );
+
+  // 세로 무한 스크롤 감지 이벤트 : 자식 컴포넌트에서 추가 데이터 요청을 감지 (props로 전달)
+  const handleLoadMore = async () => {
+    setPage(prevPage => prevPage + 1);
+  };
 
   const onDragEnd = ({ source, destination }: DropResult) => {
     //droppable 하지 않곳에 block을 내려놨을시에 중단하고 return;
@@ -99,9 +139,9 @@ const MainPage = () => {
     const destinationKey = destination.droppableId as TItemStatus;
 
     if (sourceKey === destinationKey) {
-      console.log(columns[sourceKey]);
+      // console.log(columns[sourceKey]);
       const newList = Array.from(columns[sourceKey].list);
-      console.log(newList);
+      // console.log(newList);
       const [movedItem] = newList.splice(source.index, 1);
       newList.splice(destination.index, 0, movedItem);
 
@@ -141,7 +181,15 @@ const MainPage = () => {
           <S.CardContainer>
             {Object.values(columns).map(column => {
               const { id, component: DashboardComponent, ...props } = column;
-              return <DashboardComponent key={id} id={id} dashboardId={dashboardId} {...props} />;
+              return (
+                <DashboardComponent
+                  key={id}
+                  id={id}
+                  dashboardId={dashboardId}
+                  onLoadMore={handleLoadMore}
+                  {...props}
+                />
+              );
             })}
             {/* <NotStartedDashboard id="todo" list={columns.todo.list} /> */}
           </S.CardContainer>

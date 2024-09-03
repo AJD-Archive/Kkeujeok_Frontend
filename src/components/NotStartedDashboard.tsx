@@ -10,7 +10,7 @@ import theme from '../styles/Theme/Theme';
 import main3 from '../img/main3.png';
 import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
 import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
   // list: StatusPersonalBlock | undefined;
@@ -22,9 +22,6 @@ type Props = {
 
 const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
   const navigate = useNavigate();
-  // const blocks = list.flatMap((item: StatusPersonalBlock) => item.blockListResDto);
-  // const blocks = list?.blockListResDto;
-
   const settings = {
     backGroundColor: '#E8FBFF',
     highlightColor: theme.color.main3,
@@ -67,6 +64,8 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
       onLoadMore(); // 부모 컴포넌트에 새로운 데이터 요청
     }
   }, [inView]);
+
+  // todo: 다시 렌더링 됐을 때 이전 스크롤 위치를 기억했다가 그대로 보여줘야함
 
   return (
     <S.CardContainer backGroundColor={settings.backGroundColor}>

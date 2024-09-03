@@ -14,6 +14,7 @@ import { handleAutoScroll } from '../utils/handleAutoScroll';
 import { useBlocker, useLocation } from 'react-router-dom';
 import { StatusPersonalBlock } from '../types/PersonalBlock';
 import { getDashBoard } from '../api/BoardApi';
+import ComponentStyle from 'styled-components/dist/models/ComponentStyle';
 
 export type TItemStatus = 'todo' | 'doing' | 'done';
 
@@ -22,9 +23,6 @@ const MainPage = () => {
   const dashboardId = location.pathname.split('/')[1];
 
   const [page, setPage] = useState<number>(0);
-  const [notStartedBlocks, setNotStartedBlocks] = useState<StatusPersonalBlock | undefined>(
-    undefined
-  );
 
   const [columns, setColumns] = useState<{
     [key in TItemStatus]: {
@@ -42,7 +40,7 @@ const MainPage = () => {
     todo: {
       id: 'todo',
       list: [],
-      pageInfo: { currentPage: 1, totalPages: 1, totalItems: 1 },
+      pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
       component: NotStartedDashboard,
       backGroundColor: '#E8FBFF',
       highlightColor: theme.color.main3,
@@ -52,7 +50,7 @@ const MainPage = () => {
     doing: {
       id: 'doing',
       list: [],
-      pageInfo: { currentPage: 1, totalPages: 1, totalItems: 1 },
+      pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
       component: InProgressDashboard,
       backGroundColor: '#EDF3FF',
       highlightColor: theme.color.main,
@@ -62,7 +60,7 @@ const MainPage = () => {
     done: {
       id: 'done',
       list: [],
-      pageInfo: { currentPage: 1, totalPages: 1, totalItems: 1 },
+      pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
       component: CompletedDashboard,
       backGroundColor: '#F7F1FF',
       highlightColor: theme.color.main2,
@@ -71,65 +69,52 @@ const MainPage = () => {
     },
   });
 
-  // 블록 데이터 불러오기
+  // 라우터가 변경되면 기존 list를 한번 초기화 하고 다시 불러옴
+  useEffect(() => {
+    // 사이드 페이지를 닫고 대시보드로 돌아왔을 때 todo 컬럼을 초기화
+    setPage(0);
+    setColumns(prevColumns => ({
+      ...prevColumns,
+      todo: {
+        ...prevColumns.todo,
+        list: [], // 초기화 시 기존 리스트를 비웁니다.
+        pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
+      },
+    }));
+
+    fetchData(0);
+  }, [location.pathname]); // 라우터 변경 감지
+
+  // * get 대시보드 블록
   const fetchData = async (page: number = 0) => {
     const data = await getDashBoard(dashboardId, page, 10);
-    console.log('옛다 데이터!', data);
 
     if (data) {
-      setNotStartedBlocks(data);
+      // setNotStartedBlocks(data);
 
-      // columns 확인하기
-      // console.log(JSON.stringify(columns) === JSON.stringify(data));
-
-      setColumns(prevColumns => {
-        console.log('받아온 데이터를 마지막으로 확인하고 추가하겠습니다.', data.blockListResDto);
-        const updatedColumns = {
-          ...prevColumns,
-          todo: {
-            ...prevColumns.todo,
-            list: [...prevColumns.todo.list, ...data.blockListResDto],
-            pageInfo: data.pageInfoResDto,
-          },
-        };
-
-        // 상태 업데이트 후의 동작은 이 내부에서 처리할 수 있음
-        console.log('colums 업데이트 후 상태 확인:', updatedColumns);
-
-        return updatedColumns;
-      });
+      setColumns(prevColumns => ({
+        ...prevColumns,
+        todo: {
+          ...prevColumns.todo,
+          list:
+            page === 0 ? data.blockListResDto : [...prevColumns.todo.list, ...data.blockListResDto],
+          pageInfo: data.pageInfoResDto,
+        },
+      }));
     }
   };
 
-  useEffect(() => {
-    console.log(`${page} 페이지를 요청합니다!`);
-    fetchData(page);
-  }, [location.pathname, page]); // 데이터 불러오는 기준 : 다시 이 url에 접속했을 때 (dashboardId로 업데이트하게 되면, 사이드 페이지 자동 저장 후 바로 반영되지 않아 locaton 객체로 감지)
-
-  // props로 넘겨주기 위한 columns 업데이트
-  // const updateClums = () => {
-  //   if (notStartedBlocks) {
-  //     setColumns(prevColumns => ({
-  //       ...prevColumns,
-  //       todo: {
-  //         ...prevColumns.todo,
-  //         list: [...prevColumns.todo.list, ...notStartedBlocks.blockListResDto],
-  //         pageInfo: notStartedBlocks.pageInfoResDto,
-  //       },
-  //     }));
-  //   }
-  // };
-
-  useEffect(
-    () => console.log(`진짜 columns 업데이트 확인할거임~~~~~~~~~~~~~~~~~~`, columns.todo.list),
-    [columns]
-  );
-
-  // 세로 무한 스크롤 감지 이벤트 : 자식 컴포넌트에서 추가 데이터 요청을 감지 (props로 전달)
+  // * 세로 무한 스크롤 감지 이벤트 : 자식 컴포넌트에서 추가 데이터 요청을 감지 (props로 전달)
   const handleLoadMore = async () => {
-    setPage(prevPage => prevPage + 1);
+    setPage(prevPage => prevPage + 1); // 페이지 번호를 증가시켜 다음 페이지 데이터 로드
   };
 
+  // useEffect로 페이지가 변경될 때 데이터를 다시 가져오도록 설정
+  useEffect(() => {
+    fetchData(page);
+  }, [page]); // page가 변경될 때마다 fetchData 실행
+
+  // * 드래그 앤 드롭
   const onDragEnd = ({ source, destination }: DropResult) => {
     //droppable 하지 않곳에 block을 내려놨을시에 중단하고 return;
     console.log(columns);

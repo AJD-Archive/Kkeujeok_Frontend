@@ -2,62 +2,83 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import Block from './Block';
 import * as S from '../styles/DashboardStyled';
 import { createPersonalBlock } from '../api/PersonalBlockApi';
+import { useAtom } from 'jotai';
+import { visibleAtom } from '../contexts/sideScreenAtom';
+import SidePage from '../pages/SidePage';
 import { Droppable } from 'react-beautiful-dnd';
+import theme from '../styles/Theme/Theme';
+import main2 from '../img/main2.png';
+import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
 
 type Props = {
-  backGroundColor?: string;
-  highlightColor?: string;
-  progress?: string;
-  imgSrc?: string;
-  list: string[];
+  // list: StatusPersonalBlock | undefined;
+  list: BlockListResDto[];
   id: string;
+  dashboardId: string;
 };
 
-const CompletedDashboard = ({
-  backGroundColor,
-  highlightColor,
-  progress,
-  imgSrc,
-  id,
-  list,
-}: Props) => {
+const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
   const navigate = useNavigate();
+  // const blocks = list.flatMap((item: StatusPersonalBlock) => item.blockListResDto);
+  // const blocks = list?.blockListResDto;
+
+  const settings = {
+    backGroundColor: '#F7F1FF',
+    highlightColor: theme.color.main2,
+    progress: '완료',
+    imgSrc: main2,
+  };
 
   // + 버튼 누르면 사이드 페이지로 이동
   const handleAddBtn = async () => {
     // 초기 post 요청은 빈 내용으로 요청. 추후 patch로 자동 저장.
     const now = new Date();
+    const startDate = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 00:00`;
     const deadLine = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 23:59`;
 
     const data = {
-      dashboardId: 1,
+      dashboardId: dashboardId,
       title: '',
       contents: '',
-      progress: 'COMPLETED',
+      progress: 'NOT_STARTED',
+      startDate: startDate,
       deadLine: deadLine,
     };
 
     const blockId = await createPersonalBlock(data);
     // console.log(blockId);
 
+    const { highlightColor, progress } = settings;
     navigate(`/personalBlock/${blockId}`, { state: { highlightColor, progress } });
   };
 
   return (
-    <S.CardContainer backGroundColor={backGroundColor}>
+    <S.CardContainer backGroundColor={settings.backGroundColor}>
       <header>
-        <S.StatusBarContainer highlightColor={highlightColor}>
-          <span>{progress}</span>
+        <S.StatusBarContainer highlightColor={settings.highlightColor}>
+          <span>{settings.progress}</span>
         </S.StatusBarContainer>
         <S.AddButtonWrapper onClick={handleAddBtn}>
-          <img src={imgSrc} alt="블록 더하는 버튼" />
+          <img src={settings.imgSrc} alt="블록 더하는 버튼" />
         </S.AddButtonWrapper>
       </header>
       <Droppable droppableId={id}>
         {provided => (
-          <S.BoxContainer ref={provided.innerRef} className={id} {...provided.droppableProps}>
-            {list.map((text, index) => (
-              <Block key={text} index={index} text={text} />
+          <S.BoxContainer
+            ref={provided.innerRef}
+            className="container"
+            {...provided.droppableProps}
+          >
+            {list?.map((block, index) => (
+              <Block
+                dashboardId={dashboardId}
+                key={block.blockId}
+                index={index}
+                title={block.title ?? ''}
+                dDay={block.dDay ?? 0}
+                contents={block.contents ?? ''}
+                blockId={block.blockId ?? '0'}
+              />
             ))}
             {provided.placeholder}
           </S.BoxContainer>

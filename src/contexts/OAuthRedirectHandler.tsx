@@ -29,7 +29,7 @@ const OAuthRedirectHandler = () => {
   useEffect(() => {
     if (loginToken.accessToken) {
       login(loginToken);
-      navigate('/');
+      navigate('/1'); // 기본 대시보드 불러올 라우터로 설정
     }
   }, [loginToken, login, navigate]);
 

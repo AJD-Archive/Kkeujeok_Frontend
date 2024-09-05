@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation, useBlocker } from 'react-router-dom';
 import Flex from '../components/Flex';
 import trash from '../img/delete2.png';
@@ -24,14 +24,17 @@ import {
 import { useSidePage } from '../hooks/useSidePage';
 import { BlockNoteView } from '@blocknote/mantine';
 import useInterval from '../hooks/useInterval';
+import { getPersonalBlock } from '../api/PersonalBlockApi';
+import { BlockListResDto } from '../types/PersonalBlock';
 
 const SidePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { highlightColor, progress } = location.state || {};
+  const blockId = location.pathname.split('/').pop();
 
-  const { data, handleTitleChange, onDateChange, onChange, editor, SubmitData } =
-    useSidePage(progress);
+  const { data, handleTitleChange, handleDateChange, onChange, editor, SubmitData, parseDate } =
+    useSidePage(blockId, progress);
 
   const toggleFunc = (event: React.MouseEvent) => {
     // SubmitData();
@@ -107,22 +110,23 @@ const SidePage = () => {
         {/* 날짜 및 시간 설정 */}
         <DateContainer>
           <Flex justifyContent="space-between">
-            <D_Day>D-10</D_Day>
+            <D_Day>D-{data.dDay}</D_Day>
             <StyledDatePicker>
               <DatePicker
-                selected={data.startDate}
-                onChange={(date: Date | null) => onDateChange(date, 'start')}
+                selected={parseDate(data.startDate)}
+                onChange={(date: Date | null) => handleDateChange(date, 'start')}
                 showTimeSelect
                 dateFormat="yyyy.MM.dd HH:mm"
                 timeIntervals={10} // 10분 간격으로 시간 선택
               />
               <p>~</p>
               <DatePicker
-                selected={data.endDate}
-                onChange={(date: Date | null) => onDateChange(date, 'end')}
+                selected={parseDate(data.deadLine)}
+                onChange={(date: Date | null) => handleDateChange(date, 'end')}
                 showTimeSelect
                 dateFormat="yyyy.MM.dd HH:mm"
                 timeIntervals={10} // 10분 간격으로 시간 선택
+                minDate={data.startDate ? new Date(data.startDate) : undefined}
               />
             </StyledDatePicker>
             <ImgWrapper src={trash} alt="휴지통 버튼" />

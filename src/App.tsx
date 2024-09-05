@@ -4,6 +4,7 @@ import {
   RouterProvider,
   createRoutesFromElements,
   Route,
+  Navigate,
 } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
@@ -25,8 +26,9 @@ const queryClient = new QueryClient();
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<MainPage />}>
-        <Route path="personalBlock/:id" element={<SidePage />} />
+      <Route path="/" element={<Navigate to="/1" replace />} />
+      <Route path="/:id" element={<MainPage />}>
+        <Route path="/:id/personalBlock/:blockId" element={<SidePage />} />
       </Route>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />

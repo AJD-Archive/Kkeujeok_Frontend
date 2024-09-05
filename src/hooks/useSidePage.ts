@@ -1,42 +1,50 @@
 import { useState, useEffect } from 'react';
 import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteEditor } from '@blocknote/core';
-import { patchPersonalBlock } from '../api/PersonalBlockApi';
+import { getPersonalBlock, patchPersonalBlock } from '../api/PersonalBlockApi';
 import { useDebounce } from './useDebounce';
+import { BlockListResDto } from '../types/PersonalBlock';
 
 // 훅의 반환값 타입 정의
 export interface SidePageState {
-  data: {
-    title: string;
-    startDate: Date | null;
-    endDate: Date | null;
-    markdown: string;
-    progress: string;
-  };
+  data: BlockListResDto;
   handleTitleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onDateChange: (date: Date | null, type: 'start' | 'end') => void;
+  handleDateChange: (date: Date | null, type: 'start' | 'end') => void;
   onChange: () => void;
   editor: BlockNoteEditor | null;
   SubmitData: () => void;
+  parseDate: (dateString?: string | null) => Date | null;
 }
 
-export const useSidePage = (progress: string): SidePageState => {
-  // progress 매핑 함수
-  const progressMapping: { [key: string]: string } = {
-    '시작 전': 'NOT_STARTED',
-    '진행 중': 'IN_PROGRESS',
-    완료: 'COMPLETED',
-  };
+export const useSidePage = (blockId: string | undefined, progress: string): SidePageState => {
+  const [data, setData] = useState<BlockListResDto>({});
 
-  const [data, setData] = useState({
-    title: '',
-    startDate: new Date(new Date().setHours(0, 0, 0, 0)), // 시작 날짜 (default: 생성날짜 00시 00분)
-    endDate: new Date(new Date().setHours(23, 59, 59, 999)), // 종료 날짜 (default: 생성날짜 23시 59분)
-    markdown: '',
-    progress: progressMapping[progress] || 'NOT_STARTED',
-  });
+  // 블록 에디터 초기화
+  const editor = useCreateBlockNote();
 
-  const editor = useCreateBlockNote({}); // block-note 라이브러리 사용
+  useEffect(() => {
+    const fetchDataAndInitializeEditor = async () => {
+      if (blockId) {
+        try {
+          // 데이터 가져오기
+          const fetchedData = await getPersonalBlock(blockId);
+          if (fetchedData) {
+            setData(fetchedData);
+          }
+
+          // 에디터 초기화
+          if (editor && fetchedData?.contents) {
+            const blocks = await editor.tryParseMarkdownToBlocks(fetchedData.contents);
+            editor.replaceBlocks(editor.document, blocks);
+          }
+        } catch (error) {
+          console.error('Error fetching data or initializing editor:', error);
+        }
+      }
+    };
+
+    fetchDataAndInitializeEditor();
+  }, [blockId, editor]); // blockId와 editor가 변경될 때만 실행
 
   // 제목 변경 함수
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,13 +67,33 @@ export const useSidePage = (progress: string): SidePageState => {
     return `${year}.${month}.${day} ${hours}:${minutes}`;
   };
 
-  // 날짜 변경 함수
-  const onDateChange = (date: Date | null, type: 'start' | 'end') => {
+  // 날짜 변환 함수
+  // string을 Date로 변환하는 함수
+  const parseDate = (dateString?: string | null): Date | null => {
+    return dateString ? new Date(dateString) : null;
+  };
+
+  // DatePicker의 날짜 선택 핸들러
+  const handleDateChange = (date: Date | null, type: 'start' | 'end') => {
     setData(prevData => ({
       ...prevData,
-      [type === 'start' ? 'startDate' : 'endDate']: date,
+      [type === 'start' ? 'startDate' : 'deadLine']: date ? date.toISOString() : null,
     }));
   };
+
+  // startDate가 deadLine보다 이후로 설정되면 deadLine을 startDate로 변경
+  useEffect(() => {
+    if (data.startDate && data.deadLine) {
+      const start = new Date(data.startDate);
+      const end = new Date(data.deadLine);
+      if (start > end) {
+        setData(prevData => ({
+          ...prevData,
+          deadLine: start.toISOString(),
+        }));
+      }
+    }
+  }, [data.startDate]);
 
   // 본문 작성 함수
   const onChange = async () => {
@@ -73,7 +101,7 @@ export const useSidePage = (progress: string): SidePageState => {
       const markdownContent = await editor.blocksToMarkdownLossy(editor.document);
       setData(prevData => ({
         ...prevData,
-        markdown: markdownContent,
+        contents: markdownContent,
       }));
     }
   };
@@ -88,29 +116,32 @@ export const useSidePage = (progress: string): SidePageState => {
 
   // patch api 요청
   const SubmitData = () => {
-    const startDateStr = formatDate(data.startDate);
-    const endDateStr = formatDate(data.endDate);
-    // console.log(`${data.title} / ${startDateStr} / ${endDateStr} / ${data.markdown}`);
+    // 날짜를 string | null | undefined에서 Date | null로 변환
+    const startDate = parseDate(data.startDate);
+    const endDate = parseDate(data.deadLine);
 
+    // 날짜를 포맷하여 문자열로 변환
+    const formattedStartDate = formatDate(startDate);
+    const formattedEndDate = formatDate(endDate);
+
+    // 포맷된 날짜를 포함하여 요청할 데이터 객체 생성
     const patchData = {
-      dashboardId: 1,
-      title: data.title,
-      contents: data.markdown,
-      progress: data.progress,
-      startDate: startDateStr,
-      deadLine: endDateStr,
+      ...data,
+      startDate: formattedStartDate,
+      deadLine: formattedEndDate,
     };
 
-    patchPersonalBlock(patchData);
-    // console.log(patchData);
+    // patch 요청 수행
+    patchPersonalBlock(blockId, patchData);
   };
 
   return {
     data,
     handleTitleChange,
-    onDateChange,
     onChange,
     editor,
     SubmitData,
+    handleDateChange,
+    parseDate,
   };
 };

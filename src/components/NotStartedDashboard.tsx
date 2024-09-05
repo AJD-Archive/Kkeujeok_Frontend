@@ -8,15 +8,20 @@ import SidePage from '../pages/SidePage';
 import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main3 from '../img/main3.png';
+import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
+import { useInView } from 'react-intersection-observer';
+import { useEffect, useState } from 'react';
 
 type Props = {
-  list: string[];
+  // list: StatusPersonalBlock | undefined;
+  list: BlockListResDto[];
   id: string;
+  dashboardId: string;
+  onLoadMore: () => void;
 };
 
-const NotStartedDashboard = ({ list, id }: Props) => {
+const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
   const navigate = useNavigate();
-
   const settings = {
     backGroundColor: '#E8FBFF',
     highlightColor: theme.color.main3,
@@ -28,13 +33,15 @@ const NotStartedDashboard = ({ list, id }: Props) => {
   const handleAddBtn = async () => {
     // 초기 post 요청은 빈 내용으로 요청. 추후 patch로 자동 저장.
     const now = new Date();
+    const startDate = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 00:00`;
     const deadLine = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 23:59`;
 
     const data = {
-      dashboardId: 1,
+      dashboardId: dashboardId,
       title: '',
       contents: '',
       progress: 'NOT_STARTED',
+      startDate: startDate,
       deadLine: deadLine,
     };
 
@@ -42,8 +49,23 @@ const NotStartedDashboard = ({ list, id }: Props) => {
     // console.log(blockId);
 
     const { highlightColor, progress } = settings;
-    navigate(`/personalBlock/${blockId}`, { state: { highlightColor, progress } });
+    navigate(`personalBlock/${blockId}`, {
+      state: { highlightColor, progress, blockId },
+    });
   };
+
+  // 세로 무한 스크롤
+  const { ref: lastBlockRef, inView } = useInView({
+    threshold: 0, // 마지막 블록이 0% 보였을 때를 감지
+  });
+
+  useEffect(() => {
+    if (inView) {
+      onLoadMore(); // 부모 컴포넌트에 새로운 데이터 요청
+    }
+  }, [inView]);
+
+  // todo: 다시 렌더링 됐을 때 이전 스크롤 위치를 기억했다가 그대로 보여줘야함
 
   return (
     <S.CardContainer backGroundColor={settings.backGroundColor}>
@@ -62,9 +84,32 @@ const NotStartedDashboard = ({ list, id }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
-            {list.map((text, index) => (
-              <Block key={text} index={index} text={text} />
-            ))}
+            {/* {list?.map((block, index) => (
+              <Block
+                dashboardId={dashboardId}
+                key={block.blockId}
+                index={index}
+                title={block.title ?? ''}
+                dDay={block.dDay ?? 0}
+                contents={block.contents ?? ''}
+                blockId={block.blockId ?? '0'}
+              />
+            ))} */}
+            {list?.map((block, index) => {
+              const isLastBlock = index === list.length - 1;
+              return (
+                <div key={block.blockId} ref={isLastBlock ? lastBlockRef : null}>
+                  <Block
+                    dashboardId={dashboardId}
+                    index={index}
+                    title={block.title ?? ''}
+                    dDay={block.dDay ?? 0}
+                    contents={block.contents ?? ''}
+                    blockId={block.blockId ?? '0'}
+                  />
+                </div>
+              );
+            })}
             {provided.placeholder}
           </S.BoxContainer>
         )}

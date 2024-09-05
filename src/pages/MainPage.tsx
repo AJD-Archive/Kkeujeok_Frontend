@@ -15,7 +15,9 @@ import { useBlocker, useLocation } from 'react-router-dom';
 import { StatusPersonalBlock } from '../types/PersonalBlock';
 import { getDashBoard } from '../api/BoardApi';
 import ComponentStyle from 'styled-components/dist/models/ComponentStyle';
-
+import { updateOrderBlock, updatePersonalBlock } from '../api/PersonalBlockApi';
+import { useDebounce } from '../hooks/useDebounce';
+import { initialColumns } from '../utils/columnsConfig';
 export type TItemStatus = 'todo' | 'doing' | 'done';
 
 const MainPage = () => {
@@ -36,38 +38,7 @@ const MainPage = () => {
       progress?: string;
       imgSrc?: string;
     };
-  }>({
-    todo: {
-      id: 'todo',
-      list: [],
-      pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
-      component: NotStartedDashboard,
-      backGroundColor: '#E8FBFF',
-      highlightColor: theme.color.main3,
-      progress: '시작 전',
-      imgSrc: main3,
-    },
-    doing: {
-      id: 'doing',
-      list: [],
-      pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
-      component: InProgressDashboard,
-      backGroundColor: '#EDF3FF',
-      highlightColor: theme.color.main,
-      progress: '진행 중',
-      imgSrc: main,
-    },
-    done: {
-      id: 'done',
-      list: [],
-      pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
-      component: CompletedDashboard,
-      backGroundColor: '#F7F1FF',
-      highlightColor: theme.color.main2,
-      progress: '완료',
-      imgSrc: main2,
-    },
-  });
+  }>(initialColumns);
 
   // 라우터가 변경되면 기존 list를 한번 초기화 하고 다시 불러옴
   useEffect(() => {
@@ -85,20 +56,50 @@ const MainPage = () => {
     fetchData(0);
   }, [location.pathname]); // 라우터 변경 감지
 
+  // useEffect로 페이지가 변경될 때 데이터를 다시 가져오도록 설정
+  useEffect(() => {
+    fetchData(page);
+  }, [page]); // page가 변경될 때마다 fetchData 실행
+
+  //블록 순서 변경 디바운스 api
+  const debouncedData = useDebounce(columns, 100);
+  useEffect(() => {
+    const orderArray = {
+      notStartedList: columns.todo.list.map(item => item.blockId),
+      inProgressList: columns.doing.list.map(item => item.blockId),
+      completedList: columns.done.list.map(item => item.blockId),
+    };
+    updateOrderBlock(orderArray);
+  }, [debouncedData]);
+
   // * get 대시보드 블록
   const fetchData = async (page: number = 0) => {
-    const data = await getDashBoard(dashboardId, page, 10);
+    const todo = await getDashBoard(dashboardId, page, 10, 'NOT_STARTED');
+    const doing = await getDashBoard(dashboardId, page, 10, 'IN_PROGRESS');
+    const done = await getDashBoard(dashboardId, page, 10, 'COMPLETED');
 
-    if (data) {
-      // setNotStartedBlocks(data);
-
+    if (todo && doing && done) {
       setColumns(prevColumns => ({
         ...prevColumns,
         todo: {
           ...prevColumns.todo,
           list:
-            page === 0 ? data.blockListResDto : [...prevColumns.todo.list, ...data.blockListResDto],
-          pageInfo: data.pageInfoResDto,
+            page === 0 ? todo.blockListResDto : [...prevColumns.todo.list, ...todo.blockListResDto],
+          pageInfo: todo.pageInfoResDto,
+        },
+        doing: {
+          ...prevColumns.doing,
+          list:
+            page === 0
+              ? doing.blockListResDto
+              : [...prevColumns.doing.list, ...doing.blockListResDto],
+          pageInfo: doing.pageInfoResDto,
+        },
+        done: {
+          ...prevColumns.done,
+          list:
+            page === 0 ? done.blockListResDto : [...prevColumns.done.list, ...done.blockListResDto],
+          pageInfo: done.pageInfoResDto,
         },
       }));
     }
@@ -109,27 +110,35 @@ const MainPage = () => {
     setPage(prevPage => prevPage + 1); // 페이지 번호를 증가시켜 다음 페이지 데이터 로드
   };
 
-  // useEffect로 페이지가 변경될 때 데이터를 다시 가져오도록 설정
-  useEffect(() => {
-    fetchData(page);
-  }, [page]); // page가 변경될 때마다 fetchData 실행
-
   // * 드래그 앤 드롭
   const onDragEnd = ({ source, destination }: DropResult) => {
-    //droppable 하지 않곳에 block을 내려놨을시에 중단하고 return;
-    console.log(columns);
     if (!destination) return;
 
     const sourceKey = source.droppableId as TItemStatus;
     const destinationKey = destination.droppableId as TItemStatus;
 
+    // sourceKey와 destinationKey가 유효한지 확인
+    if (!columns[sourceKey] || !columns[destinationKey]) {
+      console.error('Invalid source or destination key');
+      return;
+    }
+
+    const sourceList = columns[sourceKey].list;
+    const destinationList = columns[destinationKey].list;
+
+    if (source.index < 0 || source.index >= sourceList.length) {
+      return;
+    }
+
+    const blockId = sourceList[source.index]?.blockId;
+    if (!blockId) {
+      return;
+    }
+
     if (sourceKey === destinationKey) {
-      // console.log(columns[sourceKey]);
-      const newList = Array.from(columns[sourceKey].list);
-      // console.log(newList);
+      const newList = Array.from(sourceList);
       const [movedItem] = newList.splice(source.index, 1);
       newList.splice(destination.index, 0, movedItem);
-
       setColumns({
         ...columns,
         [sourceKey]: {
@@ -138,10 +147,9 @@ const MainPage = () => {
         },
       });
     } else {
-      const sourceList = Array.from(columns[sourceKey].list);
-      const destinationList = Array.from(columns[destinationKey].list);
       const [movedItem] = sourceList.splice(source.index, 1);
       destinationList.splice(destination.index, 0, movedItem);
+      updatePersonalBlock(blockId, status(destinationKey));
 
       setColumns({
         ...columns,
@@ -185,3 +193,14 @@ const MainPage = () => {
 };
 
 export default MainPage;
+
+const status = (status: string) => {
+  switch (status) {
+    case 'todo':
+      return 'NOT_STARTED';
+    case 'doing':
+      return 'IN_PROGRESS';
+    case 'done':
+      return 'COMPLETED';
+  }
+};

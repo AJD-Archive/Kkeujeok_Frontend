@@ -1,4 +1,4 @@
-import { BlockListResDto } from '../types/PersonalBlock';
+import { BlockListResDto, BlockOrder } from '../types/PersonalBlock';
 import { axiosInstance } from '../utils/apiConfig';
 
 // 블록 생성 post
@@ -44,5 +44,27 @@ export const getPersonalBlock = async (blockId: string | null): Promise<BlockLis
   } catch (error) {
     console.error('Error fetching data:', error);
     return null;
+  }
+};
+
+//블록 수정
+export const updatePersonalBlock = async (blockId?: string, progress?: string) => {
+  try {
+    const response = await axiosInstance.patch(`/blocks/${blockId}/progress?progress=${progress}`);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+//블록 순서 수정
+export const updateOrderBlock = async (data: BlockOrder) => {
+  try {
+    const response = await axiosInstance.patch(`/blocks/change`, data);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.log('Error fetching data:', error);
   }
 };

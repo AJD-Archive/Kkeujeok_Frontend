@@ -21,3 +21,9 @@ export interface PageInfoResDto {
   totalPages: number;
   totalItems: number;
 }
+
+export interface BlockOrder {
+  notStartedList: (string | null | undefined)[];
+  inProgressList: (string | null | undefined)[];
+  completedList: (string | null | undefined)[];
+}

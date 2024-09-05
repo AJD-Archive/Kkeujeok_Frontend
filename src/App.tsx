@@ -34,6 +34,7 @@ const router = createBrowserRouter(
       <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
       <Route path="/createBoard" element={<CreateBoard />} />
       <Route path="/createPersonalBoard" element={<CreatePersonalBoard />} />
+      <Route path="/createPersonalBoard/:id" element={<CreatePersonalBoard />} />
       <Route path="/createTeamBoard" element={<CreateTeamBoard />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/teamdocument" element={<TeamDocument />} />

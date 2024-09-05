@@ -1,7 +1,7 @@
 import { axiosInstance } from '../utils/apiConfig';
 import {
   DashboardItem,
-  PersonalDashBoard,
+  // PersonalDashBoard,
   PersonalSearchDashBoard,
 } from '../types/PersonalDashBoard';
 import { TeamDashboardResponse } from '../types/TeamDashBoard';
@@ -25,12 +25,29 @@ export const getPersonalBlock = async (
 };
 
 // * 개인 대시보드 create
-export const createDashBoard = async (data: PersonalDashBoard): Promise<void> => {
+export const createDashBoard = async (data: DashboardItem): Promise<string | null> => {
   try {
     const response = await axiosInstance.post('/dashboards/personal/', data);
     console.log(response.data);
+    return response.data.data.dashboardId;
   } catch (error) {
     console.error('Error fetching data:', error);
+    return null;
+  }
+};
+
+// * 개인 대시보드 patch
+export const patchDashBoard = async (
+  dashboardId: string,
+  data: DashboardItem
+): Promise<string | null> => {
+  try {
+    const response = await axiosInstance.patch(`/dashboards/personal/${dashboardId}`, data);
+    console.log(response);
+    return response.data.data.dashboardId;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
   }
 };
 

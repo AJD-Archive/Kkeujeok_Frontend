@@ -16,6 +16,7 @@ type Props = {
 const Header = ({ mainTitle, subTitle, blockProgress }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dashboardId = location.pathname.split('/')[1];
 
   const handleBackClick = () => {
     navigate(-1);
@@ -38,7 +39,9 @@ const Header = ({ mainTitle, subTitle, blockProgress }: Props) => {
               <Flex margin="0px 0px 6px 0px">
                 <S.TitleWrapper>{mainTitle}</S.TitleWrapper>
                 <S.SettingImgWrapper>
-                  <img src={setting} alt="설정 이미지" />
+                  <Link to={`/createPersonalBoard/${dashboardId}`}>
+                    <img src={setting} alt="설정 이미지" />
+                  </Link>
                 </S.SettingImgWrapper>
               </Flex>
               <S.SubtitleWrapper>{subTitle}</S.SubtitleWrapper>

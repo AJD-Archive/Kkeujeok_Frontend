@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createDashBoard } from '../api/BoardApi';
-import { PersonalDashBoard, PersonalSearchDashBoard } from '../types/PersonalDashBoard';
+import { createDashBoard, getPersonalDashboard, patchDashBoard } from '../api/BoardApi';
+import {
+  DashboardItem,
+  // PersonalDashBoard,
+  PersonalSearchDashBoard,
+} from '../types/PersonalDashBoard';
 import { searchPersonalDashBoard, getCategories } from '../api/BoardApi';
 import useModal from './useModal';
 
 /*
  * 개인 대시보드 생성 커스텀 훅
  */
-const usePersonalDashBoard = () => {
-  const [formData, setFormData] = useState<PersonalDashBoard>({
+const usePersonalDashBoard = (dashboardId: string | null) => {
+  const [formData, setFormData] = useState<DashboardItem>({
     title: '',
     description: '',
     isPublic: false,
@@ -19,15 +23,25 @@ const usePersonalDashBoard = () => {
   const [categoryList, setCategoryList] = useState<string[]>([]);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
-  // * 사용자 대시보드 해시태그 불러오기
-  const getCategory = async () => {
+  // * 사용자 대시보드 해시태그 불러오기 & 대시보드 수정이라면 대시보드 상세 데이터 불러오기
+  const fetchData = async () => {
     const list = await getCategories();
     setCategoryList(list ?? []); // getCategories에서 null이 반한되었을 때는 빈 배열로 설정
+
+    if (dashboardId) {
+      const data = await getPersonalDashboard(dashboardId);
+      setFormData({
+        title: data?.title ?? '', // 제목
+        description: data?.description ?? '', // 설명
+        isPublic: data?.isPublic ?? false, // 공개 여부
+        category: data?.category ?? '', // 카테고리
+      });
+    }
   };
 
   useEffect(() => {
-    getCategory();
-  }, []);
+    fetchData();
+  }, [dashboardId]);
 
   // input 데이터 설정 함수 (제목, 설명, 카테고리 - 직접 입력)
   const handleChange = (
@@ -47,7 +61,7 @@ const usePersonalDashBoard = () => {
   };
 
   // 제출시 빈 칸이 있나 확인하는 함수 (있다면 true)
-  const validateFormData = (formData: PersonalDashBoard): boolean => {
+  const validateFormData = (formData: DashboardItem): boolean => {
     return Object.values(formData).some(value => value === '');
   };
 
@@ -58,10 +72,12 @@ const usePersonalDashBoard = () => {
       openModal();
     } else {
       try {
-        await createDashBoard(formData);
-        navigate('/');
+        const responseDashboardId = dashboardId
+          ? await patchDashBoard(dashboardId, formData) // 기존 대시보드 수정
+          : await createDashBoard(formData); // 새 대시보드 생성
+        navigate(`/${responseDashboardId}`); // 해당 대시보드 페이지로 이동
       } catch (error) {
-        console.error('개인 대시보드 생성시 오류 발생!', error);
+        console.error('개인 대시보드 생성 및 수정시 오류 발생!', error);
       }
     }
   };

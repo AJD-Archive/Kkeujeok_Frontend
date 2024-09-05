@@ -22,8 +22,12 @@ import {
   Scope,
   Textarea,
 } from '../styles/CreateBoardPageStyled';
+import { useLocation } from 'react-router-dom';
 
 const CreatePersonalBoard = () => {
+  const location = useLocation();
+  let dashboardId = location.pathname.split('/').pop() || null;
+  if (dashboardId === 'createPersonalBoard') dashboardId = null; // dashboard 첫 생성시 dashboard id 값을 null로 만들어 줌
   const {
     formData,
     categoryList,
@@ -32,14 +36,14 @@ const CreatePersonalBoard = () => {
     handleScopeToggle,
     submitDashboard,
     closeModal,
-  } = usePersonalDashBoard(); // 개인 대시보드 생성 커스텀 훅 사용
+  } = usePersonalDashBoard(dashboardId); // 개인 대시보드 생성 커스텀 훅 사용
 
   return (
     <CreateDashBoardLayout>
       <Navbar />
       <CreateDashBoardContainer>
         <CreateDashBoardModal>
-          <Title>개인 대시보드 생성</Title>
+          <Title>개인 대시보드 {dashboardId ? '수정' : '생성'}</Title>
           <SubTitle>제목과 설명, 카테고리를 설정하고 공개 여부를 선택하세요.</SubTitle>
 
           <CreateForm>
@@ -103,7 +107,7 @@ const CreatePersonalBoard = () => {
             </Flex>
           </CreateForm>
 
-          <SubmitBtn onClick={submitDashboard}>대시보드 생성</SubmitBtn>
+          <SubmitBtn onClick={submitDashboard}>대시보드 {dashboardId ? '수정' : '생성'}</SubmitBtn>
         </CreateDashBoardModal>
       </CreateDashBoardContainer>
 

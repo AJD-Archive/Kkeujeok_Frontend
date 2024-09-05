@@ -15,6 +15,7 @@ const Dashboard = ({ text, dashboard }: Props) => {
 
   const onClick = (id: number | string) => {
     navigate(`/${id}`);
+    localStorage.setItem('LatestBoard', String(id));
   };
 
   return (

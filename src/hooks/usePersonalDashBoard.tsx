@@ -16,11 +16,13 @@ const usePersonalDashBoard = () => {
     category: '',
   });
   const { isModalOpen, openModal, closeModal } = useModal(); // 모달창 관련 훅 호출
+  const [categoryList, setCategoryList] = useState<string[]>([]);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   // * 사용자 대시보드 해시태그 불러오기
-  const getCategory = () => {
-    getCategories();
+  const getCategory = async () => {
+    const list = await getCategories();
+    setCategoryList(list ?? []); // getCategories에서 null이 반한되었을 때는 빈 배열로 설정
   };
 
   useEffect(() => {
@@ -66,6 +68,7 @@ const usePersonalDashBoard = () => {
 
   return {
     formData,
+    categoryList,
     isModalOpen,
     handleChange,
     handleScopeToggle,

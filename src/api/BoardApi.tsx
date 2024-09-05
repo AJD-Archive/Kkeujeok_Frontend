@@ -45,3 +45,13 @@ export const searchTeamDashBoard = async (): Promise<TeamDashboardResponse | und
     console.error('Error fetching data:', error);
   }
 };
+
+export const getCategories = async (): Promise<string[] | null> => {
+  try {
+    const response = await axiosInstance.get(`/dashboards/personal/categories`);
+    return response.data.data.categories;
+  } catch (error) {
+    console.log('error');
+    return null;
+  }
+};

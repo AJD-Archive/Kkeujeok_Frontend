@@ -24,8 +24,15 @@ import {
 } from '../styles/CreateBoardPageStyled';
 
 const CreatePersonalBoard = () => {
-  const { formData, isModalOpen, handleChange, handleScopeToggle, submitDashboard, closeModal } =
-    usePersonalDashBoard(); // 개인 대시보드 생성 커스텀 훅 사용
+  const {
+    formData,
+    categoryList,
+    isModalOpen,
+    handleChange,
+    handleScopeToggle,
+    submitDashboard,
+    closeModal,
+  } = usePersonalDashBoard(); // 개인 대시보드 생성 커스텀 훅 사용
 
   return (
     <CreateDashBoardLayout>
@@ -74,10 +81,9 @@ const CreatePersonalBoard = () => {
                   onChange={handleChange}
                 />
                 <datalist id="categoryList">
-                  <option value="해시" />
-                  <option value="태그" />
-                  <option value="오지" />
-                  <option value="않는" />
+                  {categoryList.map((category, index) => (
+                    <option key={index} value={category} />
+                  ))}
                 </datalist>
               </RowWrapper>
 

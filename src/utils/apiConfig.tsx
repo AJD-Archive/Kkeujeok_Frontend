@@ -40,10 +40,10 @@ axiosInstance.interceptors.response.use(
 
         return axiosInstance(error.config);
       } catch (refreshError) {
-        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.'); //모달창 띄우게 수정
 
         localStorage.clear();
-        window.location.href = '/';
+        // window.location.href = '/login';
 
         return Promise.reject(refreshError);
       }

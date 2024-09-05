@@ -96,8 +96,9 @@ export const GraphContainer = styled.div`
   }
 `;
 
-export const GraphProgress = styled.div`
-  width: 60%; /*todo의 완료도에 따라 부모 width의 퍼센테이지로 맞춰 크기 조정*/
+export const GraphProgress = styled.div<{ blockProgress: number }>`
+  width: ${({ blockProgress }) =>
+    blockProgress}%; /*todo의 완료도에 따라 부모 width의 퍼센테이지로 맞춰 크기 조정*/
   height: 1.3125rem;
 
   background: ${theme.color.gradation};

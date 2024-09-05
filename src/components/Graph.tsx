@@ -1,10 +1,14 @@
 import * as S from '../styles/DashboardStyled';
 
-const Graph = () => {
+type GraphProps = {
+  blockProgress: number;
+};
+
+const Graph = ({ blockProgress }: GraphProps) => {
   return (
     <S.GraphContainer>
-      <S.GraphProgress>
-        <p>60%</p>
+      <S.GraphProgress blockProgress={blockProgress}>
+        <p>{blockProgress}%</p>
       </S.GraphProgress>
     </S.GraphContainer>
   );

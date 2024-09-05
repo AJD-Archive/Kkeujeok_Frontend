@@ -13,8 +13,11 @@ import { useEffect, useState } from 'react';
 import { handleAutoScroll } from '../utils/handleAutoScroll';
 import { useBlocker, useLocation } from 'react-router-dom';
 import { StatusPersonalBlock } from '../types/PersonalBlock';
-import { getDashBoard } from '../api/BoardApi';
+import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
 import ComponentStyle from 'styled-components/dist/models/ComponentStyle';
+import { DashboardItem } from '../types/PersonalDashBoard';
+import { useAtom } from 'jotai';
+import { dashboardType } from '../contexts/DashboardAtom';
 
 export type TItemStatus = 'todo' | 'doing' | 'done';
 
@@ -24,6 +27,7 @@ const MainPage = () => {
 
   const [page, setPage] = useState<number>(0);
 
+  const [dashboardDetail, setDashboardDetail] = useState<DashboardItem>();
   const [columns, setColumns] = useState<{
     [key in TItemStatus]: {
       id: string;
@@ -82,12 +86,13 @@ const MainPage = () => {
       },
     }));
 
-    fetchData(0);
+    fetchBlockData(0);
+    fetchDashboardData();
   }, [location.pathname]); // 라우터 변경 감지
 
   // * get 대시보드 블록
-  const fetchData = async (page: number = 0) => {
-    const data = await getDashBoard(dashboardId, page, 10);
+  const fetchBlockData = async (page: number = 0) => {
+    const data = await getPersonalBlock(dashboardId, page, 10);
 
     if (data) {
       // setNotStartedBlocks(data);
@@ -111,7 +116,7 @@ const MainPage = () => {
 
   // useEffect로 페이지가 변경될 때 데이터를 다시 가져오도록 설정
   useEffect(() => {
-    fetchData(page);
+    fetchBlockData(page);
   }, [page]); // page가 변경될 때마다 fetchData 실행
 
   // * 드래그 앤 드롭
@@ -157,11 +162,25 @@ const MainPage = () => {
     }
   };
 
+  // * 개인 대시보드 상세 정보 get
+  const fetchDashboardData = async () => {
+    const data = await getPersonalDashboard(dashboardId);
+    setDashboardDetail(data ?? undefined); // getPersonalDashboard가 null 반환시 undefined로 설정
+  };
+
+  /*
+  ! 추후 비즈니스 로직은 훅으로 정리할 예정
+  */
+
   return (
     <S.MainDashBoardLayout>
       <Navbar />
       <S.MainDashBoardContainer>
-        <Header mainTitle="개인 대시보드" subTitle="개인 대시보드 설명하는 자리입니다" />
+        <Header
+          mainTitle={dashboardDetail?.title || '개인 대시보드'}
+          subTitle={dashboardDetail?.description || '개인 대시보드 설명'}
+          blockProgress={dashboardDetail?.blockProgress || 0}
+        />
         <DragDropContext onDragEnd={onDragEnd} onDragUpdate={handleAutoScroll}>
           <S.CardContainer>
             {Object.values(columns).map(column => {

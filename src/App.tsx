@@ -25,16 +25,17 @@ const queryClient = new QueryClient();
 // 로그인 상태를 체크하는 함수
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true); // 로딩 상태 추가
 
   useEffect(() => {
-    const refershToken = localStorage.getItem('refreshToken');
-
-    if (refershToken) {
-      setIsLoggedIn(!!refershToken);
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      setIsLoggedIn(true);
     }
+    setLoading(false); // 로딩 상태를 false로 변경
   }, []);
 
-  return isLoggedIn;
+  return { isLoggedIn, loading };
 };
 
 // Data Router 사용하여 라우터 설정
@@ -44,7 +45,13 @@ const router = (isLoggedIn: boolean) =>
       <>
         <Route
           path="/"
-          element={isLoggedIn ? <Navigate to="/1" replace /> : <Navigate to="/login" replace />}
+          element={
+            isLoggedIn ? (
+              <Navigate to={`/${localStorage.getItem('LatestBoard') ?? 1}`} replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
         />
         <Route path="/:id" element={<MainPage />}>
           <Route path="/:id/personalBlock/:blockId" element={<SidePage />} />
@@ -62,8 +69,13 @@ const router = (isLoggedIn: boolean) =>
   );
 
 const App: React.FC = () => {
-  const isLoggedIn = useAuth(); // 로그인 여부 체크
-  console.log(isLoggedIn);
+  const { isLoggedIn, loading } = useAuth(); // 로그인 여부와 로딩 상태 체크
+
+  if (loading) {
+    // 로딩 중일 때는 아무것도 렌더링하지 않음
+    return <div>Loading...</div>;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

@@ -16,6 +16,8 @@ import { StatusPersonalBlock } from '../types/PersonalBlock';
 import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
 import ComponentStyle from 'styled-components/dist/models/ComponentStyle';
 import { DashboardItem } from '../types/PersonalDashBoard';
+import { useAtom } from 'jotai';
+import { dashboardType } from '../contexts/DashboardAtom';
 
 export type TItemStatus = 'todo' | 'doing' | 'done';
 
@@ -177,6 +179,7 @@ const MainPage = () => {
         <Header
           mainTitle={dashboardDetail?.title || '개인 대시보드'}
           subTitle={dashboardDetail?.description || '개인 대시보드 설명'}
+          blockProgress={dashboardDetail?.blockProgress || 0}
         />
         <DragDropContext onDragEnd={onDragEnd} onDragUpdate={handleAutoScroll}>
           <S.CardContainer>

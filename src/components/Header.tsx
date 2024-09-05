@@ -5,13 +5,15 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import addbutton from '../img/addbutton.png';
 import leftarrow from '../img/leftarrow.png';
 import * as S from '../styles/HeaderStyled';
+import { dashboardType } from '../contexts/DashboardAtom';
 
 type Props = {
   mainTitle: string;
   subTitle: string;
+  blockProgress: number;
 };
 
-const Header = ({ mainTitle, subTitle }: Props) => {
+const Header = ({ mainTitle, subTitle, blockProgress }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,13 +22,14 @@ const Header = ({ mainTitle, subTitle }: Props) => {
   };
 
   // URL에 "teamdocument"가 포함되어 있는지 확인하는 함수
-  const teamLocationUrl = location.pathname.includes('teamdocument') ?? true;
+  // => 전역 변수로 개인 대시보드인지 팀 대시보드인지 확인할 예정이라 주석 처리
+  // const teamLocationUrl = location.pathname.includes('teamdocument') ?? true;
   return (
     <>
       <Flex justifyContent="space-between" gap={100} margin="0 0 0.875rem 0">
         <S.HeaderContentContainer>
           <Flex alignItems="flex-start">
-            {teamLocationUrl && (
+            {!dashboardType && (
               <S.LeftArrowWrapper>
                 <img src={leftarrow} onClick={handleBackClick} />
               </S.LeftArrowWrapper>
@@ -34,26 +37,22 @@ const Header = ({ mainTitle, subTitle }: Props) => {
             <div>
               <Flex margin="0px 0px 6px 0px">
                 <S.TitleWrapper>{mainTitle}</S.TitleWrapper>
-                {!teamLocationUrl && (
-                  <S.SettingImgWrapper>
-                    <img src={setting} alt="설정 이미지" />
-                  </S.SettingImgWrapper>
-                )}
+                <S.SettingImgWrapper>
+                  <img src={setting} alt="설정 이미지" />
+                </S.SettingImgWrapper>
               </Flex>
               <S.SubtitleWrapper>{subTitle}</S.SubtitleWrapper>
             </div>
           </Flex>
         </S.HeaderContentContainer>
         <Flex>
-          {!teamLocationUrl && (
-            <>
-              <Graph />
-              <Link to="/teamdocument">
-                <S.TeamDocButton>팀문서</S.TeamDocButton>
-              </Link>
-            </>
+          <Graph blockProgress={blockProgress} />
+          {!dashboardType && (
+            <Link to="/teamdocument">
+              <S.TeamDocButton>팀문서</S.TeamDocButton>
+            </Link>
           )}
-          {teamLocationUrl && (
+          {!dashboardType && (
             <S.AddbuttonWrapper>
               <img src={addbutton}></img>
             </S.AddbuttonWrapper>

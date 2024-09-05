@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getDashBoard } from '../api/BoardApi';
+// import { getPersonalBlock } from '../api/BoardApi';
 import * as S from '../styles/DashboardStyled';
 import { DashboardItem } from '../types/PersonalDashBoard';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';

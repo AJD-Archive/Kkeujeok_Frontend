@@ -19,6 +19,8 @@ import TeamFileBoard from './pages/TeamFileBoard';
 import SidePage from './pages/SidePage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,8 @@ const useAuth = () => {
       setIsLoggedIn(true);
     }
     setLoading(false); // 로딩 상태를 false로 변경
+
+    AOS.init(); // AOS 초기화
   }, []);
 
   return { isLoggedIn, loading };
@@ -60,7 +64,7 @@ const router = (isLoggedIn: boolean) =>
         <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
         <Route path="/createBoard" element={<CreateBoard />} />
         <Route path="/createPersonalBoard" element={<CreatePersonalBoard />} />
-         <Route path="/createPersonalBoard/:id" element={<CreatePersonalBoard />} />
+        <Route path="/createPersonalBoard/:id" element={<CreatePersonalBoard />} />
         <Route path="/createTeamBoard" element={<CreateTeamBoard />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/teamdocument" element={<TeamDocument />} />

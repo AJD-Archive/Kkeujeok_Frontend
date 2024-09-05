@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Loading from '../components/Loading';
 
 interface LoginToken {
   accessToken: string;
@@ -29,7 +30,7 @@ const OAuthRedirectHandler = () => {
   useEffect(() => {
     if (loginToken.accessToken) {
       login(loginToken);
-      navigate('/1'); // 기본 대시보드 불러올 라우터로 설정
+      navigate('/'); // 기본 대시보드 불러올 라우터로 설정 (가장 마지막에 방문한 대시보드를 기준으로)
     }
   }, [loginToken, login, navigate]);
 
@@ -54,7 +55,7 @@ const OAuthRedirectHandler = () => {
     }
   };
 
-  return <h1>{provider} 로그인 중...</h1>;
+  return <Loading />;
 };
 
 export default OAuthRedirectHandler;

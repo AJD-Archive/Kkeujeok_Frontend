@@ -11,8 +11,9 @@ import { useDebounce } from '../hooks/useDebounce';
 import { initialColumns } from '../utils/columnsConfig';
 import { DashboardItem } from '../types/PersonalDashBoard';
 import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
+import DeleteButton from '../components/DeleteButton';
 
-export type TItemStatus = 'todo' | 'doing' | 'done';
+export type TItemStatus = 'todo' | 'doing' | 'done' | 'delete';
 
 const MainPage = () => {
   const location = useLocation();
@@ -25,15 +26,19 @@ const MainPage = () => {
     [key in TItemStatus]: {
       id: string;
       list: StatusPersonalBlock['blockListResDto'];
-      pageInfo: StatusPersonalBlock['pageInfoResDto'];
+      pageInfo?: StatusPersonalBlock['pageInfoResDto'];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      component: React.ComponentType<any>;
+      component?: React.ComponentType<any>;
       backGroundColor?: string;
       highlightColor?: string;
       progress?: string;
       imgSrc?: string;
     };
   }>(initialColumns);
+
+  const hasComponent = (
+    column: (typeof initialColumns)['todo'] | (typeof initialColumns)['delete']
+  ): column is (typeof initialColumns)['todo'] => 'component' in column;
 
   // 라우터가 변경되면 기존 list를 한번 초기화 하고 다시 불러옴
   useEffect(() => {
@@ -189,6 +194,9 @@ const MainPage = () => {
           <S.CardContainer>
             {Object.values(columns).map(column => {
               const { id, component: DashboardComponent, ...props } = column;
+              if (!DashboardComponent) {
+                return null; // delete는 렌더링하지 않음
+              }
               return (
                 <DashboardComponent
                   key={id}
@@ -201,6 +209,7 @@ const MainPage = () => {
             })}
             {/* <NotStartedDashboard id="todo" list={columns.todo.list} /> */}
           </S.CardContainer>
+          <DeleteButton key="delete" id="delete" list={columns.delete.list} />
         </DragDropContext>
       </S.MainDashBoardContainer>
     </S.MainDashBoardLayout>
@@ -217,5 +226,9 @@ const status = (status: string) => {
       return 'IN_PROGRESS';
     case 'done':
       return 'COMPLETED';
+    case 'delete':
+      return 'DELETED'; // 만약 delete에 해당하는 상태가 있으면 추가
+    default:
+      return 'UNKNOWN';
   }
 };

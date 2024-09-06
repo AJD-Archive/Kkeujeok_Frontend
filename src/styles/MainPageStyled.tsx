@@ -47,9 +47,8 @@ export const DeleteDiv = styled.div`
   bottom: 20px;
   right: 20px;
   border-radius: 0.625rem;
-
-  &:hover {
-    background: red;
+  h1 {
+    margin-bottom: 1rem;
   }
 `;
 

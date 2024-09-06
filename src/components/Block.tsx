@@ -10,12 +10,12 @@ import { getPersonalBlock } from '../api/PersonalBlockApi';
 import { useEffect, useState } from 'react';
 
 type Props = {
-  blockId: string;
-  title: string;
+  blockId: string | null | undefined;
+  title: string | undefined;
   index: number;
-  contents: string;
-  dDay: number;
-  dashboardId: string;
+  contents: string | undefined;
+  dDay: number | undefined;
+  dashboardId: string | undefined;
 };
 
 const Block = ({ title, index, blockId, contents, dDay, dashboardId }: Props) => {

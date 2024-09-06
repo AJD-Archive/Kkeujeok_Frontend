@@ -39,4 +39,8 @@ export const initialColumns = {
     progress: '완료',
     imgSrc: main2,
   },
+  delete: {
+    id: 'delete',
+    list: [],
+  },
 };

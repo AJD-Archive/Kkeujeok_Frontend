@@ -66,6 +66,7 @@ const router = (isLoggedIn: boolean) =>
         <Route path="/createPersonalBoard" element={<CreatePersonalBoard />} />
         <Route path="/createPersonalBoard/:id" element={<CreatePersonalBoard />} />
         <Route path="/createTeamBoard" element={<CreateTeamBoard />} />
+        <Route path="/createTeamBoard/:id" element={<CreateTeamBoard />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/teamdocument" element={<TeamDocument />} />
         <Route path="/teamdocument/:id" element={<TeamFileBoard />} />

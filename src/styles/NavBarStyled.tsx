@@ -42,7 +42,7 @@ export const UserDetailContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.875rem;
+  margin-bottom: 2rem;
 `;
 
 export const DashboardsContainer = styled.div`

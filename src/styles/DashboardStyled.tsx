@@ -9,15 +9,23 @@ type Props = {
 };
 
 export const DashboardContainer = styled.section`
-  margin-bottom: 3.3125rem;
-  height: 100%;
+  /* margin-bottom: 3.3125rem; */
+  /* overflow: hidden; */
 
   h6 {
     font-size: 10px;
     font-weight: ${theme.font.weight.medium};
     color: ${theme.color.gray};
     margin-bottom: 1.25rem;
+    /* padding-top: 2rem; */
   }
+`;
+
+export const DashboardItemContainer = styled.div`
+  width: 100%;
+  /* background-color: red; */
+  /* height: 25vh;
+  overflow-y: scroll; */
 `;
 
 export const DashboardItem = styled.article`
@@ -26,6 +34,10 @@ export const DashboardItem = styled.article`
   font-weight: ${theme.font.weight.medium};
   margin-bottom: 0.8125rem;
   cursor: pointer;
+
+  &:last-child {
+    margin-bottom: 2rem;
+  }
 `;
 
 export const CardContainer = styled.div<Props>`

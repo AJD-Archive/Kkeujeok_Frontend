@@ -21,16 +21,18 @@ const Dashboard = ({ text, dashboard }: Props) => {
   return (
     <S.DashboardContainer>
       <h6>{text} 대시보드</h6>
-      {dashboard?.map((value, index) => (
-        <S.DashboardItem
-          key={index}
-          onClick={() => {
-            onClick(value.dashboardId ?? 0);
-          }}
-        >
-          {value.title}
-        </S.DashboardItem>
-      ))}
+      <S.DashboardItemContainer>
+        {dashboard?.map((value, index) => (
+          <S.DashboardItem
+            key={index}
+            onClick={() => {
+              onClick(value.dashboardId ?? 0);
+            }}
+          >
+            {value.title}
+          </S.DashboardItem>
+        ))}
+      </S.DashboardItemContainer>
     </S.DashboardContainer>
   );
 };

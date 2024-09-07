@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import theme from '../styles/Theme/Theme';
+import rightArrowImg from '../img/rightarrow.png';
 
 type Props = {
   backGroundColor?: string;
@@ -7,37 +8,82 @@ type Props = {
   state?: string;
   imgSrc?: string;
 };
+interface DashboardContainerProps {
+  text: string;
+}
 
-export const DashboardContainer = styled.section`
+export const DashboardContainer = styled.section<DashboardContainerProps>`
   /* margin-bottom: 3.3125rem; */
   /* overflow: hidden; */
 
   h6 {
-    font-size: 10px;
+    font-size: 0.7rem;
     font-weight: ${theme.font.weight.medium};
     color: ${theme.color.gray};
-    margin-bottom: 1.25rem;
-    /* padding-top: 2rem; */
+    margin-bottom: 0.8rem;
+    ${props =>
+      props.text === '팀' &&
+      `
+      margin-top: 2rem; /* '팀'일 때 적용할 스타일 */
+    `}
+  }
+
+  summary {
+    list-style: none; /* 기본 아이콘 제거 */
+    font-size: ${theme.font.size.main};
+    color: ${theme.color.gray};
+    font-weight: ${theme.font.weight.medium};
+    cursor: pointer;
+    margin: 0.5rem 0;
+  }
+
+  summary::-webkit-details-marker {
+    display: none; /* 크롬/사파리 등의 브라우저에서 기본 아이콘 숨기기 */
+  }
+
+  summary::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 0.5rem;
+    background-image: url(${rightArrowImg});
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.3s ease;
+  }
+
+  /* 열렸을 때 summary의 스타일 변경 */
+  /* details[open] summary {
+    font-weight: ${theme.font.weight.bold}; 
+  } */
+
+  /* 열렸을 때의 스타일 */
+  details[open] summary::before {
+    transform: rotate(90deg); /* 열리면 아이콘 회전 */
   }
 `;
 
 export const DashboardItemContainer = styled.div`
   width: 100%;
-  /* background-color: red; */
-  /* height: 25vh;
-  overflow-y: scroll; */
 `;
 
-export const DashboardItem = styled.article`
+export const PersonalDashboardItem = styled.article`
   font-size: ${theme.font.size.main};
   color: ${theme.color.gray};
   font-weight: ${theme.font.weight.medium};
-  margin-bottom: 0.8125rem;
   cursor: pointer;
+  margin: 0.5rem 0;
+  margin-left: 2rem;
+`;
 
-  &:last-child {
-    margin-bottom: 2rem;
-  }
+export const TeamDashboardItem = styled.article`
+  font-size: ${theme.font.size.main};
+  color: ${theme.color.gray};
+  font-weight: ${theme.font.weight.medium};
+  cursor: pointer;
+  margin: 0.5rem 0;
 `;
 
 export const CardContainer = styled.div<Props>`

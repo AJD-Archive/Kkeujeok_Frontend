@@ -46,7 +46,6 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
     };
 
     const blockId = await createPersonalBlock(data);
-    // console.log(blockId);
 
     const { highlightColor, progress } = settings;
     navigate(`personalBlock/${blockId}`, {

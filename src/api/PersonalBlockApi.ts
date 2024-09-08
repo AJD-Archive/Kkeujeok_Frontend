@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { BlockListResDto, BlockOrder } from '../types/PersonalBlock';
 import { axiosInstance } from '../utils/apiConfig';
 
@@ -66,5 +67,36 @@ export const updateOrderBlock = async (data: BlockOrder) => {
     return response.data;
   } catch (error) {
     console.log('Error fetching data:', error);
+  }
+};
+//블록 삭제 조회
+export const getDeleteBlock = async (dashboardId: string, page?: number, size?: number) => {
+  try {
+    const response = await axiosInstance.get(
+      `/blocks/deleted?dashboardId=${dashboardId}&page=0&size=10`
+    );
+    console.log(response);
+    return response.data.data;
+  } catch (error) {
+    console.log('Error fetching data:', error);
+  }
+};
+
+export const deleteBlock = async (blockId: string) => {
+  try {
+    const response = await axiosInstance.delete(`/blocks/${blockId}`);
+
+    console.log(response);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+export const realDeleteBlock = async (blockId: string) => {
+  try {
+    const response = await axiosInstance.delete(`/blocks/permanent/${blockId}`);
+    console.log(response);
+  } catch (error) {
+    console.error('Error fetching data:', error);
   }
 };

@@ -1,8 +1,7 @@
 import React from 'react';
+import { useAtom } from 'jotai';
 
-import ErrorIcon from '../img/error.png';
-import Flex from './Flex';
-import {} from '../styles/CreateBoardPageStyled';
+import { realDeleteBlock } from '../api/PersonalBlockApi';
 import {
   StyledModal,
   customStyles,
@@ -12,17 +11,22 @@ import {
   BtnYes,
   BtnNo,
 } from '../styles/ModalStyled';
+import ErrorIcon from '../img/error.png';
+import Flex from './Flex';
 import { CustomModalProps } from '../types/CustomModal';
+import { fetchTriggerAtom } from '../contexts/atoms';
 
-/*
->>>>> 모달창 사용 방법
-<CustomModal title="블록을 삭제하시겠습니까?" subTitle="삭제 이후 되돌릴 수 없습니다." />
-이렇게 컴포넌트로 불러와서 사용할 수 있습니다.
+const CustomModal = ({ title, subTitle, onClose, removeapi, blockId }: CustomModalProps) => {
+  const [, setFetchTrigger] = useAtom(fetchTriggerAtom); // 트리거 업데이트 함수 가져오기
 
-추후 기능에 맞춰 다른 함수를 받아 사용할 수 있도록 수정할 예정입니다.
-*/
+  const onClickHandler = async () => {
+    if (removeapi && blockId) {
+      await realDeleteBlock(blockId); // 블록 삭제 API 호출
+    }
+    setFetchTrigger(prev => prev + 1); // 상태를 변경하여 MainPage에서 데이터를 다시 불러오도록 트리거
+    onClose(); // 모달 닫기
+  };
 
-const CustomModal = ({ title, subTitle, onClose }: CustomModalProps) => {
   return (
     <StyledModal
       isOpen={true}
@@ -36,7 +40,7 @@ const CustomModal = ({ title, subTitle, onClose }: CustomModalProps) => {
         <Title>{title}</Title>
       </Flex>
       <Flex>
-        <BtnYes onClick={onClose}>예</BtnYes>
+        <BtnYes onClick={onClickHandler}>예</BtnYes>
         <BtnNo onClick={onClose}>아니오</BtnNo>
       </Flex>
     </StyledModal>

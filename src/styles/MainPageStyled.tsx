@@ -72,3 +72,8 @@ export const DeleteIconWrapper = styled.div`
     height: 31px;
   }
 `;
+
+export const BoxContainer = styled.section`
+  height: calc(100% - 36px);
+  overflow: auto;
+`;

@@ -42,5 +42,6 @@ export const initialColumns = {
   delete: {
     id: 'delete',
     list: [],
+    pageInfo: { currentPage: 0, totalPages: 1, totalItems: 0 },
   },
 };

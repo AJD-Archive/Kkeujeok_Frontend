@@ -87,6 +87,8 @@ export const CreateDashBoardModal = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  position: relative;
 `;
 
 export const CreateForm = styled.form`
@@ -188,6 +190,17 @@ export const SubmitBtn = styled.button`
   background: ${theme.color.gradation};
   font-size: 1rem;
   color: ${theme.color.white};
+`;
+
+export const DelBtn = styled.button`
+  padding: 0.5rem 1rem;
+  border-radius: 0.625rem;
+  background-color: ${theme.color.stroke2};
+  color: ${theme.color.gray};
+
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 `;
 
 /* 팀 대시보드 생성 */

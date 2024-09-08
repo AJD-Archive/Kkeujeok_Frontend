@@ -39,3 +39,15 @@ export const getTeamDashboard = async (id: string): Promise<TeamDashboardInfoRes
     return null;
   }
 };
+
+// * 팀 대시보드 삭제
+export const deleteTeamDashboard = async (id: string): Promise<void> => {
+  try {
+    const response = await axiosInstance.delete(`/dashboards/team/${id}`);
+    // return response.data.data;
+    console.log(response);
+  } catch (error) {
+    console.log('error');
+    // return null;
+  }
+};

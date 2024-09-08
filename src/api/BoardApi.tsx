@@ -91,3 +91,15 @@ export const getPersonalDashboard = async (id: string): Promise<DashboardItem | 
     return null;
   }
 };
+
+// * 개인 대시보드 삭제
+export const deletePersonalDashboard = async (id: string): Promise<void> => {
+  try {
+    const response = await axiosInstance.delete(`/dashboards/personal/${id}`);
+    // return response.data.data;
+    console.log(response);
+  } catch (error) {
+    console.log('error');
+    // return null;
+  }
+};

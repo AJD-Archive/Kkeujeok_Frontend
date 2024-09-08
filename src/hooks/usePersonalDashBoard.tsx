@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createDashBoard, getPersonalDashboard, patchDashBoard } from '../api/BoardApi';
+import {
+  createDashBoard,
+  deletePersonalDashboard,
+  getPersonalDashboard,
+  patchDashBoard,
+} from '../api/BoardApi';
 import {
   DashboardItem,
   // PersonalDashBoard,
@@ -19,7 +24,9 @@ const usePersonalDashBoard = (dashboardId: string | null) => {
     isPublic: false,
     category: '',
   });
-  const { isModalOpen, openModal, closeModal } = useModal(); // 모달창 관련 훅 호출
+  const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
+  const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
+  const [isEmptyModalOpen, setIsEmptyModalOpen] = useState<boolean>(false);
   const [categoryList, setCategoryList] = useState<string[]>([]);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
@@ -69,7 +76,9 @@ const usePersonalDashBoard = (dashboardId: string | null) => {
   const submitDashboard = async () => {
     // 빈 작성란이 있으면 모달창 띄우기. 모두 작성되었으면 최종 제출
     if (validateFormData(formData)) {
-      openModal();
+      setIsEmptyModalOpen(true);
+      const handleModalClose = () => setIsEmptyModalOpen(false);
+      openModal('normal', handleModalClose); // yes, no 모두 모달창 끄도록 호출
     } else {
       try {
         const responseDashboardId = dashboardId
@@ -82,6 +91,21 @@ const usePersonalDashBoard = (dashboardId: string | null) => {
     }
   };
 
+  // * 개인 대시보드 삭제 api
+  const deleteDashboard = async () => {
+    if (dashboardId) {
+      await deletePersonalDashboard(dashboardId);
+      navigate('/');
+    }
+  };
+
+  // * 개인 대시보드 삭제 모달창
+  const submitDelDashboard = () => {
+    setIsDelModalOpen(true);
+    const handleModalClose = () => setIsDelModalOpen(false);
+    openModal('yes', deleteDashboard, handleModalClose); // yes 버튼이 눌릴 때만 대시보드 삭제 api 요청
+  };
+
   return {
     formData,
     categoryList,
@@ -89,7 +113,11 @@ const usePersonalDashBoard = (dashboardId: string | null) => {
     handleChange,
     handleScopeToggle,
     submitDashboard,
-    closeModal,
+    handleYesClick,
+    handleNoClick,
+    submitDelDashboard,
+    isDelModalOpen,
+    isEmptyModalOpen,
   };
 };
 

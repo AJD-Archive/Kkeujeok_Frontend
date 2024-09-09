@@ -2,7 +2,7 @@ import Navbar from '../components/Navbar';
 import Folder from '../components/Folder';
 import Flex from '../components/Flex';
 import * as S from '../styles/TeamDocumentStyled';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import folderimg from '../img/folderimg.png';
 import { useState } from 'react';
 import addbutton from '../img/addbutton.png';
@@ -12,6 +12,8 @@ import DocumentCard from '../components/DocumentCard';
 import { Outlet } from 'react-router-dom';
 
 const TeamDocumentBoard = () => {
+  const location = useLocation();
+  const dashboardId = location.pathname.split('/')[1];
   const [folder, setFolder] = useState('');
   const [folderArray, setFolderArray] = useState<string[]>(['프론트엔드', '백엔드', '기획']);
   const [visible, setVisible] = useState<boolean>(false);
@@ -67,14 +69,12 @@ const TeamDocumentBoard = () => {
         </S.CategoriesContainer>
 
         <S.DocumentContainer>
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
+          <DocumentCard documentId="1" />
+          <DocumentCard documentId="1" />
+          <DocumentCard documentId="1" />
+          <DocumentCard documentId="1" />
+          <DocumentCard documentId="1" />
+          <DocumentCard documentId="1" />
         </S.DocumentContainer>
 
         <S.PaginationWrapper>

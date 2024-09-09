@@ -51,7 +51,7 @@ const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) =>
         <Flex>
           <Graph blockProgress={blockProgress} />
           {!dashboardType && (
-            <Link to="/teamdocument">
+            <Link to={`/${dashboardId}/teamdocument`}>
               <S.TeamDocButton>팀문서</S.TeamDocButton>
             </Link>
           )}

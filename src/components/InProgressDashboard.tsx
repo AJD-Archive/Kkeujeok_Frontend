@@ -38,7 +38,7 @@ const InProgressDashboard = ({ list, id, dashboardId }: Props) => {
       dashboardId: dashboardId,
       title: '',
       contents: '',
-      progress: 'NOT_STARTED',
+      progress: 'IN_PROGRESS',
       startDate: startDate,
       deadLine: deadLine,
     };

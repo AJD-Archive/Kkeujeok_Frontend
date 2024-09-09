@@ -38,7 +38,7 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
       dashboardId: dashboardId,
       title: '',
       contents: '',
-      progress: 'NOT_STARTED',
+      progress: 'COMPLETED',
       startDate: startDate,
       deadLine: deadLine,
     };

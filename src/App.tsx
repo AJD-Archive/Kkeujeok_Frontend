@@ -15,7 +15,7 @@ import CreateTeamBoard from './pages/CreateTeamBoardPage';
 import OAuthRedirectHandler from './contexts/OAuthRedirectHandler';
 import { AuthProvider } from './contexts/AuthContext';
 import TeamDocument from './pages/TeamDocument';
-import TeamFileBoard from './pages/TeamFileBoard';
+import TeamDocumentBoard from './pages/TeamDocumentBoard';
 import SidePage from './pages/SidePage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -46,7 +46,7 @@ const useAuth = () => {
 const router = (isLoggedIn: boolean) =>
   createBrowserRouter(
     createRoutesFromElements(
-      <>
+      <Route>
         <Route
           path="/"
           element={
@@ -68,9 +68,11 @@ const router = (isLoggedIn: boolean) =>
         <Route path="/createTeamBoard" element={<CreateTeamBoard />} />
         <Route path="/createTeamBoard/:id" element={<CreateTeamBoard />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/teamdocument" element={<TeamDocument />} />
-        <Route path="/teamdocument/:id" element={<TeamFileBoard />} />
-      </>
+        <Route path="/:id/teamdocument" element={<TeamDocumentBoard />}>
+          <Route path=":documentId" element={<TeamDocument />} />
+        </Route>
+        <Route path="/test" element={<TeamDocument />} />
+      </Route>
     )
   );
 

@@ -1,86 +1,112 @@
-import Navbar from '../components/Navbar';
-import Folder from '../components/Folder';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation, useBlocker } from 'react-router-dom';
 import Flex from '../components/Flex';
+import trash from '../img/delete2.png';
+import closebutton from '../img/closebutton.png';
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import '@blocknote/core/fonts/inter.css';
+import '@blocknote/mantine/style.css';
+import {
+  SideScreenContainer,
+  SideScreen,
+  StyledEditorWrapper,
+  ImgWrapper,
+  StatusBarContainer,
+  DateContainer,
+  TitleContainer,
+  D_Day,
+  StyledDatePicker,
+  Input,
+  CategoryContainer,
+  InputCategory,
+  RowWrapper,
+} from '../styles/SidePageStyled';
 import * as S from '../styles/TeamDocumentStyled';
-import { useNavigate } from 'react-router-dom';
-import folderimg from '../img/folderimg.png';
-import { useState } from 'react';
-import addbutton from '../img/addbutton.png';
-import leftarrow from '../img/leftarrow.png';
-import Pagination from '../components/CustomPagination';
-import DocumentCard from '../components/DocumentCard';
+import { useTeamDocument } from '../hooks/useTeamDocument';
+import { BlockNoteView } from '@blocknote/mantine';
+import useInterval from '../hooks/useInterval';
+import { getPersonalBlock } from '../api/PersonalBlockApi';
+import { BlockListResDto } from '../types/PersonalBlock';
+import Navbar from '../components/Navbar';
 
 const TeamDocument = () => {
-  const [folder, setFolder] = useState('');
-  const [folderArray, setFolderArray] = useState<string[]>(['프론트엔드', '백엔드', '기획']);
-  const [visible, setVisible] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [count, setCount] = useState<number>(1); // 총 페이지 수
-  const [page, setPage] = useState<number>(1); // 현재 페이지
+  const location = useLocation();
+  const { highlightColor, progress } = location.state || {};
+  const blockId = location.pathname.split('/').pop();
 
-  const handleNavigate = () => {
-    navigate('1'); // 상대 경로로 이동 `1`은 추후에 서버에서 받아오는 id값으로 대체할 예정임
-  };
+  const { data, handleTitleChange, handleDateChange, onChange, editor, SubmitData, parseDate } =
+    useTeamDocument(blockId, progress);
 
-  const onChangeHandler = (e: React.FormEvent<HTMLInputElement>) => {
-    setFolder(e.currentTarget.value);
-  };
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFolderArray([...folderArray, folder]);
+  const toggleFunc = (event: React.MouseEvent) => {
+    // SubmitData();
+    navigate(-1);
+    event.stopPropagation();
   };
 
-  // 페이지네이션 페이지 변경 감지 함수
-  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value); // 페이지 변경 시 현재 페이지 상태 업데이트
-  };
+  if (!editor) return <div>Loading editor...</div>;
+
+  // 라우터 변경 감지 : 라우터 변경시 데이터 저장
+  useBlocker(tx => {
+    const { currentLocation, nextLocation } = tx;
+
+    if (currentLocation.pathname !== nextLocation.pathname) {
+      // SubmitData();
+      return false;
+    }
+    return true;
+  });
 
   return (
-    <S.MainDashBoardLayout>
-      <Navbar />
-      <S.MainDashBoardContainer>
-        <S.Header>
+    <SideScreenContainer onClick={toggleFunc}>
+      <SideScreen
+        onClick={e => {
+          e.stopPropagation();
+        }}
+      >
+        <ImgWrapper src={closebutton} alt="닫기 버튼" onClick={toggleFunc} />
+
+        {/* 제목 입력 */}
+        <TitleContainer>
           <Flex>
-            <img src={leftarrow} />
-            <S.Title>팀 문서</S.Title>
+            <S.DocumentWriterImg></S.DocumentWriterImg>
+            <S.DocumnetWriter>작성자</S.DocumnetWriter>
           </Flex>
-          <img src={addbutton} />
-        </S.Header>
+          <Input
+            type="text"
+            name="title"
+            placeholder="제목을 입력하세요."
+            // value={data.title}
+            // onChange={handleTitleChange}
+          />
+          <RowWrapper>
+            <InputCategory
+              type="text"
+              name="category"
+              placeholder="대시보드 카테고리를 설정해주세요."
+              list="categoryList"
+              // value={formData.category}
+              // onChange={handleChange}
+            />
+            <datalist id="categoryList">
+              {/* {categoryList.map((category, index) => (
+                    <option key={index} value={category} />
+                  ))} */}
+            </datalist>
+          </RowWrapper>
+          <hr />
+        </TitleContainer>
 
-        <S.CategoriesContainer>
-          <S.Category>카테고리 1</S.Category>
-          <S.Category>카테고리 2</S.Category>
-          <S.Category>카테고리 3</S.Category>
-          <S.Category>카테고리 1</S.Category>
-          <S.Category>카테고리 2</S.Category>
-          <S.Category>카테고리 3</S.Category>
-          <S.Category>카테고리 1</S.Category>
-          <S.Category>카테고리 2</S.Category>
-          <S.Category>카테고리 3</S.Category>
-          <S.Category>카테고리 1</S.Category>
-          <S.Category>카테고리 2</S.Category>
-          <S.Category>카테고리 3</S.Category>
-          <S.Category>카테고리 1</S.Category>
-          <S.Category>카테고리 2</S.Category>
-          <S.Category>카테고리 3</S.Category>
-        </S.CategoriesContainer>
-
-        <S.DocumentContainer>
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-          <DocumentCard />
-        </S.DocumentContainer>
-
-        <S.PaginationWrapper>
-          <Pagination count={count} page={page} onChange={handleChangePage} />
-        </S.PaginationWrapper>
-      </S.MainDashBoardContainer>
-    </S.MainDashBoardLayout>
+        {/* 본문 작성 */}
+        <StyledEditorWrapper>
+          <BlockNoteView editor={editor} onChange={onChange} />
+        </StyledEditorWrapper>
+      </SideScreen>
+    </SideScreenContainer>
   );
 };
+
 export default TeamDocument;

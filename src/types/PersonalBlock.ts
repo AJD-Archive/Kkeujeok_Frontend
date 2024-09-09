@@ -14,6 +14,7 @@ export interface BlockListResDto {
   deadLine?: string | null;
   nickname?: string;
   dDay?: number;
+  dType?: 'PersonalDashboard';
 }
 
 export interface PageInfoResDto {

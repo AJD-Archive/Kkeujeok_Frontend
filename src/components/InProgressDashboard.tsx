@@ -2,13 +2,11 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import Block from './Block';
 import * as S from '../styles/DashboardStyled';
 import { createPersonalBlock } from '../api/PersonalBlockApi';
-import { useAtom } from 'jotai';
-import { visibleAtom } from '../contexts/sideScreenAtom';
 import SidePage from '../pages/SidePage';
 import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main from '../img/main.png';
-import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
+import { BlockListResDto } from '../types/PersonalBlock';
 
 type Props = {
   // list: StatusPersonalBlock | undefined;
@@ -78,6 +76,8 @@ const InProgressDashboard = ({ list, id, dashboardId }: Props) => {
                 dDay={block.dDay ?? 0}
                 contents={block.contents ?? ''}
                 blockId={block.blockId ?? '0'}
+                dType={block.dType ?? 'TeamDashboard'}
+                name={block.nickname ?? '이름 없음'}
               />
             ))}
             {provided.placeholder}

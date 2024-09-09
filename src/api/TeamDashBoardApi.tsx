@@ -1,4 +1,4 @@
-import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
+import { TeamDashboardInfoResDto, TeamDashboardResponse } from '../types/TeamDashBoard';
 import { axiosInstance } from '../utils/apiConfig';
 
 // * 팀 대시보드 create
@@ -33,9 +33,21 @@ export const patchTeamDashBoard = async (
 export const getTeamDashboard = async (id: string): Promise<TeamDashboardInfoResDto | null> => {
   try {
     const response = await axiosInstance.get(`/dashboards/team/${id}`);
+    console.log(response);
     return response.data.data;
   } catch (error) {
     console.log('error');
     return null;
+  }
+};
+
+// * 팀 대시보드 삭제
+export const deleteTeamDashboard = async (id: string): Promise<void> => {
+  try {
+    const response = await axiosInstance.delete(`/dashboards/team/${id}`);
+    console.log(response);
+  } catch (error) {
+    console.log('error');
+    // return null;
   }
 };

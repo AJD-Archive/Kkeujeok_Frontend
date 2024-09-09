@@ -77,8 +77,12 @@ export const DocumentContainer = styled.div`
   }
 `;
 
-export const DocumentCard = styled.div`
+export const DocumentComponent = styled.div`
   width: calc(100% / 2 - 2rem);
+`;
+
+export const DocumentCard = styled.div`
+  /* width: calc(100% / 2 - 2rem); */ /* Link 연결하니 width가 깨져서 따로 DocumentComponent로 빼서 설정 */
   height: 7rem;
   padding: 1rem;
   margin-bottom: 1rem;

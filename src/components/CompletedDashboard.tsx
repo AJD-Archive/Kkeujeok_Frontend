@@ -47,7 +47,7 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
     // console.log(blockId);
 
     const { highlightColor, progress } = settings;
-    navigate(`/personalBlock/${blockId}`, { state: { highlightColor, progress } });
+    navigate(`personalBlock/${blockId}`, { state: { highlightColor, progress, blockId } });
   };
 
   return (

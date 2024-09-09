@@ -2,18 +2,18 @@ import Graph from '../components/Graph';
 import Flex from './Flex';
 import setting from '../img/setting.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import addbutton from '../img/addbutton.png';
 import leftarrow from '../img/leftarrow.png';
 import * as S from '../styles/HeaderStyled';
-import { dashboardType } from '../contexts/DashboardAtom';
+// import { dashboardType } from '../contexts/DashboardAtom';
 
 type Props = {
   mainTitle: string;
   subTitle: string;
   blockProgress: number;
+  dashboardType?: boolean;
 };
 
-const Header = ({ mainTitle, subTitle, blockProgress }: Props) => {
+const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[1];
@@ -54,11 +54,6 @@ const Header = ({ mainTitle, subTitle, blockProgress }: Props) => {
             <Link to="/teamdocument">
               <S.TeamDocButton>팀문서</S.TeamDocButton>
             </Link>
-          )}
-          {!dashboardType && (
-            <S.AddbuttonWrapper>
-              <img src={addbutton}></img>
-            </S.AddbuttonWrapper>
           )}
         </Flex>
       </Flex>

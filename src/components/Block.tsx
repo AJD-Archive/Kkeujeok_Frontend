@@ -1,13 +1,10 @@
 import Flex from './Flex';
 import edit from '../img/edit.png';
 import deleteicon from '../img/delete.png';
-import profile from '../img/kakaoprofileimage.png';
 import * as S from '../styles/DashboardStyled';
 import { Draggable } from 'react-beautiful-dnd';
-import { BlockListResDto } from '../types/PersonalBlock';
-import { Link, useBlocker } from 'react-router-dom';
-import { getPersonalBlock } from '../api/PersonalBlockApi';
-import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import Profile from './Profile';
 
 type Props = {
   blockId: string;
@@ -16,9 +13,11 @@ type Props = {
   contents: string;
   dDay: number;
   dashboardId: string;
+  dType: string;
+  name: string;
 };
 
-const Block = ({ title, index, blockId, contents, dDay, dashboardId }: Props) => {
+const Block = ({ title, index, blockId, contents, dDay, dType, name }: Props) => {
   const updatedBlockId = blockId ? (parseInt(blockId, 10) + 1).toString() : '1';
 
   // useEffect(() => {
@@ -55,13 +54,16 @@ const Block = ({ title, index, blockId, contents, dDay, dashboardId }: Props) =>
               <h3>{title}</h3>
               <span>D-{dDay}</span>
             </Flex>
-            <p>{contents}</p>
-            <Flex>
-              {/* <S.ProfileImageWrapper>
-              <img src={profile} />
-            </S.ProfileImageWrapper>
-            <span>{blockId}</span> */}
-            </Flex>
+            {dType === 'PersonalDashboard' ? (
+              <p>{contents}</p>
+            ) : (
+              <Flex>
+                <S.ProfileImageWrapper>
+                  <Profile width="" height="" profile="" />
+                </S.ProfileImageWrapper>
+                <span>{name}</span>
+              </Flex>
+            )}
           </S.BlockContainer>
         )}
       </Draggable>

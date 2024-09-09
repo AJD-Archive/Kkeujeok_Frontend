@@ -15,7 +15,6 @@ export interface DashboardItem {
   category: string;
   blockProgress?: number;
 }
-
 export interface PageInfo {
   currentPage: number;
   totalPages: number;

@@ -20,10 +20,16 @@ import {
   MemberEmail,
   MemberState,
   MemberWrapper,
+  DelBtn,
 } from '../styles/CreateBoardPageStyled';
 import Flex from '../components/Flex';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
-import { createTeamDashBoard, getTeamDashboard, patchTeamDashBoard } from '../api/TeamDashBoardApi';
+import {
+  createTeamDashBoard,
+  deleteTeamDashboard,
+  getTeamDashboard,
+  patchTeamDashBoard,
+} from '../api/TeamDashBoardApi';
 import useModal from '../hooks/useModal';
 import CustomModal from '../components/CustomModal';
 
@@ -32,7 +38,9 @@ const CreateTeamBoard = () => {
   const location = useLocation();
   let dashboardId = location.pathname.split('/').pop() || null;
   if (dashboardId === 'createPersonalBoard') dashboardId = null; // dashboard 첫 생성시 dashboard id 값을 null로 만들어 줌
-  const { isModalOpen, openModal, closeModal } = useModal(); // 모달창 관련 훅 호출
+  const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
+  const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
+  const [isEmptyModalOpen, setIsEmptyModalOpen] = useState<boolean>(false);
   const [emailInput, setEmailInput] = useState<string>(''); // 팀원 이메일 저장 (input)
   const [members, setMembers] = useState<string[]>([]); // 팀원 이메일 리스트
   const [formData, setFormData] = useState<TeamDashboardInfoResDto>({
@@ -81,7 +89,9 @@ const CreateTeamBoard = () => {
   const submitTeamDashboard = async () => {
     // 빈 작성란이 있으면 모달창 띄우기. 모두 작성되었으면 최종 제출
     if (validateFormData(formData)) {
-      openModal();
+      setIsEmptyModalOpen(true);
+      const handleModalClose = () => setIsEmptyModalOpen(false);
+      openModal('normal', handleModalClose); // yes, no 모두 모달창 끄도록 호출
     } else {
       try {
         const responseDashboardId = dashboardId
@@ -92,6 +102,21 @@ const CreateTeamBoard = () => {
         console.error('팀 대시보드 생성 및 수정시 오류 발생!', error);
       }
     }
+  };
+
+  // * 팀 대시보드 삭제 api
+  const deleteDashboard = async () => {
+    if (dashboardId) {
+      await deleteTeamDashboard(dashboardId);
+      navigate('/');
+    }
+  };
+
+  // * 팀 대시보드 삭제 모달창
+  const submitDelDashboard = () => {
+    setIsDelModalOpen(true);
+    const handleModalClose = () => setIsDelModalOpen(false);
+    openModal('yes', deleteDashboard, handleModalClose); // yes 버튼이 눌릴 때만 대시보드 삭제 api 요청
   };
 
   return (
@@ -156,16 +181,31 @@ const CreateTeamBoard = () => {
             </Flex>
           </CreateForm>
 
-          <SubmitBtn onClick={submitTeamDashboard}>대시보드 생성</SubmitBtn>
+          <SubmitBtn onClick={submitTeamDashboard}>
+            대시보드 {dashboardId ? '수정' : '생성'}
+          </SubmitBtn>
+
+          {dashboardId && <DelBtn onClick={submitDelDashboard}>대시보드 삭제</DelBtn>}
         </CreateDashBoardModal>
       </CreateDashBoardContainer>
 
       {/* 작성되지 않은 부분이 있으면 모달창으로 알림 */}
-      {isModalOpen && (
+      {isModalOpen && isEmptyModalOpen && (
         <CustomModal
           title="모든 칸을 작성해주세요."
-          subTitle="잠깐! 아직 작성되지 않은 칸이 있습니다."
-          onClose={closeModal}
+          subTitle="잠깐! 작성되지 않은 칸이 있습니다."
+          onYesClick={handleYesClick}
+          onNoClick={handleNoClick}
+        />
+      )}
+
+      {/* 삭제 동의 모달창 */}
+      {isModalOpen && isDelModalOpen && (
+        <CustomModal
+          title="대시보드를 삭제하시겠습니까?"
+          subTitle="한 번 삭제된 대시보드는 되돌릴 수 없습니다."
+          onYesClick={handleYesClick}
+          onNoClick={handleNoClick}
         />
       )}
     </CreateDashBoardLayout>
@@ -173,3 +213,8 @@ const CreateTeamBoard = () => {
 };
 
 export default CreateTeamBoard;
+
+/*
+todo: 팀 대시보드 삭제 코드는 완료. 팀 대시보드 get, patch 추가 해야 함.
+?? 팀 수정 코드는 있는데 patch 함수 호출하면 에러남. 500 에러. memberList때문에 그런건가?
+*/

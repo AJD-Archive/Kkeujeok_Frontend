@@ -11,6 +11,7 @@ const Navbar = () => {
   const { dashboard } = usePersonalDashBoardSearch();
   const { teamDashboard } = useTeamDashBoard();
   const { info } = useInfo();
+
   return (
     <S.NavBarLayout>
       <div>

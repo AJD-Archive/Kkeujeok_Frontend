@@ -9,11 +9,29 @@ import CustomModal from './CustomModal';
 interface Props {
   id: string;
   list: BlockListResDto[];
+  removeValue: boolean;
 }
-const DeleteButton = ({ id, list }: Props) => {
+const DeleteButton = ({ id, list, removeValue }: Props) => {
   const [value, setValue] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [blockId, setBlockId] = useState<string>('');
+  const [info, setInfo] = useState({
+    title: '블록을 복구하시겠습니까?',
+    subTitle: '블록은 그 전 상태로 복구됩니다',
+  });
+
+  const onRestoreTextHandler = () => {
+    setInfo({
+      title: '블록을 완전 삭제 하시겠습니까?',
+      subTitle: '삭제 이후 되돌릴 수 없습니다.',
+    });
+  };
+  const onDeleteTextHandler = () => {
+    setInfo({
+      title: '블록을 복구하시겠습니까?',
+      subTitle: '블록은 그 전 상태로 복구됩니다',
+    });
+  };
 
   const onValueFunction = () => {
     setValue(value => !value);
@@ -44,6 +62,9 @@ const DeleteButton = ({ id, list }: Props) => {
                     remove={true}
                     onModal={onModalHandler}
                     onBlockIdHandler={onBlockIdHandler}
+                    removeValue={removeValue}
+                    onRestoreTextHandler={onRestoreTextHandler}
+                    onDeleteTextHandler={onDeleteTextHandler}
                   />
                 ))}
               </S.BoxContainer>
@@ -57,8 +78,8 @@ const DeleteButton = ({ id, list }: Props) => {
       </S.DeleteIconWrapper>
       {isModalOpen && (
         <CustomModal
-          title="블록 이름을 삭제 하시겠습니까?"
-          subTitle="삭제 이후 되돌릴 수 없습니다."
+          title={info.title}
+          subTitle={info.subTitle}
           onClose={onModalHandler}
           blockId={blockId}
           removeapi={true}

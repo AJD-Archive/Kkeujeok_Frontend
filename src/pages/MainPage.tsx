@@ -235,13 +235,13 @@ const MainPage = () => {
                   key={id}
                   id={id}
                   dashboardId={dashboardId}
-                  onLoadMore={handleLoadMore} // 이 부분을 전달
+                  onLoadMore={handleLoadMore}
                   {...props}
                 />
               );
             })}
           </S.CardContainer>
-          <DeleteButton key="delete" id="delete" list={columns.delete.list} />
+          <DeleteButton key="delete" id="delete" removeValue={true} list={columns.delete.list} />
         </DragDropContext>
       </S.MainDashBoardContainer>
     </S.MainDashBoardLayout>

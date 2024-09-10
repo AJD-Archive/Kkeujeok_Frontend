@@ -115,8 +115,8 @@ export const BlockContainer = styled.div`
   padding: 0.625rem 1.375rem 1.25rem 1.375em;
   border: 1px solid #f4f4f4;
   border-radius: 10px;
-  margin-bottom: 1rem;
   cursor: pointer;
+  flex: 1;
 
   h3 {
     font-size: ${theme.font.size.main};
@@ -181,4 +181,8 @@ export const ProfileImageWrapper = styled.div`
 export const BoxContainer = styled.section`
   height: calc(100% - 35px);
   overflow: auto;
+`;
+
+export const BlockEntireContainer = styled.div`
+  display: flex;
 `;

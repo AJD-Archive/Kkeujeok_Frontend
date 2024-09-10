@@ -100,3 +100,12 @@ export const realDeleteBlock = async (blockId: string) => {
     console.error('Error fetching data:', error);
   }
 };
+
+export const restoreBlockFunc = async (blockId: string) => {
+  try {
+    const response = await axiosInstance.delete(`/blocks/${blockId}`);
+    console.log(response);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};

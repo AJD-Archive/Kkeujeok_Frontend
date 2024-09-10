@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAtom } from 'jotai';
 
-import { realDeleteBlock } from '../api/PersonalBlockApi';
+import { realDeleteBlock, restoreBlockFunc } from '../api/PersonalBlockApi';
 import {
   StyledModal,
   customStyles,
@@ -20,11 +20,16 @@ const CustomModal = ({ title, subTitle, onClose, removeapi, blockId }: CustomMod
   const [, setFetchTrigger] = useAtom(fetchTriggerAtom); // 트리거 업데이트 함수 가져오기
 
   const onClickHandler = async () => {
-    if (removeapi && blockId) {
+    //삭제
+    if (title.includes('삭제') && blockId) {
       await realDeleteBlock(blockId); // 블록 삭제 API 호출
+    } else if (title.includes('복구') && blockId) {
+      await restoreBlockFunc(blockId);
     }
     setFetchTrigger(prev => prev + 1); // 상태를 변경하여 MainPage에서 데이터를 다시 불러오도록 트리거
     onClose(); // 모달 닫기
+
+    //복구
   };
 
   return (

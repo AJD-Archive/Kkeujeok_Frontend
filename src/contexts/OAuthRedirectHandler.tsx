@@ -43,7 +43,7 @@ const OAuthRedirectHandler = () => {
       const tokenResponse = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/${provider}/token`,
         {
-          authCode: idTokenResponse.data,
+          authCode: idTokenResponse.data.idToken,
         }
       );
 

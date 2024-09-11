@@ -83,4 +83,5 @@ export const BlockEntireContainer = styled.div`
   grid-template-columns: 85% 5%;
   grid-gap: 10px;
   margin-bottom: 1rem;
+  align-items: center;
 `;

@@ -44,20 +44,22 @@ export const CategoriesContainer = styled.p`
   overflow-y: scroll;
 `;
 
-export const Category = styled.p`
+export const Category = styled.p<{ isSelected: boolean }>`
   width: fit-content;
   padding: 0.5rem 1rem;
   border-radius: 2rem;
   margin-right: 0.7rem;
   white-space: nowrap;
 
-  color: ${theme.color.gray};
-  background-color: ${theme.color.stroke2};
   cursor: pointer;
 
+  /* 카테고리 선택에 맞게 다른 스타일 적용 */
+  background: ${props =>
+    props.isSelected ? `${theme.color.gradation}` : `${theme.color.stroke2}`};
+  color: ${props => (props.isSelected ? `${theme.color.white}` : `${theme.color.gray}`)};
+
   &:hover {
-    background-color: ${theme.color.main};
-    color: ${theme.color.white};
+    background-color: ${theme.color.lightGray};
   }
 `;
 
@@ -107,15 +109,18 @@ export const DocumentCategory = styled.p`
 
 export const DocumentTitle = styled.p`
   font-size: ${theme.font.size.main};
+  font-weight: ${theme.font.weight.semiBold};
   color: ${theme.color.black};
 `;
 
 export const DocumentWriterImg = styled.div`
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  background-color: ${theme.color.stroke2};
+  img {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    background-color: ${theme.color.stroke2};
+  }
 `;
 
 export const DocumnetWriter = styled.p`

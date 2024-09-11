@@ -2,16 +2,28 @@ import { Link } from 'react-router-dom';
 import Flex from '../components/Flex';
 import * as S from '../styles/TeamDocumentStyled';
 
-const DocumentCard = () => {
+type Props = {
+  // documentId: string | undefined;
+  // title?: string;
+  // category?: string;
+  // name?: string;
+  // profileImg?: string;
+  // content?: string;
+  document: TeamDocument;
+};
+
+const DocumentCard = ({ document }: Props) => {
   return (
     <S.DocumentComponent>
-      <Link to="/1/teamdocument/1">
+      <Link to={`${document.teamDocumentId}`}>
         <S.DocumentCard>
-          <S.DocumentCategory>카테고리</S.DocumentCategory>
-          <S.DocumentTitle>제목</S.DocumentTitle>
+          <S.DocumentCategory>{document.category}</S.DocumentCategory>
+          <S.DocumentTitle>{document.title}</S.DocumentTitle>
           <Flex>
-            <S.DocumentWriterImg></S.DocumentWriterImg>
-            <S.DocumnetWriter>작성자</S.DocumnetWriter>
+            <S.DocumentWriterImg>
+              <img src={document.picture} alt="프로필 사진" />
+            </S.DocumentWriterImg>
+            <S.DocumnetWriter>{document.author}</S.DocumnetWriter>
           </Flex>
         </S.DocumentCard>
       </Link>

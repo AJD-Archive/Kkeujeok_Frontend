@@ -4,7 +4,7 @@ import setting from '../img/setting.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import leftarrow from '../img/leftarrow.png';
 import * as S from '../styles/HeaderStyled';
-// import { dashboardType } from '../contexts/DashboardAtom';
+import { dashboardType } from '../contexts/DashboardAtom';
 
 type Props = {
   mainTitle: string;
@@ -51,7 +51,7 @@ const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) =>
         <Flex>
           <Graph blockProgress={blockProgress} />
           {!dashboardType && (
-            <Link to="/teamdocument">
+            <Link to={`/${dashboardId}/teamdocument`}>
               <S.TeamDocButton>팀문서</S.TeamDocButton>
             </Link>
           )}

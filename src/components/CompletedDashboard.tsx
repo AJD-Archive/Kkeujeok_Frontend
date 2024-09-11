@@ -78,6 +78,7 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
                 blockId={block.blockId ?? '0'}
                 dType={block.dType ?? 'TeamDashboard'}
                 name={block.nickname ?? '이름 없음'}
+                picture={block.picture ?? ''}
               />
             ))}
             {provided.placeholder}

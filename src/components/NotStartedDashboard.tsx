@@ -46,7 +46,6 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
     };
 
     const blockId = await createPersonalBlock(data);
-    // console.log(blockId);
 
     const { highlightColor, progress } = settings;
     navigate(`personalBlock/${blockId}`, {
@@ -108,6 +107,7 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
                     blockId={block.blockId ?? '0'}
                     dType={block.dType ?? 'TeamDashboard'}
                     name={block.nickname ?? '이름 없음'}
+                    picture={block.picture ?? ''}
                   />
                 </div>
               );

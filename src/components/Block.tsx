@@ -8,6 +8,7 @@ import CustomModal from './CustomModal';
 import { dashboardType } from '../contexts/DashboardAtom';
 import { Link } from 'react-router-dom';
 import Profile from './Profile';
+import useModal from '../hooks/useModal';
 
 type Props = {
   blockId: string | null | undefined;
@@ -17,13 +18,12 @@ type Props = {
   dDay: number | undefined;
   dashboardId: string | undefined;
   remove?: boolean;
-  onModal?: () => void;
   onBlockIdHandler?: (num: string) => void;
   onRestoreTextHandler?: () => void;
   onDeleteTextHandler?: () => void;
   removeValue?: boolean;
-  dType: string;
-  name: string;
+  dType: string | undefined;
+  name: string | undefined;
 };
 
 const Block = ({
@@ -33,38 +33,39 @@ const Block = ({
   contents,
   dDay,
   remove,
-  onModal,
   onBlockIdHandler,
   removeValue,
   dType,
   name,
 }: Props) => {
+  const { openModal } = useModal(); // 모달창 관련 훅 호출
   const updatedBlockId = blockId ? (parseInt(blockId, 10) + 1).toString() : '1';
   const navigate = useNavigate();
 
   const clickHandler = () => {
     navigate(`personalBlock/${blockId}`);
   };
+  const removeApi = () => {
+    console.log('실행됨');
+  };
   //완전 삭제 로직
   const onremoveHandler = () => {
-    if (blockId && onBlockIdHandler && onModal) {
-      onBlockIdHandler(blockId);
-      // if (onRestoreTextHandler) onRestoreTextHandler();
-      // onModal();
-    }
+    const noApi = () => console.log('실행됨');
+    openModal('yes', noApi);
   };
   //복구 로직
   const onRestoreFunc = () => {
-    if (blockId && onBlockIdHandler && onModal) {
+    if (blockId && onBlockIdHandler) {
       onBlockIdHandler(blockId);
       // if (onDeleteTextHandler) onDeleteTextHandler();
       // onModal();
     }
   };
+
   return (
     <Draggable draggableId={updatedBlockId} key={updatedBlockId} index={index}>
       {provided => (
-        <S.BlockEntireContainer>
+        <>
           <S.BlockContainer
             ref={provided.innerRef}
             {...provided.draggableProps}
@@ -99,12 +100,14 @@ const Block = ({
             )}
           </S.BlockContainer>
           {removeValue && (
-            <Flex flexDirection="column" justifyContent="space-around">
-              <button onClick={onRestoreFunc}>복구</button>
-              <button onClick={onremoveHandler}>삭제</button>
-            </Flex>
+            <S.GridBlockStyle>
+              <div>
+                <button onClick={onRestoreFunc}>복구</button>
+                <button onClick={onremoveHandler}>삭제</button>
+              </div>
+            </S.GridBlockStyle>
           )}
-        </S.BlockEntireContainer>
+        </>
       )}
     </Draggable>
   );

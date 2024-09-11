@@ -175,7 +175,8 @@ export const BlockContainer = styled.div`
   border-radius: 10px;
   cursor: pointer;
   flex: 1;
-
+  grid-column: 1;
+  margin-bottom: 1rem;
   h3 {
     font-size: ${theme.font.size.main};
     font-weight: ${theme.font.weight.medium};
@@ -241,6 +242,6 @@ export const BoxContainer = styled.section`
   overflow: auto;
 `;
 
-export const BlockEntireContainer = styled.div`
-  display: flex;
+export const GridBlockStyle = styled.div`
+  grid-column: 2;
 `;

@@ -5,6 +5,7 @@ import { Droppable } from 'react-beautiful-dnd';
 import Block from './Block';
 import { BlockListResDto } from '../types/PersonalBlock';
 import CustomModal from './CustomModal';
+import useModal from '../hooks/useModal';
 
 interface Props {
   id: string;
@@ -13,7 +14,6 @@ interface Props {
 }
 const DeleteButton = ({ id, list, removeValue }: Props) => {
   const [value, setValue] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [blockId, setBlockId] = useState<string>('');
   const [info, setInfo] = useState({
     title: '블록을 복구하시겠습니까?',
@@ -32,13 +32,12 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
       subTitle: '블록은 그 전 상태로 복구됩니다',
     });
   };
+  const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
 
   const onValueFunction = () => {
     setValue(value => !value);
   };
-  const onModalHandler = () => {
-    setIsModalOpen(prev => !prev);
-  };
+
   const onBlockIdHandler = (num: string | null | undefined) => {
     if (num) setBlockId(num);
   };
@@ -50,23 +49,28 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
             <S.DeleteDiv ref={provided.innerRef} className="container" {...provided.droppableProps}>
               <h1>휴지통</h1>
               <S.BoxContainer>
-                {list.map(({ title, blockId, contents, dDay, dashboardId }, index) => (
-                  <Block
-                    key={index}
-                    title={title}
-                    blockId={blockId}
-                    contents={contents}
-                    dDay={dDay}
-                    dashboardId={dashboardId}
-                    index={index}
-                    remove={true}
-                    onModal={onModalHandler}
-                    onBlockIdHandler={onBlockIdHandler}
-                    removeValue={removeValue}
-                    onRestoreTextHandler={onRestoreTextHandler}
-                    onDeleteTextHandler={onDeleteTextHandler}
-                  />
-                ))}
+                {list.map(
+                  ({ title, blockId, contents, dDay, dashboardId, dType, nickname }, index) => (
+                    <S.BlockEntireContainer key={index}>
+                      <Block
+                        key={index}
+                        title={title}
+                        blockId={blockId}
+                        contents={contents}
+                        dDay={dDay}
+                        dashboardId={dashboardId}
+                        index={index}
+                        remove={true}
+                        onBlockIdHandler={onBlockIdHandler}
+                        removeValue={removeValue}
+                        onRestoreTextHandler={onRestoreTextHandler}
+                        onDeleteTextHandler={onDeleteTextHandler}
+                        dType={dType}
+                        name={nickname}
+                      />
+                    </S.BlockEntireContainer>
+                  )
+                )}
               </S.BoxContainer>
               {provided.placeholder}
             </S.DeleteDiv>
@@ -76,13 +80,20 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
       <S.DeleteIconWrapper onClick={onValueFunction}>
         <img src={deleteicon} alt="휴지통아이콘" />
       </S.DeleteIconWrapper>
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <CustomModal
           title={info.title}
           subTitle={info.subTitle}
           onClose={onModalHandler}
-          blockId={blockId}
-          removeapi={true}
+        />
+      )} */}
+
+      {isModalOpen && (
+        <CustomModal
+          title="대시보드를 삭제하시겠습니까?"
+          subTitle="한 번 삭제된 대시보드는 되돌릴 수 없습니다."
+          onYesClick={handleYesClick}
+          onNoClick={handleNoClick}
         />
       )}
     </S.DeleteContainer>

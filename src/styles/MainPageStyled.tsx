@@ -77,3 +77,10 @@ export const BoxContainer = styled.section`
   height: calc(100% - 36px);
   overflow: auto;
 `;
+
+export const BlockEntireContainer = styled.div`
+  display: grid;
+  grid-template-columns: 85% 5%;
+  grid-gap: 10px;
+  margin-bottom: 1rem;
+`;

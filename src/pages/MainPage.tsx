@@ -131,14 +131,15 @@ const MainPage = () => {
       },
     }));
 
-    fetchBlockData(0);
-    fetchDashboardData();
-  }, [location.pathname]);
+    fetchData(0);
+  }, [location.pathname, fetchData]);
 
   // 페이지가 변경될 때 데이터를 다시 가져옴
   useEffect(() => {
-    fetchBlockData(page);
-  }, [page]);
+    if (page > 0) {
+      fetchData(page);
+    }
+  }, [page, fetchData]);
 
   useEffect(() => {
     fetchBlockData(0); // 페이지가 로드될 때 처음으로 데이터를 불러옵니다.

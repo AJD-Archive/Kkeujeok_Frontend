@@ -4,7 +4,7 @@ import setting from '../img/setting.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import leftarrow from '../img/leftarrow.png';
 import * as S from '../styles/HeaderStyled';
-// import { dashboardType } from '../contexts/DashboardAtom';
+import { dashboardType } from '../contexts/DashboardAtom';
 
 type Props = {
   mainTitle: string;

@@ -15,9 +15,10 @@ type Props = {
   dashboardId: string;
   dType: string;
   name: string;
+  picture?: string;
 };
 
-const Block = ({ title, index, blockId, contents, dDay, dType, name }: Props) => {
+const Block = ({ title, index, blockId, contents, dDay, dType, name, picture }: Props) => {
   const updatedBlockId = blockId ? (parseInt(blockId, 10) + 1).toString() : '1';
 
   // useEffect(() => {
@@ -59,7 +60,7 @@ const Block = ({ title, index, blockId, contents, dDay, dType, name }: Props) =>
             ) : (
               <Flex>
                 <S.ProfileImageWrapper>
-                  <Profile width="" height="" profile="" />
+                  <Profile width="" height="" profile={picture} />
                 </S.ProfileImageWrapper>
                 <span>{name}</span>
               </Flex>

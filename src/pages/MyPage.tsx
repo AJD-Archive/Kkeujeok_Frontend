@@ -4,15 +4,22 @@ import googleicon from '../img/googleicon.png';
 import kakaologo from '../img/kakaologo.png';
 import bell from '../img/bell.png';
 import ChallengeBlock from '../components/ChallengeBlock';
-import ReactPaginate from 'react-paginate';
 import * as S from '../styles/MyPageStyled';
 import Profile from '../components/Profile';
 import { useQuery } from '@tanstack/react-query';
-import { fetchData } from '../api/MyPageApi';
+import { fetchBlockData, fetchData } from '../api/MyPageApi';
+import { ChangeEvent, useState } from 'react';
+import Pagination from '@mui/material/Pagination';
+import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 
 const MyPage = () => {
   const { data } = useQuery({ queryKey: ['profile'], queryFn: fetchData });
+  const { data: teamBlock } = useQuery({ queryKey: ['teamBlcok'], queryFn: fetchBlockData });
+
+  const [teamBool, setTeamBool] = useState<boolean>(true);
+
   const socialType = data?.data.socialType;
+
   const SocialIcon = () => (
     <S.GoogleImageIcon
       src={socialType === 'KAKAO' ? kakaologo : googleicon}
@@ -45,15 +52,21 @@ const MyPage = () => {
           </S.ImageWrapper>
         </Flex>
         <S.ChanllengeBlockContainer>
-          <ChallengeBlock />
-          <ChallengeBlock />
-          <ChallengeBlock />
-          <ChallengeBlock />
-          <ChallengeBlock />
-          <ChallengeBlock />
+          {teamBool
+            ? teamBlock?.data.teamDashboardList.teamDashboardInfoResDto.map((item, idx) => (
+                <ChallengeBlock key={idx} />
+              ))
+            : teamBlock?.data.challengeList.challengeInfoResDto.map((item, idx) => (
+                <ChallengeBlock key={idx} />
+              ))}
         </S.ChanllengeBlockContainer>
         <S.PagenateBox>
-          <ReactPaginate pageCount={6} pageRangeDisplayed={6} previousLabel="<" nextLabel=">" />
+          {/* <Pagination
+            page={teamPage}
+            count={teamBlock?.data.teamDashboardList.pageInfoResDto.totalPages}
+            defaultPage={1}
+            onChange={onChangePageNation}
+          /> */}
         </S.PagenateBox>
       </S.MyPageLayout>
     </Flex>

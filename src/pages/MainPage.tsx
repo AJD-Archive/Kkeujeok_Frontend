@@ -53,13 +53,15 @@ const MainPage = () => {
     async (page: number = 0) => {
       try {
         // 개인 및 팀 데이터를 병렬로 가져옴
-        const [todo, doing, done, personalDashboardData, teamDashboardData] = await Promise.all([
-          getPersonalBlock(dashboardId, page, 10, 'NOT_STARTED'),
-          getPersonalBlock(dashboardId, page, 10, 'IN_PROGRESS'),
-          getPersonalBlock(dashboardId, page, 10, 'COMPLETED'),
-          getPersonalDashboard(dashboardId),
-          getTeamDashboard(dashboardId),
-        ]);
+        const [todo, doing, done, remove, personalDashboardData, teamDashboardData] =
+          await Promise.all([
+            getPersonalBlock(dashboardId, page, 10, 'NOT_STARTED'),
+            getPersonalBlock(dashboardId, page, 10, 'IN_PROGRESS'),
+            getPersonalBlock(dashboardId, page, 10, 'COMPLETED'),
+            getDeleteBlock(dashboardId),
+            getPersonalDashboard(dashboardId),
+            getTeamDashboard(dashboardId),
+          ]);
 
         // 개인 블록 데이터를 업데이트
         if (todo && doing && done) {
@@ -88,6 +90,11 @@ const MainPage = () => {
                   ? done.blockListResDto
                   : [...prevColumns.done.list, ...done.blockListResDto],
               pageInfo: done.pageInfoResDto,
+            },
+            delete: {
+              ...prevColumns.delete,
+              list: page === 0 ? remove.blockListResDto : [...remove.blockListResDto],
+              pageInfo: remove.pageInfoResDto,
             },
           }));
         }
@@ -126,12 +133,13 @@ const MainPage = () => {
       },
       delete: {
         ...prevColumns.delete,
-        list: [],
-        pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
+        list: prevColumns.delete.list, // 휴지통 리스트 유지
+        pageInfo: prevColumns.delete.pageInfo, // 휴지통 페이지 정보 유지
       },
     }));
 
     fetchData(0);
+    fetchDashboardData();
   }, [location.pathname, fetchData]);
 
   // 페이지가 변경될 때 데이터를 다시 가져옴
@@ -150,7 +158,7 @@ const MainPage = () => {
     fetchBlockData(0); // 트리거가 변경되면 다시 데이터 호출
   }, [fetchTrigger]);
   // 블록 순서 변경 디바운스 처리
-  const debouncedData = useDebounce(columns, 100);
+  const debouncedData = useDebounce(columns, 10);
 
   useEffect(() => {
     const orderArray = {

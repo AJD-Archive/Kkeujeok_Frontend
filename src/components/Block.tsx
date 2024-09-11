@@ -10,7 +10,9 @@ import { Link } from 'react-router-dom';
 import Profile from './Profile';
 import useModal from '../hooks/useModal';
 import { realDeleteBlock, restoreBlockFunc } from '../api/PersonalBlockApi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
+import { fetchTriggerAtom } from '../contexts/atoms';
 
 type Props = {
   blockId: string | null | undefined;
@@ -34,7 +36,7 @@ const Block = ({
   blockId,
   contents,
   dDay,
-  remove,
+  remove = false,
   onBlockIdHandler,
   removeValue,
   dType,
@@ -43,20 +45,23 @@ const Block = ({
   const [isRemove, setIsRemove] = useState(true);
   const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal();
   const updatedBlockId = blockId ? (parseInt(blockId, 10) + 1).toString() : '1';
+  const [, setFetchTrigger] = useAtom(fetchTriggerAtom); // 트리거 업데이트 함수 가져오기
   const navigate = useNavigate();
 
   const clickHandler = () => {
     navigate(`personalBlock/${blockId}`);
   };
-
-  //모달 삭제에 전달할 함수
-  const removeFunc = () => {
-    if (blockId) realDeleteBlock(blockId);
+  const removeFunc = async () => {
+    if (blockId) {
+      await realDeleteBlock(blockId); // 블록을 삭제하는 API 호출
+      setFetchTrigger(prev => prev + 1); // 상태를 변경하여 MainPage에서 데이터를 다시 불러오도록 트리거
+    }
   };
 
   //모달 복구에 전달할 함수
-  const restoreFunc = () => {
-    if (blockId) restoreBlockFunc(blockId);
+  const restoreFunc = async () => {
+    if (blockId) await restoreBlockFunc(blockId);
+    setFetchTrigger(prev => prev + 1); // 상태를 변경하여 MainPage에서 데이터를 다시 불러오도록 트리거
   };
 
   //완전 삭제 로직
@@ -77,6 +82,7 @@ const Block = ({
         {provided => (
           <>
             <S.BlockContainer
+              marginValue={remove ? '0' : '1'}
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
@@ -103,10 +109,8 @@ const Block = ({
             </S.BlockContainer>
             {removeValue && (
               <S.GridBlockStyle>
-                <div>
-                  <button onClick={onRestoreFunc}>복구</button>
-                  <button onClick={onremoveHandler}>삭제</button>
-                </div>
+                <button onClick={onRestoreFunc}>복구</button>
+                <button onClick={onremoveHandler}>삭제</button>
               </S.GridBlockStyle>
             )}
           </>

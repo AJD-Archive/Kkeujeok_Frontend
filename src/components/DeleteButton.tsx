@@ -62,8 +62,6 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
                         remove={true}
                         onBlockIdHandler={onBlockIdHandler}
                         removeValue={removeValue}
-                        onRestoreTextHandler={onRestoreTextHandler}
-                        onDeleteTextHandler={onDeleteTextHandler}
                         dType={dType}
                         name={nickname}
                       />

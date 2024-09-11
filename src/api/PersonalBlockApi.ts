@@ -48,7 +48,7 @@ export const getPersonalBlock = async (blockId: string | null): Promise<BlockLis
   }
 };
 
-//블록 수정
+//블록의 상태 수정
 export const updatePersonalBlock = async (blockId?: string, progress?: string) => {
   try {
     const response = await axiosInstance.patch(`/blocks/${blockId}/progress?progress=${progress}`);

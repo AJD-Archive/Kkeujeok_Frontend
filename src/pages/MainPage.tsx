@@ -6,21 +6,30 @@ import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { handleAutoScroll } from '../utils/handleAutoScroll';
 import { useLocation } from 'react-router-dom';
 import { StatusPersonalBlock } from '../types/PersonalBlock';
-import { updateOrderBlock, updatePersonalBlock } from '../api/PersonalBlockApi';
+import {
+  deleteBlock,
+  getDeleteBlock,
+  updateOrderBlock,
+  updatePersonalBlock,
+} from '../api/PersonalBlockApi';
 import { useDebounce } from '../hooks/useDebounce';
 import { initialColumns } from '../utils/columnsConfig';
 import { DashboardItem } from '../types/PersonalDashBoard';
 import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
+import DeleteButton from '../components/DeleteButton';
+import { useAtom } from 'jotai';
+import { fetchTriggerAtom } from '../contexts/atoms';
 import { getTeamDashboard } from '../api/TeamDashBoardApi';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 
-export type TItemStatus = 'todo' | 'doing' | 'done';
+export type TItemStatus = 'todo' | 'doing' | 'done' | 'delete';
 
 const MainPage = () => {
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[1];
 
   const [page, setPage] = useState<number>(0);
+  const [fetchTrigger] = useAtom(fetchTriggerAtom); // 상태 트리거 가져오기
   const [dashboardDetail, setDashboardDetail] = useState<DashboardItem | null>(null);
   const [teamDashboardDetail, setTeamDashboardDetail] = useState<TeamDashboardInfoResDto | null>(
     null
@@ -29,9 +38,9 @@ const MainPage = () => {
     [key in TItemStatus]: {
       id: string;
       list: StatusPersonalBlock['blockListResDto'];
-      pageInfo: StatusPersonalBlock['pageInfoResDto'];
+      pageInfo?: StatusPersonalBlock['pageInfoResDto'];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      component: React.ComponentType<any>;
+      component?: React.ComponentType<any>;
       backGroundColor?: string;
       highlightColor?: string;
       progress?: string;
@@ -44,13 +53,15 @@ const MainPage = () => {
     async (page: number = 0) => {
       try {
         // 개인 및 팀 데이터를 병렬로 가져옴
-        const [todo, doing, done, personalDashboardData, teamDashboardData] = await Promise.all([
-          getPersonalBlock(dashboardId, page, 10, 'NOT_STARTED'),
-          getPersonalBlock(dashboardId, page, 10, 'IN_PROGRESS'),
-          getPersonalBlock(dashboardId, page, 10, 'COMPLETED'),
-          getPersonalDashboard(dashboardId),
-          getTeamDashboard(dashboardId),
-        ]);
+        const [todo, doing, done, remove, personalDashboardData, teamDashboardData] =
+          await Promise.all([
+            getPersonalBlock(dashboardId, page, 10, 'NOT_STARTED'),
+            getPersonalBlock(dashboardId, page, 10, 'IN_PROGRESS'),
+            getPersonalBlock(dashboardId, page, 10, 'COMPLETED'),
+            getDeleteBlock(dashboardId),
+            getPersonalDashboard(dashboardId),
+            getTeamDashboard(dashboardId),
+          ]);
 
         // 개인 블록 데이터를 업데이트
         if (todo && doing && done) {
@@ -80,6 +91,11 @@ const MainPage = () => {
                   : [...prevColumns.done.list, ...done.blockListResDto],
               pageInfo: done.pageInfoResDto,
             },
+            delete: {
+              ...prevColumns.delete,
+              list: page === 0 ? remove.blockListResDto : [...remove.blockListResDto],
+              pageInfo: remove.pageInfoResDto,
+            },
           }));
         }
 
@@ -105,20 +121,45 @@ const MainPage = () => {
         list: [],
         pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
       },
+      doing: {
+        ...prevColumns.doing,
+        list: [],
+        pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
+      },
+      done: {
+        ...prevColumns.done,
+        list: [],
+        pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
+      },
+      delete: {
+        ...prevColumns.delete,
+        list: prevColumns.delete.list, // 휴지통 리스트 유지
+        pageInfo: prevColumns.delete.pageInfo, // 휴지통 페이지 정보 유지
+      },
     }));
 
     fetchData(0);
+    fetchDashboardData();
   }, [location.pathname, fetchData]);
 
-  // 페이지 변경 시 fetchData 호출
+  // 페이지가 변경될 때 데이터를 다시 가져옴
   useEffect(() => {
     if (page > 0) {
       fetchData(page);
     }
   }, [page, fetchData]);
 
-  // Debounce 처리된 데이터를 이용하여 updateOrderBlock 호출
-  const debouncedData = useDebounce(columns, 100);
+  useEffect(() => {
+    fetchBlockData(0); // 페이지가 로드될 때 처음으로 데이터를 불러옵니다.
+  }, [dashboardId]);
+
+  // fetchTrigger 상태가 변경되면 데이터를 다시 불러옴
+  useEffect(() => {
+    fetchBlockData(0); // 트리거가 변경되면 다시 데이터 호출
+  }, [fetchTrigger]);
+  // 블록 순서 변경 디바운스 처리
+  const debouncedData = useDebounce(columns, 10);
+
   useEffect(() => {
     const orderArray = {
       notStartedList: columns.todo.list.map(item => item.blockId),
@@ -128,25 +169,80 @@ const MainPage = () => {
     updateOrderBlock(orderArray);
   }, [debouncedData]);
 
-  // 페이지를 증가시켜 더 많은 데이터를 불러오는 함수
-  const handleLoadMore = useCallback(() => {
-    setPage(prevPage => prevPage + 1);
-  }, []);
+  // * get 대시보드 블록
+  const fetchBlockData = async (page: number = 0) => {
+    try {
+      const [todo, doing, done, remove] = await Promise.all([
+        getPersonalBlock(dashboardId, page, 10, 'NOT_STARTED'),
+        getPersonalBlock(dashboardId, page, 10, 'IN_PROGRESS'),
+        getPersonalBlock(dashboardId, page, 10, 'COMPLETED'),
+        getDeleteBlock(dashboardId),
+      ]);
 
-  // Drag and Drop 이벤트 처리 함수
+      const removeBlockList = Array.isArray(remove?.blockListResDto) ? remove.blockListResDto : [];
+
+      // 데이터가 존재하는지 확인
+      if (todo && doing && done) {
+        setColumns(prevColumns => ({
+          ...prevColumns,
+          todo: {
+            ...prevColumns.todo,
+            list:
+              page === 0
+                ? todo.blockListResDto
+                : [...prevColumns.todo.list, ...todo.blockListResDto],
+            pageInfo: todo.pageInfoResDto,
+          },
+          doing: {
+            ...prevColumns.doing,
+            list:
+              page === 0
+                ? doing.blockListResDto
+                : [...prevColumns.doing.list, ...doing.blockListResDto],
+            pageInfo: doing.pageInfoResDto,
+          },
+          done: {
+            ...prevColumns.done,
+            list:
+              page === 0
+                ? done.blockListResDto
+                : [...prevColumns.done.list, ...done.blockListResDto],
+            pageInfo: done.pageInfoResDto,
+          },
+          delete: {
+            ...prevColumns.delete,
+            list: page === 0 ? remove.blockListResDto : [...remove.blockListResDto],
+            pageInfo: remove.pageInfoResDto,
+          },
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to fetch block data:', error);
+    }
+  };
+
+  // 세로 무한 스크롤 감지 이벤트
+  const handleLoadMore = async () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
+  // 드래그 앤 드롭 핸들러
   const onDragEnd = ({ source, destination }: DropResult) => {
     if (!destination) return;
 
     const sourceKey = source.droppableId as TItemStatus;
     const destinationKey = destination.droppableId as TItemStatus;
 
+    const sourceList = columns[sourceKey]?.list || [];
+    const destinationList = columns[destinationKey]?.list || [];
+
     if (!columns[sourceKey] || !columns[destinationKey]) {
       console.error('Invalid source or destination key');
       return;
     }
 
-    const sourceList = columns[sourceKey].list;
-    const destinationList = columns[destinationKey].list;
+    // const sourceList = columns[sourceKey].list;
+    // const destinationList = columns[destinationKey].list;
 
     const blockId = sourceList[source.index]?.blockId;
     if (!blockId) return;
@@ -165,8 +261,11 @@ const MainPage = () => {
     } else {
       const [movedItem] = sourceList.splice(source.index, 1);
       destinationList.splice(destination.index, 0, movedItem);
-      updatePersonalBlock(blockId, status(destinationKey));
-
+      if (destinationKey !== 'delete') updatePersonalBlock(blockId, status(destinationKey));
+      else deleteBlock(blockId);
+      if (sourceKey === 'delete') {
+        deleteBlock(blockId);
+      }
       setColumns({
         ...columns,
         [sourceKey]: {
@@ -181,6 +280,11 @@ const MainPage = () => {
     }
   };
 
+  // 대시보드 상세 정보 가져오기
+  const fetchDashboardData = async () => {
+    const data = await getPersonalDashboard(dashboardId);
+    if (data) setDashboardDetail(data);
+  };
   // 유효한 데이터에 따라 mainTitle과 subTitle을 설정
   const mainTitle = teamDashboardDetail?.title || dashboardDetail?.title || '대시보드 제목';
   const subTitle =
@@ -201,6 +305,9 @@ const MainPage = () => {
           <S.CardContainer>
             {Object.values(columns).map(column => {
               const { id, component: DashboardComponent, ...props } = column;
+              if (!DashboardComponent) {
+                return null;
+              }
               return (
                 <DashboardComponent
                   key={id}
@@ -212,6 +319,7 @@ const MainPage = () => {
               );
             })}
           </S.CardContainer>
+          <DeleteButton key="delete" id="delete" removeValue={true} list={columns.delete.list} />
         </DragDropContext>
       </S.MainDashBoardContainer>
     </S.MainDashBoardLayout>
@@ -229,5 +337,9 @@ const status = (status: string) => {
       return 'IN_PROGRESS';
     case 'done':
       return 'COMPLETED';
+    case 'delete':
+      return 'DELETED';
+    default:
+      return 'UNKNOWN';
   }
 };

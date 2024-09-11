@@ -168,13 +168,15 @@ export const GraphProgress = styled.div<{ blockProgress: number }>`
 `;
 
 /* 블록 스타일*/
-export const BlockContainer = styled.div`
+export const BlockContainer = styled.div<{ marginValue: string }>`
   background: ${theme.color.white};
-  padding: 0.625rem 1.375rem 1.25rem 1.375em;
+  padding: 1.375rem 1.375rem 1.375rem 1.375em;
   border: 1px solid #f4f4f4;
   border-radius: 10px;
-  margin-bottom: 1rem;
   cursor: pointer;
+  flex: 1;
+  grid-column: 1;
+  margin-bottom: ${({ marginValue }) => `${marginValue}rem`};
 
   h3 {
     font-size: ${theme.font.size.main};
@@ -239,4 +241,8 @@ export const ProfileImageWrapper = styled.div`
 export const BoxContainer = styled.section`
   height: calc(100% - 35px);
   overflow: auto;
+`;
+
+export const GridBlockStyle = styled.div`
+  grid-column: 2;
 `;

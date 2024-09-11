@@ -47,9 +47,8 @@ export const DeleteDiv = styled.div`
   bottom: 20px;
   right: 20px;
   border-radius: 0.625rem;
-
-  &:hover {
-    background: red;
+  h1 {
+    margin-bottom: 1rem;
   }
 `;
 
@@ -72,4 +71,17 @@ export const DeleteIconWrapper = styled.div`
     width: 27px;
     height: 31px;
   }
+`;
+
+export const BoxContainer = styled.section`
+  height: calc(100% - 36px);
+  overflow: auto;
+`;
+
+export const BlockEntireContainer = styled.div`
+  display: grid;
+  grid-template-columns: 85% 5%;
+  grid-gap: 10px;
+  margin-bottom: 1rem;
+  align-items: center;
 `;

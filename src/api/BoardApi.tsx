@@ -18,7 +18,6 @@ export const getPersonalBlock = async (
     const response = await axiosInstance.get(
       `/blocks?dashboardId=${id}&progress=${progress}&page=${page}&size=${size}`
     );
-    // console.log(response.data.data);
     return response.data.data as StatusPersonalBlock;
   } catch (error) {
     console.error('Error fetching data:', error);

@@ -31,15 +31,27 @@ import useInterval from '../hooks/useInterval';
 import { getPersonalBlock } from '../api/PersonalBlockApi';
 import { BlockListResDto } from '../types/PersonalBlock';
 import Navbar from '../components/Navbar';
+import useInfo from '../hooks/useInfo';
 
 const TeamDocument = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { highlightColor, progress } = location.state || {};
-  const blockId = location.pathname.split('/').pop();
+  const pathname = location.pathname;
+  const segments = pathname.split('/');
 
-  const { data, handleTitleChange, handleDateChange, onChange, editor, SubmitData, parseDate } =
-    useTeamDocument(blockId, progress);
+  const teamDashboardId = segments[1]; // Assuming /48 is the teamDashboardId
+  const teamDocumentId = segments[3]; // Assuming /15 is the teamDocumentId
+
+  const { progress } = location.state || {};
+  const { info } = useInfo();
+
+  const { data, categories, handleInputChange, onChange, editor, SubmitData } = useTeamDocument(
+    teamDashboardId,
+    teamDocumentId,
+    progress
+  );
+
+  console.log('전달받은 카테고리', categories);
 
   const toggleFunc = (event: React.MouseEvent) => {
     // SubmitData();
@@ -72,15 +84,17 @@ const TeamDocument = () => {
         {/* 제목 입력 */}
         <TitleContainer>
           <Flex>
-            <S.DocumentWriterImg></S.DocumentWriterImg>
-            <S.DocumnetWriter>작성자</S.DocumnetWriter>
+            <S.DocumentWriterImg>
+              <img src={info?.data.picture} alt="프로필 사진" />
+            </S.DocumentWriterImg>
+            <S.DocumnetWriter>{info?.data.nickName}</S.DocumnetWriter>
           </Flex>
           <Input
             type="text"
             name="title"
             placeholder="제목을 입력하세요."
-            // value={data.title}
-            // onChange={handleTitleChange}
+            value={data.title}
+            onChange={handleInputChange}
           />
           <RowWrapper>
             <InputCategory
@@ -88,13 +102,13 @@ const TeamDocument = () => {
               name="category"
               placeholder="대시보드 카테고리를 설정해주세요."
               list="categoryList"
-              // value={formData.category}
-              // onChange={handleChange}
+              value={data.category}
+              onChange={handleInputChange}
             />
             <datalist id="categoryList">
-              {/* {categoryList.map((category, index) => (
-                    <option key={index} value={category} />
-                  ))} */}
+              {categories.map((category, index) => (
+                <option key={index} value={category} />
+              ))}
             </datalist>
           </RowWrapper>
           <hr />

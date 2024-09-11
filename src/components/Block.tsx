@@ -6,6 +6,8 @@ import { Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import CustomModal from './CustomModal';
 import { dashboardType } from '../contexts/DashboardAtom';
+import { Link } from 'react-router-dom';
+import Profile from './Profile';
 
 type Props = {
   blockId: string | null | undefined;
@@ -20,6 +22,8 @@ type Props = {
   onRestoreTextHandler?: () => void;
   onDeleteTextHandler?: () => void;
   removeValue?: boolean;
+  dType: string;
+  name: string;
 };
 
 const Block = ({
@@ -32,8 +36,8 @@ const Block = ({
   onModal,
   onBlockIdHandler,
   removeValue,
-  onRestoreTextHandler,
-  onDeleteTextHandler,
+  dType,
+  name,
 }: Props) => {
   const updatedBlockId = blockId ? (parseInt(blockId, 10) + 1).toString() : '1';
   const navigate = useNavigate();
@@ -45,16 +49,16 @@ const Block = ({
   const onremoveHandler = () => {
     if (blockId && onBlockIdHandler && onModal) {
       onBlockIdHandler(blockId);
-      if (onRestoreTextHandler) onRestoreTextHandler();
-      onModal();
+      // if (onRestoreTextHandler) onRestoreTextHandler();
+      // onModal();
     }
   };
   //복구 로직
   const onRestoreFunc = () => {
     if (blockId && onBlockIdHandler && onModal) {
       onBlockIdHandler(blockId);
-      if (onDeleteTextHandler) onDeleteTextHandler();
-      onModal();
+      // if (onDeleteTextHandler) onDeleteTextHandler();
+      // onModal();
     }
   };
   return (
@@ -83,13 +87,16 @@ const Block = ({
               <h3>{title}</h3>
               <span>D-{dDay}</span>
             </Flex>
-            <p>{contents}</p>
-            <Flex>
-              {/* <S.ProfileImageWrapper>
-              <img src={profile} />
-            </S.ProfileImageWrapper>
-            <span>{blockId}</span> */}
-            </Flex>
+            {dType === 'PersonalDashboard' ? (
+              <p>{contents}</p>
+            ) : (
+              <Flex>
+                <S.ProfileImageWrapper>
+                  <Profile width="" height="" profile="" />
+                </S.ProfileImageWrapper>
+                <span>{name}</span>
+              </Flex>
+            )}
           </S.BlockContainer>
           {removeValue && (
             <Flex flexDirection="column" justifyContent="space-around">

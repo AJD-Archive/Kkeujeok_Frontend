@@ -2,13 +2,11 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import Block from './Block';
 import * as S from '../styles/DashboardStyled';
 import { createPersonalBlock } from '../api/PersonalBlockApi';
-import { useAtom } from 'jotai';
-import { visibleAtom } from '../contexts/sideScreenAtom';
 import SidePage from '../pages/SidePage';
 import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main2 from '../img/main2.png';
-import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
+import { BlockListResDto } from '../types/PersonalBlock';
 
 type Props = {
   // list: StatusPersonalBlock | undefined;
@@ -40,7 +38,7 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
       dashboardId: dashboardId,
       title: '',
       contents: '',
-      progress: 'NOT_STARTED',
+      progress: 'COMPLETED',
       startDate: startDate,
       deadLine: deadLine,
     };
@@ -49,7 +47,7 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
     // console.log(blockId);
 
     const { highlightColor, progress } = settings;
-    navigate(`/personalBlock/${blockId}`, { state: { highlightColor, progress } });
+    navigate(`personalBlock/${blockId}`, { state: { highlightColor, progress, blockId } });
   };
 
   return (
@@ -78,6 +76,8 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
                 dDay={block.dDay ?? 0}
                 contents={block.contents ?? ''}
                 blockId={block.blockId ?? '0'}
+                dType={block.dType ?? 'TeamDashboard'}
+                name={block.nickname ?? '이름 없음'}
               />
             ))}
             {provided.placeholder}

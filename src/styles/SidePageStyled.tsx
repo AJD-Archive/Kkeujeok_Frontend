@@ -15,6 +15,10 @@ export const SideScreenContainer = styled.div`
   top: 0px;
   left: 0px;
   backdrop-filter: blur(4px);
+
+  hr {
+    border: 1px solid #f4f4f4;
+  }
 `;
 
 export const SideScreen = styled.div`
@@ -74,10 +78,14 @@ export const StatusBarContainer = styled.div<Props>`
   }
 `;
 
+export const CategoryContainer = styled.div`
+  /* margin: 0 3.5rem; */
+`;
+
 export const Input = styled.input`
   width: 100%;
   padding: 0.5rem 0;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   border: none;
   font-size: ${theme.font.size.mainTitle};
   font-weight: ${theme.font.weight.bold};
@@ -85,6 +93,25 @@ export const Input = styled.input`
   &:focus {
     outline: none;
   }
+`;
+
+export const InputCategory = styled.input`
+  width: 50%;
+  padding: 0.5rem 0;
+  border: none;
+  font-size: ${theme.font.size.main};
+  font-weight: ${theme.font.weight.medium};
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const RowWrapper = styled.div`
+  margin: 0.5rem 0;
+
+  display: flex;
+  align-items: center;
 `;
 
 export const D_Day = styled.p`

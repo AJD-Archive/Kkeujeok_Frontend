@@ -1,8 +1,8 @@
+import { useEffect, useState, useCallback } from 'react';
 import Navbar from '../components/Navbar';
 import Header from '../components/Header';
 import * as S from '../styles/MainPageStyled';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { useEffect, useState } from 'react';
 import { handleAutoScroll } from '../utils/handleAutoScroll';
 import { useLocation } from 'react-router-dom';
 import { StatusPersonalBlock } from '../types/PersonalBlock';
@@ -19,6 +19,8 @@ import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
 import DeleteButton from '../components/DeleteButton';
 import { useAtom } from 'jotai';
 import { fetchTriggerAtom } from '../contexts/atoms';
+import { getTeamDashboard } from '../api/TeamDashBoardApi';
+import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 
 export type TItemStatus = 'todo' | 'doing' | 'done' | 'delete';
 
@@ -28,7 +30,10 @@ const MainPage = () => {
 
   const [page, setPage] = useState<number>(0);
   const [fetchTrigger] = useAtom(fetchTriggerAtom); // 상태 트리거 가져오기
-  const [dashboardDetail, setDashboardDetail] = useState<DashboardItem>();
+  const [dashboardDetail, setDashboardDetail] = useState<DashboardItem | null>(null);
+  const [teamDashboardDetail, setTeamDashboardDetail] = useState<TeamDashboardInfoResDto | null>(
+    null
+  );
   const [columns, setColumns] = useState<{
     [key in TItemStatus]: {
       id: string;
@@ -43,7 +48,63 @@ const MainPage = () => {
     };
   }>(initialColumns);
 
-  // 라우터가 변경되면 기존 리스트를 초기화하고 다시 불러옴
+  // 개인 및 팀 대시보드 데이터를 가져오는 useCallback 함수
+  const fetchData = useCallback(
+    async (page: number = 0) => {
+      try {
+        // 개인 및 팀 데이터를 병렬로 가져옴
+        const [todo, doing, done, personalDashboardData, teamDashboardData] = await Promise.all([
+          getPersonalBlock(dashboardId, page, 10, 'NOT_STARTED'),
+          getPersonalBlock(dashboardId, page, 10, 'IN_PROGRESS'),
+          getPersonalBlock(dashboardId, page, 10, 'COMPLETED'),
+          getPersonalDashboard(dashboardId),
+          getTeamDashboard(dashboardId),
+        ]);
+
+        // 개인 블록 데이터를 업데이트
+        if (todo && doing && done) {
+          setColumns(prevColumns => ({
+            ...prevColumns,
+            todo: {
+              ...prevColumns.todo,
+              list:
+                page === 0
+                  ? todo.blockListResDto
+                  : [...prevColumns.todo.list, ...todo.blockListResDto],
+              pageInfo: todo.pageInfoResDto,
+            },
+            doing: {
+              ...prevColumns.doing,
+              list:
+                page === 0
+                  ? doing.blockListResDto
+                  : [...prevColumns.doing.list, ...doing.blockListResDto],
+              pageInfo: doing.pageInfoResDto,
+            },
+            done: {
+              ...prevColumns.done,
+              list:
+                page === 0
+                  ? done.blockListResDto
+                  : [...prevColumns.done.list, ...done.blockListResDto],
+              pageInfo: done.pageInfoResDto,
+            },
+          }));
+        }
+
+        // 개인 대시보드 데이터 업데이트
+        setDashboardDetail(personalDashboardData);
+
+        // 팀 대시보드 데이터 업데이트
+        setTeamDashboardDetail(teamDashboardData);
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    },
+    [dashboardId]
+  );
+
+  // 데이터 fetch 후 팀 또는 개인 대시보드 데이터를 설정
   useEffect(() => {
     setPage(0);
     setColumns(prevColumns => ({
@@ -166,14 +227,16 @@ const MainPage = () => {
     const sourceList = columns[sourceKey]?.list || [];
     const destinationList = columns[destinationKey]?.list || [];
 
-    if (source.index < 0 || source.index >= sourceList.length) {
+    if (!columns[sourceKey] || !columns[destinationKey]) {
+      console.error('Invalid source or destination key');
       return;
     }
 
+    // const sourceList = columns[sourceKey].list;
+    // const destinationList = columns[destinationKey].list;
+
     const blockId = sourceList[source.index]?.blockId;
-    if (!blockId) {
-      return;
-    }
+    if (!blockId) return;
 
     if (sourceKey === destinationKey) {
       const newList = Array.from(sourceList);
@@ -211,17 +274,23 @@ const MainPage = () => {
   // 대시보드 상세 정보 가져오기
   const fetchDashboardData = async () => {
     const data = await getPersonalDashboard(dashboardId);
-    setDashboardDetail(data ?? undefined);
+    if (data) setDashboardDetail(data);
   };
+  // 유효한 데이터에 따라 mainTitle과 subTitle을 설정
+  const mainTitle = teamDashboardDetail?.title || dashboardDetail?.title || '대시보드 제목';
+  const subTitle =
+    teamDashboardDetail?.description || dashboardDetail?.description || '대시보드 설명';
+  const blockProgress = teamDashboardDetail?.blockProgress || dashboardDetail?.blockProgress || 0;
 
   return (
     <S.MainDashBoardLayout>
       <Navbar />
       <S.MainDashBoardContainer>
         <Header
-          mainTitle={dashboardDetail?.title || '개인 대시보드'}
-          subTitle={dashboardDetail?.description || '개인 대시보드 설명'}
-          blockProgress={dashboardDetail?.blockProgress || 0}
+          mainTitle={mainTitle}
+          subTitle={subTitle}
+          blockProgress={blockProgress}
+          dashboardType={dashboardDetail ? true : false}
         />
         <DragDropContext onDragEnd={onDragEnd} onDragUpdate={handleAutoScroll}>
           <S.CardContainer>
@@ -250,6 +319,7 @@ const MainPage = () => {
 
 export default MainPage;
 
+// Helper 함수: status 변환을 위한 함수
 const status = (status: string) => {
   switch (status) {
     case 'todo':

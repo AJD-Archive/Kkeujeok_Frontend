@@ -21,6 +21,7 @@ import {
   RowWrapper,
   Scope,
   Textarea,
+  DelBtn,
 } from '../styles/CreateBoardPageStyled';
 import { useLocation } from 'react-router-dom';
 
@@ -35,7 +36,11 @@ const CreatePersonalBoard = () => {
     handleChange,
     handleScopeToggle,
     submitDashboard,
-    closeModal,
+    handleYesClick,
+    handleNoClick,
+    submitDelDashboard,
+    isDelModalOpen,
+    isEmptyModalOpen,
   } = usePersonalDashBoard(dashboardId); // 개인 대시보드 생성 커스텀 훅 사용
 
   return (
@@ -108,15 +113,28 @@ const CreatePersonalBoard = () => {
           </CreateForm>
 
           <SubmitBtn onClick={submitDashboard}>대시보드 {dashboardId ? '수정' : '생성'}</SubmitBtn>
+
+          {dashboardId && <DelBtn onClick={submitDelDashboard}>대시보드 삭제</DelBtn>}
         </CreateDashBoardModal>
       </CreateDashBoardContainer>
 
       {/* 작성되지 않은 부분이 있으면 모달창으로 알림 */}
-      {isModalOpen && (
+      {isModalOpen && isEmptyModalOpen && (
         <CustomModal
           title="모든 칸을 작성해주세요."
-          subTitle="잠깐! 아직 작성되지 않은 칸이 있습니다."
-          onClose={closeModal}
+          subTitle="잠깐! 작성되지 않은 칸이 있습니다."
+          onYesClick={handleYesClick}
+          onNoClick={handleNoClick}
+        />
+      )}
+
+      {/* 삭제 동의 모달창 */}
+      {isModalOpen && isDelModalOpen && (
+        <CustomModal
+          title="대시보드를 삭제하시겠습니까?"
+          subTitle="한 번 삭제된 대시보드는 되돌릴 수 없습니다."
+          onYesClick={handleYesClick}
+          onNoClick={handleNoClick}
         />
       )}
     </CreateDashBoardLayout>

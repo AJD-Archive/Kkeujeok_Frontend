@@ -105,6 +105,8 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
                     dDay={block.dDay ?? 0}
                     contents={block.contents ?? ''}
                     blockId={block.blockId ?? '0'}
+                    dType={block.dType ?? 'TeamDashboard'}
+                    name={block.nickname ?? '이름 없음'}
                   />
                 </div>
               );

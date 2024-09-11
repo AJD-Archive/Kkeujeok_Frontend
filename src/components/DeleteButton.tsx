@@ -32,7 +32,6 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
       subTitle: '블록은 그 전 상태로 복구됩니다',
     });
   };
-  const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
 
   const onValueFunction = () => {
     setValue(value => !value);
@@ -87,15 +86,6 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
           onClose={onModalHandler}
         />
       )} */}
-
-      {isModalOpen && (
-        <CustomModal
-          title="대시보드를 삭제하시겠습니까?"
-          subTitle="한 번 삭제된 대시보드는 되돌릴 수 없습니다."
-          onYesClick={handleYesClick}
-          onNoClick={handleNoClick}
-        />
-      )}
     </S.DeleteContainer>
   );
 };

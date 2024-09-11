@@ -15,6 +15,7 @@ export interface BlockListResDto {
   nickname?: string;
   dDay?: number;
   dType?: 'PersonalDashboard';
+  picture?: string;
 }
 
 export interface PageInfoResDto {

@@ -23,11 +23,10 @@ type Props = {
   dashboardId: string | undefined;
   remove?: boolean;
   onBlockIdHandler?: (num: string) => void;
-  onRestoreTextHandler?: () => void;
-  onDeleteTextHandler?: () => void;
   removeValue?: boolean;
   dType: string | undefined;
   name: string | undefined;
+  picture?: string;
 };
 
 const Block = ({
@@ -41,6 +40,7 @@ const Block = ({
   removeValue,
   dType,
   name,
+  picture,
 }: Props) => {
   const [isRemove, setIsRemove] = useState(true);
   const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal();
@@ -101,7 +101,7 @@ const Block = ({
               ) : (
                 <Flex>
                   <S.ProfileImageWrapper>
-                    <Profile width="" height="" profile="" />
+                    <Profile width="" height="" profile={picture} />
                   </S.ProfileImageWrapper>
                   <span>{name}</span>
                 </Flex>

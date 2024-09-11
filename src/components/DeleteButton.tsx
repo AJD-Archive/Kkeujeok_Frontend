@@ -15,23 +15,6 @@ interface Props {
 const DeleteButton = ({ id, list, removeValue }: Props) => {
   const [value, setValue] = useState(false);
   const [blockId, setBlockId] = useState<string>('');
-  const [info, setInfo] = useState({
-    title: '블록을 복구하시겠습니까?',
-    subTitle: '블록은 그 전 상태로 복구됩니다',
-  });
-
-  const onRestoreTextHandler = () => {
-    setInfo({
-      title: '블록을 완전 삭제 하시겠습니까?',
-      subTitle: '삭제 이후 되돌릴 수 없습니다.',
-    });
-  };
-  const onDeleteTextHandler = () => {
-    setInfo({
-      title: '블록을 복구하시겠습니까?',
-      subTitle: '블록은 그 전 상태로 복구됩니다',
-    });
-  };
 
   const onValueFunction = () => {
     setValue(value => !value);
@@ -49,7 +32,10 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
               <h1>휴지통</h1>
               <S.BoxContainer>
                 {list.map(
-                  ({ title, blockId, contents, dDay, dashboardId, dType, nickname }, index) => (
+                  (
+                    { title, blockId, contents, dDay, dashboardId, dType, nickname, picture },
+                    index
+                  ) => (
                     <S.BlockEntireContainer key={index}>
                       <Block
                         key={index}
@@ -64,6 +50,7 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
                         removeValue={removeValue}
                         dType={dType}
                         name={nickname}
+                        picture={picture}
                       />
                     </S.BlockEntireContainer>
                   )

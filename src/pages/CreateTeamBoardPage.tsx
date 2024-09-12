@@ -37,7 +37,7 @@ const CreateTeamBoard = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
   const location = useLocation();
   let dashboardId = location.pathname.split('/').pop() || null;
-  if (dashboardId === 'createPersonalBoard') dashboardId = null; // dashboard 첫 생성시 dashboard id 값을 null로 만들어 줌
+  if (dashboardId === 'createTeamBoard') dashboardId = null; // dashboard 첫 생성시 dashboard id 값을 null로 만들어 줌
   const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
   const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
   const [isEmptyModalOpen, setIsEmptyModalOpen] = useState<boolean>(false);
@@ -46,6 +46,7 @@ const CreateTeamBoard = () => {
   const [formData, setFormData] = useState<TeamDashboardInfoResDto>({
     title: '',
     description: '',
+    invitedEmails: [],
   });
 
   // * 사용자 대시보드 해시태그 불러오기 & 대시보드 수정이라면 대시보드 상세 데이터 불러오기

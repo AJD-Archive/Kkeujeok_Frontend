@@ -110,6 +110,14 @@ export const Label = styled.label`
   margin-right: 1rem;
   color: ${theme.color.black};
   font-size: 1rem;
+
+  /* background-color: yellow; */
+`;
+
+// Label을 상속받은 LastLabel
+// ! 팀원일때 스타일 오류나면 고쳐야할 곳
+export const LastLabel = styled(Label)<{ isNotCreator: boolean }>`
+  margin-right: ${({ isNotCreator }) => (isNotCreator ? '1rem' : '0')};
 `;
 
 export const Input = styled.input`
@@ -211,6 +219,10 @@ export const InvitedBtn = styled.button`
   background: ${theme.color.lightGray};
   font-size: 0.75rem;
   color: ${theme.color.gray};
+
+  &:hover {
+    background-color: ${theme.color.stroke2};
+  }
 `;
 
 export const MemberWrapper = styled.div`
@@ -219,15 +231,24 @@ export const MemberWrapper = styled.div`
   overflow-y: scroll;
 `;
 
+// MemberWrapper를 상속받은 MemberWrapperMemberView
+export const MemberWrapperMemberView = styled(MemberWrapper)`
+  margin-left: 1rem;
+`;
+
 export const Member = styled.div`
   width: 15rem;
-  margin: 0.5rem 0;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+
+  &:first-child {
+    margin-top: 0.5rem;
+  }
 `;
 
-export const MemberImage = styled.image`
+export const MemberImage = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;

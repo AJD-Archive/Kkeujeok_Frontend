@@ -3,6 +3,7 @@ import { useNavigate, useLocation, useBlocker } from 'react-router-dom';
 import Flex from '../components/Flex';
 import trash from '../img/delete2.png';
 import closebutton from '../img/closebutton.png';
+import deleteIcon from '../img/delete2.png';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -23,6 +24,7 @@ import {
   CategoryContainer,
   InputCategory,
   RowWrapper,
+  DeleteIcon,
 } from '../styles/SidePageStyled';
 import * as S from '../styles/TeamDocumentStyled';
 import { useTeamDocument } from '../hooks/useTeamDocument';
@@ -32,6 +34,7 @@ import { getPersonalBlock } from '../api/PersonalBlockApi';
 import { BlockListResDto } from '../types/PersonalBlock';
 import Navbar from '../components/Navbar';
 import useInfo from '../hooks/useInfo';
+import { deleteTeamDocument } from '../api/TeamDocumentApi';
 
 const TeamDocument = () => {
   const navigate = useNavigate();
@@ -72,6 +75,11 @@ const TeamDocument = () => {
     return true;
   });
 
+  // * 팀 문서 삭제
+  const delTeamDocument = async () => {
+    await deleteTeamDocument(teamDocumentId);
+    navigate(`/${teamDashboardId}/teamdocument`);
+  };
   return (
     <SideScreenContainer onClick={toggleFunc}>
       <SideScreen
@@ -83,11 +91,17 @@ const TeamDocument = () => {
 
         {/* 제목 입력 */}
         <TitleContainer>
-          <Flex>
-            <S.DocumentWriterImg>
-              <img src={info?.data.picture} alt="프로필 사진" />
-            </S.DocumentWriterImg>
-            <S.DocumnetWriter>{info?.data.nickName}</S.DocumnetWriter>
+          <Flex justifyContent="space-between">
+            <Flex>
+              <S.DocumentWriterImg>
+                <img src={info?.data.picture} alt="프로필 사진" />
+              </S.DocumentWriterImg>
+              <S.DocumnetWriter>{info?.data.nickName}</S.DocumnetWriter>
+            </Flex>
+            {/* 팀 문서 삭제 */}
+            <DeleteIcon onClick={delTeamDocument}>
+              <img src={deleteIcon} alt="휴지통 아이콘" />
+            </DeleteIcon>
           </Flex>
           <Input
             type="text"

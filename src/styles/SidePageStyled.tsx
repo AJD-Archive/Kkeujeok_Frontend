@@ -190,3 +190,23 @@ export const StyledEditorWrapper = styled.div`
     overflow-y: scroll;
   }
 `;
+
+export const DeleteIcon = styled.div`
+  width: 1.8rem;
+  height: 1.8rem;
+
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 1rem;
+    cursor: pointer;
+  }
+
+  &:hover {
+    background-color: ${theme.color.stroke2};
+  }
+`;

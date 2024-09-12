@@ -30,18 +30,24 @@ const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) =>
       <Flex justifyContent="space-between" gap={100} margin="0 0 0.875rem 0">
         <S.HeaderContentContainer>
           <Flex alignItems="flex-start">
-            {!dashboardType && (
+            {/* {!dashboardType && (
               <S.LeftArrowWrapper>
                 <img src={leftarrow} onClick={handleBackClick} />
               </S.LeftArrowWrapper>
-            )}
+            )} */}
             <div>
               <Flex margin="0px 0px 6px 0px">
                 <S.TitleWrapper>{mainTitle}</S.TitleWrapper>
                 <S.SettingImgWrapper>
-                  <Link to={`/createPersonalBoard/${dashboardId}`}>
-                    <img src={setting} alt="설정 이미지" />
-                  </Link>
+                  {dashboardType ? (
+                    <Link to={`/createPersonalBoard/${dashboardId}`}>
+                      <img src={setting} alt="설정 이미지" />
+                    </Link>
+                  ) : (
+                    <Link to={`/createTeamBoard/${dashboardId}`}>
+                      <img src={setting} alt="설정 이미지" />
+                    </Link>
+                  )}
                 </S.SettingImgWrapper>
               </Flex>
               <S.SubtitleWrapper>{subTitle}</S.SubtitleWrapper>

@@ -270,7 +270,7 @@ const CreateTeamBoard = () => {
 
           {formData?.myId === formData.creatorId && (
             <SubmitBtn onClick={submitTeamDashboard}>
-              대시보드 {dashboardId ? '수정' : '생성'}
+              팀원 초대 및 대시보드 {dashboardId ? '수정' : '생성'}
             </SubmitBtn>
           )}
 

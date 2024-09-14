@@ -121,6 +121,7 @@ export const ChallengeComponent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const ChallengeImg = styled.div`

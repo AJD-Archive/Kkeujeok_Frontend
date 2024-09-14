@@ -17,6 +17,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import TeamDocument from './pages/TeamDocument';
 import TeamDocumentBoard from './pages/TeamDocumentBoard';
 import SidePage from './pages/SidePage';
+import ChallengeCommunityPage from './pages/ChallengeComunityPage';
+import CreateChallengePage from './pages/CreateChallengePage';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AOS from 'aos';
@@ -71,7 +74,8 @@ const router = (isLoggedIn: boolean) =>
         <Route path="/:id/teamdocument" element={<TeamDocumentBoard />}>
           <Route path=":documentId" element={<TeamDocument />} />
         </Route>
-        <Route path="/test" element={<TeamDocument />} />
+        <Route path="/challenge" element={<ChallengeCommunityPage />} />
+        <Route path="/challenge/create" element={<CreateChallengePage />} />
       </Route>
     )
   );

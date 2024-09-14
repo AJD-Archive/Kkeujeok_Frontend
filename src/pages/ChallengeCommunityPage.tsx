@@ -6,6 +6,7 @@ import Flex from '../components/Flex';
 import Pagination from '../components/CustomPagination';
 import { useState } from 'react';
 import ChallengeCard from '../components/ChallengeCard';
+import { Link } from 'react-router-dom';
 
 const ChallengeCommunityPage = () => {
   const [count, setCount] = useState<number>(1); // 총 페이지 수
@@ -28,7 +29,9 @@ const ChallengeCommunityPage = () => {
               <S.SubTitle>다른 참여자와 함께 이뤄나가요.</S.SubTitle>
             </Flex>
           </Flex>
-          <img src={addbutton} />
+          <Link to="create">
+            <img src={addbutton} />
+          </Link>
         </S.Header>
 
         <S.CategoriesContainer>

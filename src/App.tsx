@@ -18,6 +18,8 @@ import TeamDocument from './pages/TeamDocument';
 import TeamDocumentBoard from './pages/TeamDocumentBoard';
 import SidePage from './pages/SidePage';
 import ChallengeCommunityPage from './pages/ChallengeCommunityPage';
+import CreateChallengePage from './pages/CreateChallengePage';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AOS from 'aos';
@@ -73,6 +75,7 @@ const router = (isLoggedIn: boolean) =>
           <Route path=":documentId" element={<TeamDocument />} />
         </Route>
         <Route path="/challenge" element={<ChallengeCommunityPage />} />
+        <Route path="/challenge/create" element={<CreateChallengePage />} />
       </Route>
     )
   );

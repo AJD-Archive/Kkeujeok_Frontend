@@ -31,6 +31,7 @@ export const Header = styled.div`
   img {
     width: 1.5rem;
     cursor: pointer;
+    margin-right: 1rem;
   }
 `;
 
@@ -383,4 +384,219 @@ export const EndDateWrapper = styled.div`
 
 export const StyledDatePicker2 = styled(StyledDatePicker)`
   width: 8rem;
+`;
+
+// * 챌린지 디테일 페이지 스타일
+export const DetailHeader = styled.div`
+  padding-bottom: 13px;
+  border-bottom: 1px solid #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const BackButton = styled.img`
+  width: 1.5rem;
+  cursor: pointer;
+  margin-right: 1rem;
+`;
+
+export const DetaileSubTitle = styled(SubTitle)`
+  margin-top: 0;
+`;
+
+export const DetailTitle = styled(Title)`
+  margin-top: 0.3rem;
+`;
+
+export const JoinButton = styled.div`
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(90deg, #4c8cff 0%, #9847ff 100%);
+  border-radius: 1.25rem;
+  color: ${theme.color.white};
+  cursor: pointer;
+`;
+
+export const EditDelButton = styled.img`
+  width: 1rem;
+  cursor: pointer;
+
+  &:first-child {
+    width: 1.1rem;
+    margin-right: 1rem;
+  }
+`;
+
+export const QuitButton = styled(JoinButton)`
+  background: ${theme.color.gray};
+`;
+
+export const SectionTitle = styled.p`
+  margin-top: 2rem;
+  color: ${theme.color.text};
+`;
+
+export const ChallengeDetailContainer = styled.div`
+  width: 100%;
+  height: 40vh;
+  margin-top: 1rem;
+  border: 1px solid ${theme.color.stroke2};
+  border-radius: 1.25rem;
+`;
+
+// 추후 img로 변환
+export const ChallengeThumbnail = styled.div`
+  width: 35%;
+  height: 40vh;
+  border-radius: 1.25rem 0 0 1.25rem;
+  background-color: ${theme.color.stroke2};
+`;
+
+export const DetailContainer = styled.div`
+  width: 65%;
+  height: 40vh;
+  padding: 2rem;
+  border-radius: 0 1.25rem 1.25rem 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+export const DetailContentWrapper = styled.div``;
+
+export const DetailSquareWrapper = styled.div`
+  & > *:first-child {
+    margin-bottom: 0.7rem;
+  }
+`;
+
+export const DetailContent = styled.div`
+  margin-top: 0.5rem;
+  line-height: 1.4rem;
+
+  max-height: 12vh;
+  overflow-y: scroll;
+
+  p {
+    font-size: 0.9rem;
+  }
+`;
+
+export const DetailTermSquare = styled.div`
+  margin-left: 1.5rem;
+  padding: 1rem 1.5rem;
+
+  background: ${theme.color.gradation};
+  color: ${theme.color.white};
+  border-radius: 1.25rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const DetailRealTimeCountSquare = styled(DetailTermSquare)`
+  background: ${theme.color.stroke2};
+  color: ${theme.color.text};
+`;
+
+export const ChallengeBlockPriview = styled.div`
+  width: fit-content;
+  max-width: 30rem;
+  margin-top: 0.5rem;
+
+  background: ${theme.color.white};
+  padding: 1.375rem 1.375rem 1.375rem 1.375em;
+  border: 1px solid ${theme.color.stroke2};
+  border-radius: 10px;
+
+  h3 {
+    font-size: ${theme.font.size.main};
+    font-weight: ${theme.font.weight.medium};
+    color: ${theme.color.black};
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+    max-height: 3em;
+    margin-right: 23px;
+    flex: 2;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    font-size: ${theme.font.size.caption};
+    font-weight: ${theme.font.weight.light};
+    color: ${theme.color.gray};
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+`;
+
+export const ChallengeCreatorContainer = styled.div`
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+
+  span {
+    font-size: ${theme.font.size.caption};
+    color: ${theme.color.gray};
+    font-weight: ${theme.font.weight.light};
+  }
+`;
+
+export const ProfileImage = styled.div`
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background-color: ${theme.color.stroke2};
+`;
+
+export const RealTimeContainer = styled.div`
+  width: 100%;
+  height: 25vh;
+  margin-top: 1rem;
+
+  display: flex;
+  overflow-x: scroll;
+`;
+
+export const RealTimeComponent = styled.div`
+  width: fit-content;
+  padding: 2rem;
+  margin-right: 1rem;
+  border: 1px solid ${theme.color.stroke2};
+  background: ${theme.color.white};
+  border-radius: 1.25rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const RealTimeUserImg = styled.div`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background-color: ${theme.color.stroke2};
+`;
+
+export const RealTimeUserName = styled.p`
+  max-width: 7rem;
+  max-height: 3rem;
+  overflow-y: scroll;
+  /* white-space: nowrap; */
+
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: ${theme.color.text};
 `;

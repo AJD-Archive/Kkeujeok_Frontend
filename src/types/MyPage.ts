@@ -18,19 +18,25 @@ interface PageInfoResDto {
 }
 
 interface TeamDashboardInfoResDto {
-  // 팀 대시보드 정보에 맞는 속성들을 추가해야 합니다. 예시로는 아래와 같이 비워둡니다.
+  blockProgress: number;
+  creatorId: string;
+  dashboardId: string;
+  description: string;
+  joinMembers: number | null;
+  myId: string;
+  title: string;
 }
 
 interface ChallengeInfoResDto {
   // 챌린지 정보에 맞는 속성들을 추가해야 합니다. 예시로는 아래와 같이 비워둡니다.
 }
 
-interface TeamDashboardList {
+export interface TeamDashboardList {
   teamDashboardInfoResDto: TeamDashboardInfoResDto[];
   pageInfoResDto: PageInfoResDto;
 }
 
-interface ChallengeList {
+export interface ChallengeList {
   challengeInfoResDto: ChallengeInfoResDto[];
   pageInfoResDto: PageInfoResDto;
 }
@@ -49,3 +55,27 @@ export interface ReturnData {
     challengeList: ChallengeList;
   };
 }
+
+type NotificationInfoResDto = {
+  id: number | null; // id가 null일 수 있으므로 number | null 타입으로 처리
+  message: string;
+  isRead: boolean;
+};
+
+type NotiPageInfoResDto = {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+};
+
+export type NotificationResponse = {
+  data: {
+    notificationInfoResDto: NotificationInfoResDto[];
+    pageInfoResDto: NotiPageInfoResDto;
+  };
+};
+
+export type PageNationProps = {
+  page: number;
+  size: number;
+};

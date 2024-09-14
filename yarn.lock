@@ -2702,6 +2702,11 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
   integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
 
+"@types/event-source-polyfill@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/event-source-polyfill/-/event-source-polyfill-1.0.5.tgz#7223387b99ff519b0fed6278961c84315ffc14b7"
+  integrity sha512-iaiDuDI2aIFft7XkcwMzDWLqo7LVDixd2sR6B4wxJut9xcp/Ev9bO4EFg4rm6S9QxATLBj5OPxdeocgmhjwKaw==
+
 "@types/express-serve-static-core@*", "@types/express-serve-static-core@^4.17.33":
   version "4.19.5"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.19.5.tgz#218064e321126fcf9048d1ca25dd2465da55d9c6"
@@ -2930,6 +2935,13 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
+
+"@types/react-toastify@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-toastify/-/react-toastify-4.1.0.tgz#604e712855dd677916d5c66af595d3b590f5d95d"
+  integrity sha512-u7Ie/7LHBsPVz/iJxi/WlRDS7Gh9csCJACTDXx+pSLuZCm94xpkwzhM3jV1L5ZxP/in0Gp2tFbJ91VrSGr1gyQ==
+  dependencies:
+    react-toastify "*"
 
 "@types/react-transition-group@^4.4.11":
   version "4.4.11"
@@ -5705,6 +5717,11 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
+
+event-source-polyfill@^1.0.31:
+  version "1.0.31"
+  resolved "https://registry.yarnpkg.com/event-source-polyfill/-/event-source-polyfill-1.0.31.tgz#45fb0a6fc1375b2ba597361ba4287ffec5bf2e0c"
+  integrity sha512-4IJSItgS/41IxN5UVAVuAyczwZF7ZIEsM1XAoUzIHA6A+xzusEZUutdXz2Nr+MQPLxfTiCvqE79/C8HT8fKFvA==
 
 eventemitter3@^4.0.0:
   version "4.0.7"
@@ -10482,6 +10499,13 @@ react-textarea-autosize@8.5.3, react-textarea-autosize@^8.5.3:
     "@babel/runtime" "^7.20.13"
     use-composed-ref "^1.3.0"
     use-latest "^1.2.1"
+
+react-toastify@*, react-toastify@^10.0.5:
+  version "10.0.5"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-10.0.5.tgz#6b8f8386060c5c856239f3036d1e76874ce3bd1e"
+  integrity sha512-mNKt2jBXJg4O7pSdbNUfDdTsK9FIdikfsIE/yUCxbAEXl4HMyJaivrVFcn3Elvt5xvCQYhUZm+hqTIu1UXM3Pw==
+  dependencies:
+    clsx "^2.1.0"
 
 react-transition-group@^4.4.5:
   version "4.4.5"

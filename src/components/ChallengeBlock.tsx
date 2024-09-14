@@ -1,15 +1,22 @@
 import * as S from '../styles/MyPageStyled';
+import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 
-const ChallengeBlock = () => {
+interface Props {
+  dashboardId?: string;
+  title?: string;
+  joinMembers?: number;
+  description?: string;
+}
+const ChallengeBlock = ({ dashboardId, title, joinMembers, description }: Props) => {
   return (
     <S.ChallengeLayout>
-      <S.ChallengeBoxTitle>대시보드 이름</S.ChallengeBoxTitle>
+      <S.ChallengeBoxTitle>{title}</S.ChallengeBoxTitle>
       <S.CahllengeInfo>
         <span>주기</span>
         <span>&nbsp;|&nbsp;</span>
-        <span>참여인원</span>
+        <span>{joinMembers ?? 1}</span>
         <hr />
-        <p>챌린지 설명</p>
+        <p>{description}</p>
       </S.CahllengeInfo>
     </S.ChallengeLayout>
   );

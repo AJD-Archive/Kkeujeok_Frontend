@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import Header from '../components/Header';
 import * as S from '../styles/MainPageStyled';
@@ -21,7 +21,7 @@ import { useAtom } from 'jotai';
 import { fetchTriggerAtom } from '../contexts/atoms';
 import { getTeamDashboard } from '../api/TeamDashBoardApi';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
-
+import 'react-toastify/dist/ReactToastify.css';
 export type TItemStatus = 'todo' | 'doing' | 'done' | 'delete';
 
 const MainPage = () => {
@@ -34,6 +34,9 @@ const MainPage = () => {
   const [teamDashboardDetail, setTeamDashboardDetail] = useState<TeamDashboardInfoResDto | null>(
     null
   );
+
+  // const { data } = useQuery({ queryKey: ['alarm'], queryFn: getAlarmEnrollment });
+
   const [columns, setColumns] = useState<{
     [key in TItemStatus]: {
       id: string;
@@ -102,8 +105,9 @@ const MainPage = () => {
         // 개인 대시보드 데이터 업데이트
         setDashboardDetail(personalDashboardData);
 
-        // 팀 대시보드 데이터 업데이트
-        setTeamDashboardDetail(teamDashboardData);
+        if (teamDashboardData)
+          // 팀 대시보드 데이터 업데이트
+          setTeamDashboardDetail(teamDashboardData);
       } catch (error) {
         console.error('Error fetching data', error);
       }
@@ -149,6 +153,7 @@ const MainPage = () => {
     }
   }, [page, fetchData]);
 
+  useEffect(() => {}, []);
   useEffect(() => {
     fetchBlockData(0); // 페이지가 로드될 때 처음으로 데이터를 불러옵니다.
   }, [dashboardId]);
@@ -283,6 +288,7 @@ const MainPage = () => {
   // 대시보드 상세 정보 가져오기
   const fetchDashboardData = async () => {
     const data = await getPersonalDashboard(dashboardId);
+
     if (data) setDashboardDetail(data);
   };
   // 유효한 데이터에 따라 mainTitle과 subTitle을 설정

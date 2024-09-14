@@ -50,7 +50,8 @@ export const DashboardsContainer = styled.div`
 `;
 
 export const NavButton = styled.button<{ variant: 'primary' | 'secondary' }>`
-  padding: 0.75rem 1.875rem;
+  width: 9.3rem;
+  padding: 0.75rem 1rem;
   border: 0;
   border-radius: 0.625rem;
   font-weight: ${theme.font.weight.medium};

@@ -29,7 +29,9 @@ const Navbar = () => {
           <Link to="/createBoard">
             <S.NavButton variant="primary">대시보드 생성</S.NavButton>
           </Link>
-          <S.NavButton variant="secondary">도전! 챌린지</S.NavButton>
+          <Link to="/challenge">
+            <S.NavButton variant="secondary">도전! 챌린지</S.NavButton>
+          </Link>
         </S.ButtonContainer>
       </div>
       <S.DashboardsContainer>

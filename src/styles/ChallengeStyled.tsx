@@ -272,13 +272,18 @@ export const SubmitBtn = styled.button`
   color: ${theme.color.white};
 `;
 
-export const SelectTerm = styled.div`
+export const SelectTerm = styled.div<{ isSelected: boolean }>`
   margin-right: 0.3rem;
   padding: 0.55rem 1rem;
   border-radius: 0.3rem;
   border: 1px solid ${theme.color.stroke2};
   color: ${theme.color.gray};
   font-size: 0.9rem;
+  white-space: nowrap;
+
+  background-color: ${({ isSelected }) => (isSelected ? `${theme.color.stroke2}` : 'white')};
+  color: ${({ isSelected }) => isSelected && `${theme.color.text}`};
+
   cursor: pointer;
 `;
 
@@ -291,12 +296,37 @@ export const TermWrapper = styled.div`
   /* background-color: red; */
 `;
 
-export const Week = styled(SelectTerm)`
+export const Week = styled(SelectTerm)<{ isSelected: boolean }>`
   width: fit-content;
   padding: 0.5rem;
+
+  background-color: ${({ isSelected }) => (isSelected ? `${theme.color.stroke2}` : 'white')};
+  color: ${({ isSelected }) => isSelected && `${theme.color.text}`};
+
   &:last-child {
     margin-right: 0;
   }
+`;
+
+export const Month = styled.div<{ isSelected: boolean }>`
+  width: 2rem;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  padding: 0.55rem 1rem;
+  border-radius: 0.3rem;
+  border: 1px solid ${theme.color.stroke2};
+  color: ${theme.color.gray};
+  font-size: 0.9rem;
+  white-space: nowrap;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: ${({ isSelected }) => (isSelected ? `${theme.color.stroke2}` : 'white')};
+  color: ${({ isSelected }) => isSelected && `${theme.color.text}`};
+
+  cursor: pointer;
 `;
 
 export const Date = styled.div``;
@@ -312,6 +342,7 @@ export const StyledDatePicker = styled.div`
   align-items: center;
   border: none;
   font-size: 0.9rem;
+
   p {
     color: ${theme.color.gray};
     white-space: nowrap;

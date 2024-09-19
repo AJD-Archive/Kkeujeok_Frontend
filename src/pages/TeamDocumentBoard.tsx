@@ -73,7 +73,7 @@ const TeamDocumentBoard = () => {
     const newDocument: TeamDocument = {
       title: '',
       content: '',
-      category: '',
+      category: '카테고리 없음',
       teamDashboardId: dashboardId,
     };
 

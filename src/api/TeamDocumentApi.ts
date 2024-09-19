@@ -84,3 +84,12 @@ export const patchTeamDocument = async (data: TeamDocument): Promise<string | nu
     return null;
   }
 };
+
+// * 팀 문서 삭제 delete
+export const deleteTeamDocument = async (teamDocumentId: string): Promise<void> => {
+  try {
+    const response = await axiosInstance.delete(`/dashboards/team/document/${teamDocumentId}`);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};

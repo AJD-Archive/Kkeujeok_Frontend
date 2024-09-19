@@ -3,6 +3,7 @@ import { useNavigate, useLocation, useBlocker } from 'react-router-dom';
 import Flex from '../components/Flex';
 import trash from '../img/delete2.png';
 import closebutton from '../img/closebutton.png';
+import deleteIcon from '../img/delete2.png';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -23,6 +24,7 @@ import {
   CategoryContainer,
   InputCategory,
   RowWrapper,
+  DeleteIcon,
 } from '../styles/SidePageStyled';
 import * as S from '../styles/TeamDocumentStyled';
 import { useTeamDocument } from '../hooks/useTeamDocument';
@@ -32,12 +34,16 @@ import { getPersonalBlock } from '../api/PersonalBlockApi';
 import { BlockListResDto } from '../types/PersonalBlock';
 import Navbar from '../components/Navbar';
 import useInfo from '../hooks/useInfo';
+import { deleteTeamDocument } from '../api/TeamDocumentApi';
+import useModal from '../hooks/useModal';
+import CustomModal from '../components/CustomModal';
 
 const TeamDocument = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
   const segments = pathname.split('/');
+  const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
 
   const teamDashboardId = segments[1]; // Assuming /48 is the teamDashboardId
   const teamDocumentId = segments[3]; // Assuming /15 is the teamDocumentId
@@ -72,6 +78,16 @@ const TeamDocument = () => {
     return true;
   });
 
+  // * 팀 문서 삭제
+  const delTeamDocument = async () => {
+    await deleteTeamDocument(teamDocumentId);
+    navigate(`/${teamDashboardId}/teamdocument`);
+  };
+
+  const submitDelTeamDocument = () => {
+    openModal('yes', delTeamDocument);
+  };
+
   return (
     <SideScreenContainer onClick={toggleFunc}>
       <SideScreen
@@ -83,11 +99,17 @@ const TeamDocument = () => {
 
         {/* 제목 입력 */}
         <TitleContainer>
-          <Flex>
-            <S.DocumentWriterImg>
-              <img src={info?.data.picture} alt="프로필 사진" />
-            </S.DocumentWriterImg>
-            <S.DocumnetWriter>{info?.data.nickName}</S.DocumnetWriter>
+          <Flex justifyContent="space-between">
+            <Flex>
+              <S.DocumentWriterImg>
+                <img src={info?.data.picture} alt="프로필 사진" />
+              </S.DocumentWriterImg>
+              <S.DocumnetWriter>{info?.data.nickName}</S.DocumnetWriter>
+            </Flex>
+            {/* 팀 문서 삭제 */}
+            <DeleteIcon onClick={submitDelTeamDocument}>
+              <img src={deleteIcon} alt="휴지통 아이콘" />
+            </DeleteIcon>
           </Flex>
           <Input
             type="text"
@@ -118,6 +140,15 @@ const TeamDocument = () => {
         <StyledEditorWrapper>
           <BlockNoteView editor={editor} onChange={onChange} />
         </StyledEditorWrapper>
+
+        {isModalOpen && (
+          <CustomModal
+            title="팀 문서를 삭제하시겠습니까?"
+            subTitle="한 번 삭제된 팀 문서는 되돌릴 수 없습니다."
+            onYesClick={handleYesClick}
+            onNoClick={handleNoClick}
+          />
+        )}
       </SideScreen>
     </SideScreenContainer>
   );

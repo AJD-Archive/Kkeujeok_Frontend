@@ -54,13 +54,14 @@ export const CategoriesContainer = styled.p`
   overflow-y: scroll;
 `;
 
-export const Category = styled.p`
+export const Category = styled.p<{ isSelected: boolean }>`
   width: fit-content;
   padding: 0.5rem 1rem;
   border-radius: 2rem;
   margin-right: 0.7rem;
   white-space: nowrap;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+
   color: ${theme.color.gray};
   background-color: ${theme.color.stroke2};
   cursor: pointer;
@@ -68,10 +69,16 @@ export const Category = styled.p`
     linear-gradient(white, white) padding-box,
     linear-gradient(45deg, rgba(76, 140, 255, 0.5), rgba(152, 71, 255, 0.5)) border-box;
   border: 3px solid transparent;
+
   &:hover {
     background: linear-gradient(45deg, ${theme.color.main}, ${theme.color.main2}) border-box;
     color: ${theme.color.white};
   }
+
+  background: ${props =>
+    props.isSelected &&
+    `linear-gradient(45deg, ${theme.color.main}, ${theme.color.main2}) border-box`};
+  color: ${props => (props.isSelected ? `${theme.color.white}` : `${theme.color.gray}`)};
 `;
 
 export const SearchContainer = styled.div`

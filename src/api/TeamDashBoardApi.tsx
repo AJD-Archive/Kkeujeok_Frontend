@@ -48,6 +48,16 @@ export const deleteTeamDashboard = async (id: string): Promise<void> => {
     const response = await axiosInstance.delete(`/dashboards/team/${id}`);
     console.log(response);
   } catch (error) {
-    console.log('error');
+    console.error('error');
+  }
+};
+
+// * 팀 대시보드 참여 수락
+export const postTeamDashboard = async (dashboardId: string) => {
+  try {
+    const response = await axiosInstance.post(`/dashboards/team/${dashboardId}/join`);
+    console.log(response.data);
+  } catch (error) {
+    console.error('error');
   }
 };

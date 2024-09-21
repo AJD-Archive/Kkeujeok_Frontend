@@ -1,87 +1,210 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Flex from '../components/Flex';
+import AlarmBlock from '../components/AlarmBlock';
+import ProfileUpdateModal from '../components/ProfileUpdateModal';
+import ChallengeBlock from '../components/ChallengeBlock';
+import Profile from '../components/Profile';
+
 import googleicon from '../img/googleicon.png';
 import kakaologo from '../img/kakaologo.png';
 import bell from '../img/bell.png';
-import ChallengeBlock from '../components/ChallengeBlock';
+
 import * as S from '../styles/MyPageStyled';
-import Profile from '../components/Profile';
-import { useQuery } from '@tanstack/react-query';
-import { fetchBlockData, fetchData, getAlarmList } from '../api/MyPageApi';
-import { useEffect, useState } from 'react';
-import Pagination from '@mui/material/Pagination';
-import { ChallengeList, TeamDashboardList } from '../types/MyPage';
-import { Link, useNavigate } from 'react-router-dom';
+
+import { ChallengeList, PersonalDashboardList, TeamDashboardList } from '../types/MyPage';
+import { fetchBlockData, fetchData, getAlarmList, updateAlarmIsRead } from '../api/MyPageApi';
 import { useAtom } from 'jotai';
+import { useQuery } from '@tanstack/react-query';
+import Pagination from '@mui/material/Pagination';
 import { unreadCount } from '../contexts/sseAtom';
+import { useSSE } from '../hooks/useSSE';
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const { data } = useQuery({ queryKey: ['profile'], queryFn: fetchData });
+  const { data, refetch } = useQuery({ queryKey: ['profile'], queryFn: fetchData });
   const { data: alarmNoti } = useQuery({ queryKey: ['alarmNoti'], queryFn: getAlarmList });
 
-  const [teamBool, setTeamBool] = useState<boolean>(true);
-  const [pageNumber, setPageNumber] = useState(1);
+  console.log(alarmNoti);
+  const [teamBool, setTeamBool] = useState<string>('personal'); // 기본값으로 팀 탭을 보여줌
+  const [pageNumber, setPageNumber] = useState(1); // 페이지네이션 변수
+
+  //* 개인,팀,챌린지 정보 담는 변수들
+  const [personalBlockData, setPersonalBlockData] = useState<PersonalDashboardList | undefined>();
   const [teamBlockData, setTeamBlockData] = useState<TeamDashboardList | undefined>();
   const [challengeBlockData, setChallengeBlockData] = useState<ChallengeList | undefined>();
-  const [alarmData, setAramData] = useState(
-    alarmNoti?.data.notificationInfoResDto.filter(item => !item.isRead).length
-  );
-  const [visible, setVisible] = useState(false);
 
-  const clickHandler = () => {
-    setVisible(prev => !prev);
+  //* 알람 관련 변수
+  const [unReadCount, setUnReadCount] = useAtom(unreadCount);
+  const [visibleAlarm, setAlarmVisible] = useState(false);
+  const [visibleModal, setModalVisible] = useState(false);
+  const [alarmList, setAlarmList] = useState(alarmNoti);
+
+  useSSE(setAlarmList); //스트림 연결
+
+  const onAlarmVisibleFunc = () => {
+    setAlarmVisible(prev => !prev);
+    setUnReadCount(0);
+    updateAlarmIsRead();
   };
+
+  const onModalVisibleFunc = () => {
+    refetch();
+    setModalVisible(prev => !prev);
+  };
+
   // 페이지네이션 변경 시 동작하는 함수
   const onChangePageNation = async (event: React.ChangeEvent<unknown>, page: number) => {
     setPageNumber(page);
-    const fetchData = await fetchBlockData(page - 1);
-    setTeamBlockData(fetchData?.data.teamDashboardList);
+    if (data?.data.email) {
+      const fetchData = await fetchBlockData(page - 1, data?.data.email);
+
+      if (teamBool === 'personal') setPersonalBlockData(fetchData?.data.personalDashboardList);
+      else if (teamBool === 'team') setTeamBlockData(fetchData?.data.teamDashboardList);
+    }
   };
 
-  const socialType = data?.data.socialType;
-
-  const SocialIcon = () => (
-    <S.GoogleImageIcon
-      src={socialType === 'KAKAO' ? kakaologo : googleicon}
-      alt={socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
-    />
-  );
-
-  //팀 버튼
+  // 개인 버튼 클릭 시 데이터 로드
+  const onOpenPersonalFunc = async () => {
+    setTeamBool('personal');
+    setPageNumber(1);
+    if (data?.data.email) {
+      const fetchData = await fetchBlockData(0, data?.data.email); // 첫 페이지 데이터
+      setPersonalBlockData(fetchData?.data.personalDashboardList);
+    }
+  };
+  // 팀 버튼 클릭 시 데이터 로드
   const onOpenTeamFunc = async () => {
-    setTeamBool(true);
+    setTeamBool('team');
     setPageNumber(1);
-    const fetchData = await fetchBlockData(pageNumber - 1);
-    setTeamBlockData(fetchData?.data.teamDashboardList);
+    if (data?.data.email) {
+      const fetchData = await fetchBlockData(0, data?.data.email); // 첫 페이지 데이터
+      setTeamBlockData(fetchData?.data.teamDashboardList);
+    }
   };
 
-  //챌린지 버튼
-  const onChallengeFunc = async () => {
-    setTeamBool(false);
+  // 챌린지 버튼 클릭 시 데이터 로드
+  const onOpenChallengeFunc = async () => {
+    setTeamBool('challenge');
     setPageNumber(1);
-    const fetchData = await fetchBlockData(pageNumber - 1);
-    setTeamBlockData(fetchData?.data.teamDashboardList);
+    if (data?.data.email) {
+      const fetchData = await fetchBlockData(0, data?.data.email); // 첫 페이지 데이터
+      setChallengeBlockData(fetchData?.data.challengeList);
+    }
   };
 
-  const onEditProfileHandler = () => {
-    // navigate('/profile/edit');
-  };
-
-  // 처음 렌더링 시 fetchBlockData 호출
+  // 처음 렌더링 시 팀 탭 데이터 호출
   useEffect(() => {
     const fetchInitialBlockData = async () => {
       try {
-        const initialData = await fetchBlockData(0); // 첫 페이지 데이터 호출
-        setTeamBlockData(initialData?.data.teamDashboardList);
-        setChallengeBlockData(initialData?.data.challengeList);
+        if (data?.data.email) {
+          const initialData = await fetchBlockData(0, data.data.email); // 첫 페이지 데이터 호출
+          setPersonalBlockData(initialData?.data.personalDashboardList);
+          setTeamBlockData(initialData?.data.teamDashboardList);
+          setChallengeBlockData(initialData?.data.challengeList);
+        }
       } catch (error) {
         console.error('Failed to fetch block data:', error);
       }
     };
 
     fetchInitialBlockData();
-  }, []);
+  }, [data?.data.email]); // email이 있을 때만 데이터 호출
+
+  // 처음 렌더링시 알람 데이터 불러오기
+  useEffect(() => {
+    if (alarmNoti?.data) {
+      setAlarmList(alarmNoti);
+      setUnReadCount(alarmNoti.data.notificationInfoResDto.filter(item => !item.isRead).length);
+    }
+  }, [alarmNoti]);
+
+  let content;
+  if (teamBool === 'personal') {
+    content = (
+      <S.DashboardContainer>
+        <S.ChanllengeBlockContainer>
+          {personalBlockData?.personalDashboardInfoResDto.map((item, idx) => {
+            const { dashboardId, title, description } = item;
+            return (
+              <S.TeamBlockWrapper
+                key={idx}
+                onClick={() => {
+                  navigate(`/${dashboardId}`);
+                }}
+              >
+                <ChallengeBlock title={title} description={description} />
+              </S.TeamBlockWrapper>
+            );
+          })}
+        </S.ChanllengeBlockContainer>
+        <S.PagenateBox>
+          <Pagination
+            page={pageNumber}
+            count={personalBlockData?.pageInfoResDto.totalPages}
+            defaultPage={0}
+            onChange={onChangePageNation}
+          />
+        </S.PagenateBox>
+      </S.DashboardContainer>
+    );
+  } else if (teamBool === 'team') {
+    content = (
+      <S.DashboardContainer>
+        <S.ChanllengeBlockContainer>
+          {teamBlockData?.teamDashboardInfoResDto.map((item, idx) => {
+            const { dashboardId, title, joinMembers, description } = item;
+            return (
+              <S.TeamBlockWrapper
+                key={idx}
+                onClick={() => {
+                  navigate(`/${dashboardId}`);
+                }}
+              >
+                <ChallengeBlock
+                  title={title}
+                  joinMembers={joinMembers ?? 0}
+                  description={description}
+                />
+              </S.TeamBlockWrapper>
+            );
+          })}
+        </S.ChanllengeBlockContainer>
+        <S.PagenateBox>
+          <Pagination
+            page={pageNumber}
+            count={teamBlockData?.pageInfoResDto.totalPages}
+            defaultPage={0}
+            onChange={onChangePageNation}
+          />
+        </S.PagenateBox>
+      </S.DashboardContainer>
+    );
+  } else if (teamBool === 'challenge') {
+    content = (
+      <S.DashboardContainer>
+        <S.ChanllengeBlockContainer>
+          {challengeBlockData?.challengeInfoResDto.map((item, idx) => {
+            const { title, cycle } = item;
+            return (
+              <div key={idx}>
+                <ChallengeBlock key={idx} />
+              </div>
+            );
+          })}
+        </S.ChanllengeBlockContainer>
+        <S.PagenateBox>
+          <Pagination
+            page={pageNumber}
+            count={challengeBlockData?.pageInfoResDto.totalPages}
+            defaultPage={0}
+            onChange={onChangePageNation}
+          />
+        </S.PagenateBox>
+      </S.DashboardContainer>
+    );
+  }
 
   return (
     <Flex alignItems="flex-start">
@@ -104,7 +227,10 @@ const MyPage = () => {
                 gap="0.75rem"
               >
                 <Flex alignItems="center" gap="0.5625rem">
-                  <SocialIcon />
+                  <S.GoogleImageIcon
+                    src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
+                    alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
+                  />
                   <S.MainText>{data?.data.name}</S.MainText>
                 </Flex>
                 <S.CaptionText>{data?.data.introduction}</S.CaptionText>
@@ -112,81 +238,36 @@ const MyPage = () => {
             </Flex>
 
             <Flex flexDirection="column" gap="0.75rem">
-              <Link to="edit">
-                <S.ButtonWrapper onClick={onEditProfileHandler}>프로필 수정</S.ButtonWrapper>
-              </Link>
+              <S.ButtonWrapper onClick={onModalVisibleFunc}>프로필 수정</S.ButtonWrapper>
               <S.ButtonWrapper> 로그아웃 </S.ButtonWrapper>
             </Flex>
           </Flex>
 
-          <S.ImageWrapper onMouseEnter={clickHandler} onMouseLeave={clickHandler}>
+          <S.ImageWrapper onClick={onAlarmVisibleFunc}>
             <img src={bell} alt="알림 아이콘" />
-            <div>{alarmData ?? 0}</div>
+            {unReadCount > 0 ? <div>!</div> : ''}
           </S.ImageWrapper>
-          {visible && (
+          {visibleAlarm && (
             <S.AlarmDataContainer>
               {alarmNoti?.data.notificationInfoResDto.map((item, idx) => (
-                <div key={idx}>{item.message}</div>
+                <AlarmBlock key={idx} message={item.message} isRead={item.isRead} />
               ))}
             </S.AlarmDataContainer>
           )}
         </Flex>
 
-        <S.ButtonContainer teamBool={teamBool}>
-          <button onClick={onOpenTeamFunc}>팀</button>
-          <button onClick={onChallengeFunc}>챌린지</button>
-        </S.ButtonContainer>
-        {teamBool ? (
-          <div>
-            <S.ChanllengeBlockContainer>
-              {teamBlockData?.teamDashboardInfoResDto.map((item, idx) => {
-                const { dashboardId, title, joinMembers, description } = item;
-                return (
-                  <S.TeamBlockWrapper
-                    key={idx}
-                    onClick={() => {
-                      navigate(`/${dashboardId}`);
-                    }}
-                  >
-                    <ChallengeBlock
-                      dashboardId={dashboardId}
-                      title={title}
-                      joinMembers={joinMembers ?? 0}
-                      description={description}
-                    />
-                  </S.TeamBlockWrapper>
-                );
-              })}
-            </S.ChanllengeBlockContainer>
-            <S.PagenateBox>
-              <Pagination
-                page={pageNumber}
-                count={teamBlockData?.pageInfoResDto.totalPages}
-                defaultPage={0}
-                onChange={onChangePageNation}
-              />
-            </S.PagenateBox>
-          </div>
-        ) : (
-          <div>
-            <S.ChanllengeBlockContainer>
-              {challengeBlockData?.challengeInfoResDto.map((item, idx) => (
-                <div key={idx}>
-                  <ChallengeBlock key={idx} />
-                </div>
-              ))}
-            </S.ChanllengeBlockContainer>
-            <S.PagenateBox>
-              <Pagination
-                page={pageNumber}
-                count={challengeBlockData?.pageInfoResDto.totalPages}
-                defaultPage={0}
-                onChange={onChangePageNation}
-              />
-            </S.PagenateBox>
-          </div>
-        )}
+        <Flex>
+          <S.ButtonContainer teamBool={teamBool}>
+            <button onClick={onOpenPersonalFunc}>개인</button>
+            <button onClick={onOpenTeamFunc}>팀</button>
+            <button onClick={onOpenChallengeFunc}>챌린지</button>
+          </S.ButtonContainer>
+
+          {content}
+        </Flex>
       </S.MyPageLayout>
+
+      {visibleModal && <ProfileUpdateModal onModalVisibleFunc={onModalVisibleFunc} />}
     </Flex>
   );
 };

@@ -1,3 +1,6 @@
+import { DashboardItem } from './PersonalDashBoard';
+
+//* 사용자 프로필 타입
 export interface ProfileInfo {
   statusCode: number;
   message: 'string';
@@ -11,12 +14,23 @@ export interface ProfileInfo {
   };
 }
 
+//* 페이지네이션 타입
 interface PageInfoResDto {
   currentPage: number;
   totalPages: number;
   totalItems: number;
 }
 
+//* 마이페이지 개인,팀,챌린지 대시보드 타입
+export interface ReturnData {
+  data: {
+    personalDashboardList: PersonalDashboardList;
+    teamDashboardList: TeamDashboardList;
+    challengeList: ChallengeList;
+  };
+}
+
+//* 팀 대시보드 정보 타입
 interface TeamDashboardInfoResDto {
   blockProgress: number;
   creatorId: string;
@@ -27,10 +41,26 @@ interface TeamDashboardInfoResDto {
   title: string;
 }
 
+//* 챌린지 대시보드 정보 타입
 interface ChallengeInfoResDto {
-  // 챌린지 정보에 맞는 속성들을 추가해야 합니다. 예시로는 아래와 같이 비워둡니다.
+  challengeId: number;
+  title: string;
+  contents: string;
+  category: string;
+  cycle: string;
+  cycleDetails: string[];
+  startDate: number[];
+  endDate: number[];
+  representImage: string;
+  authorName: string;
+  authorProfileImage: string;
+  blockName: string;
 }
 
+export interface PersonalDashboardList {
+  personalDashboardInfoResDto: DashboardItem[];
+  pageInfoResDto: PageInfoResDto;
+}
 export interface TeamDashboardList {
   teamDashboardInfoResDto: TeamDashboardInfoResDto[];
   pageInfoResDto: PageInfoResDto;
@@ -41,41 +71,15 @@ export interface ChallengeList {
   pageInfoResDto: PageInfoResDto;
 }
 
-interface ApiResponse {
-  statusCode: number;
-  message: string;
-  data: {
-    teamDashboardList: TeamDashboardList;
-    challengeList: ChallengeList;
-  };
-}
-export interface ReturnData {
-  data: {
-    teamDashboardList: TeamDashboardList;
-    challengeList: ChallengeList;
-  };
-}
-
+// * 알람 정보 타입
 type NotificationInfoResDto = {
-  id: number | null; // id가 null일 수 있으므로 number | null 타입으로 처리
+  id: number | null;
   message: string;
   isRead: boolean;
-};
-
-type NotiPageInfoResDto = {
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
 };
 
 export type NotificationResponse = {
   data: {
     notificationInfoResDto: NotificationInfoResDto[];
-    pageInfoResDto: NotiPageInfoResDto;
   };
-};
-
-export type PageNationProps = {
-  page: number;
-  size: number;
 };

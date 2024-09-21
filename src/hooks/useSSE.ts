@@ -3,19 +3,21 @@ import { atom, useAtom } from 'jotai';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import { unreadCount } from '../contexts/sseAtom';
 import { customErrToast } from '../utils/customErrorToast';
+import { NotificationResponse } from '../types/MyPage';
 
-// 1. Jotai atom 정의 (SSE 상태와 메시지 관리)
 const sseConnectedAtom = atom(false); // SSE 연결 상태
 const sseMessagesAtom = atom<string[]>([]); // SSE 메시지 상태
 
-// 2. useSSE 훅 정의
-export const useSSE = () => {
+export const useSSE = (
+  setAlarmNoti?: React.Dispatch<React.SetStateAction<NotificationResponse | undefined>>
+) => {
   const [, setConnected] = useAtom(sseConnectedAtom);
   const [, setMessages] = useAtom(sseMessagesAtom);
   const [unReadCount, setUnReadCount] = useAtom(unreadCount);
 
   const eventSource = useRef<EventSourcePolyfill | null>(null);
-  const reconnectTimeout = useRef<NodeJS.Timeout | null>(null); // 재연결 타임아웃 관리
+  // 재연결 타임아웃 관리
+  const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // SSE 연결 설정 함수
   const connectToSSE = useCallback(() => {
@@ -39,10 +41,22 @@ export const useSSE = () => {
 
     // 메시지 수신 처리
     eventSource.current.onmessage = event => {
-      console.log('SSE 메시지 수신:', event.data);
-      if (event.data.includes('대시보드')) {
-        customErrToast(event.data);
+      if (!event.data.includes('연결')) {
+        const modifiedMessage = event.data.replace(/\d+$/, '');
+        customErrToast(modifiedMessage);
         setUnReadCount(prev => prev + 1);
+        if (setAlarmNoti)
+          setAlarmNoti(prev => {
+            if (prev) {
+              return {
+                ...prev,
+                data: {
+                  ...prev.data,
+                  notificationInfoResDto: [modifiedMessage, ...prev.data.notificationInfoResDto],
+                },
+              };
+            }
+          });
       }
     };
 
@@ -64,7 +78,7 @@ export const useSSE = () => {
         connectToSSE();
       }, 3000); // 3초 후 재연결
     };
-  }, [setConnected, setMessages]);
+  }, [setConnected, setMessages, setUnReadCount]);
 
   useEffect(() => {
     // 첫 연결 시도

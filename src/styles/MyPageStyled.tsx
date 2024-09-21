@@ -40,7 +40,9 @@ export const ImageWrapper = styled.div`
   position: absolute;
   right: 0px;
   top: -10px;
-  z-index: 10;
+  background: white;
+  border-radius: 1rem;
+  z-index: 1;
   img {
     width: 100%;
     height: 100%;
@@ -100,21 +102,34 @@ export const CahllengeInfo = styled.div`
   }
 `;
 
-export const ButtonContainer = styled.div<{ teamBool: boolean }>`
+export const ButtonContainer = styled.div<{ teamBool: string }>`
   display: flex;
   justify-content: space-around;
-  width: 100%;
-  height: 3rem;
+  flex-direction: column;
+  align-self: start;
+
+  button {
+    height: 2.5rem;
+    border: 1px solid ${theme.color.stroke2};
+    border-radius: 0.5rem 0 0 0.5rem;
+    background: white;
+  }
 
   button:first-child {
-    // background-color: ${props => (props.teamBool ? 'pink' : 'white')};
-    border-radius: 1rem 1rem 0 0;
-    flex: 1;
+    background: ${props => props.teamBool === 'personal' && theme.color.gradation};
+    color: ${props => props.teamBool === 'personal' && 'white'};
+    border: ${props => props.teamBool === 'personal' && theme.color.stroke2};
+  }
+
+  button:nth-child(2) {
+    background: ${props => props.teamBool === 'team' && theme.color.gradation};
+    color: ${props => props.teamBool === 'team' && 'white'};
+    border: ${props => props.teamBool === 'team' && theme.color.stroke2};
   }
   button:last-child {
-    // background-color: ${props => (props.teamBool ? 'white' : 'pink')};
-    border-radius: 1rem 1rem 0 0;
-    flex: 1;
+    background: ${props => props.teamBool === 'challenge' && theme.color.gradation};
+    color: ${props => props.teamBool === 'challenge' && 'white'};
+    border: ${props => props.teamBool === 'challenge' && theme.color.stroke2};
   }
 `;
 
@@ -142,18 +157,16 @@ export const ButtonWrapper = styled.button`
 export const EditLayout = styled.section`
   display: flex;
   width: 100%;
-  height: 100vh;
 `;
 export const EditContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 0.8rem;
 
   form {
-    box-shadow: 0px 0px 10px rgba(1, 1, 1, 0.1);
     width: 40rem;
-    height: 30rem;
     border-radius: 2rem;
     display: flex;
     align-items: center;
@@ -176,8 +189,14 @@ export const AlarmDataContainer = styled.div`
   right: 10px;
   top: 0px;
   width: 20.25rem;
-  height: 25.25rem;
+  max-height: 40.25rem;
   background: white;
   border: 1px solid #f4f4f4;
   border-radius: 1rem;
+  overflow: scroll;
+  box-shadow: 0px 0px 10px rgba(1, 1, 1, 0.07);
+`;
+
+export const DashboardContainer = styled.div`
+  flex: 1;
 `;

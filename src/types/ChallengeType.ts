@@ -10,6 +10,19 @@ export interface Challenge {
   blockName?: string;
 }
 
+// * 페이지 정보 타입
+export interface PageInfoResDto {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+}
+
+// * 최종 응답 타입
+export interface ChallengeResponse {
+  challengeInfoResDto: Challenge[];
+  pageInfoResDto: PageInfoResDto;
+}
+
 // * 챌린지 카테고리
 export const ChallengeCategory = {
   HEALTH_AND_FITNESS: '건강 및 운동',

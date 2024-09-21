@@ -4,38 +4,63 @@ import addbutton from '../img/addbutton.png';
 import leftarrow from '../img/leftarrow.png';
 import Flex from '../components/Flex';
 import Pagination from '../components/CustomPagination';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChallengeCard from '../components/ChallengeCard';
 import { Link } from 'react-router-dom';
-import { ChallengeCategory } from '../types/ChallengeType';
+import { Challenge, ChallengeCategory, ChallengeResponse } from '../types/ChallengeType';
+import { getSearchChallenge } from '../api/ChallengeApi';
 
 const ChallengeCommunityPage = () => {
   const [count, setCount] = useState<number>(1); // 총 페이지 수
   const [page, setPage] = useState<number>(1); // 현재 페이지
+  const [pageInfo, setPageInfo] = useState<PageInfoResDto>({
+    currentPage: 0,
+    totalPages: 1,
+    totalItems: 0,
+  });
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
+  const [challenges, setChallenges] = useState<Challenge[]>();
 
-  // 페이지네이션 페이지 변경 감지 함수
+  // * 페이지네이션 페이지 변경 감지 함수
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value); // 페이지 변경 시 현재 페이지 상태 업데이트
+    setPageInfo(prevPageInfo => ({
+      ...prevPageInfo, // 기존 pageInfo 값을 유지
+      currentPage: value - 1,
+    }));
   };
 
   // * 카테고리로 선택하여 검색
   const handleCategoryClick = async (category: string) => {
     setSelectedCategory(category);
     setPage(1);
-    // setPageInfo(prevPageInfo => ({
-    //   ...prevPageInfo, // 기존 pageInfo 값을 유지
-    //   currentPage: 0,
-    // }));
+    setPageInfo(prevPageInfo => ({
+      ...prevPageInfo, // 기존 pageInfo 값을 유지
+      currentPage: 0,
+    }));
   };
 
   // * 검색어 변경 함수
   // ? debounce 설정?
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
-    console.log(e.target.value);
   };
+
+  // * 팀 문서 카테고리별 검색 get
+  const fetchDocumentData = async () => {
+    const response = await getSearchChallenge(keyword, selectedCategory, pageInfo?.currentPage, 8);
+
+    if (response) {
+      console.log('이만큼 받아옴!', response);
+      setChallenges(response.challengeInfoResDto);
+      setPageInfo(response.pageInfoResDto);
+    }
+  };
+
+  useEffect(() => {
+    fetchDocumentData();
+  }, [pageInfo.currentPage, location.pathname, selectedCategory, keyword]); // 페이지가 변경될 때와, 데이터가 변경되었을 때 (즉 라우터가 변경되었을 때) 리렌더링
 
   return (
     <S.MainDashBoardLayout>
@@ -61,8 +86,8 @@ const ChallengeCommunityPage = () => {
           {Object.entries(ChallengeCategory).map(([key, value]) => (
             <S.Category
               key={key}
-              onClick={() => handleCategoryClick(value)}
-              isSelected={selectedCategory === value}
+              onClick={() => handleCategoryClick(key)}
+              isSelected={selectedCategory === key}
             >
               {value}
             </S.Category>
@@ -70,36 +95,51 @@ const ChallengeCommunityPage = () => {
         </S.CategoriesContainer>
 
         <S.SearchContainer>
-          <div className="searchBar">
+          <S.SearchBar>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.5 9.5L12.5 12.5"
+                stroke="#D1D1D1"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M5.75 10.5C8.37335 10.5 10.5 8.37335 10.5 5.75C10.5 3.12665 8.37335 1 5.75 1C3.12665 1 1 3.12665 1 5.75C1 8.37335 3.12665 10.5 5.75 10.5Z"
+                stroke="#D1D1D1"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+
             <S.Input
-              placeholder="{name}님, {활동}은 어떠신가요?"
+              placeholder="다양한 챌린지를 검색해보세요!"
               type="text"
               value={keyword}
               name="keyword"
               onChange={handleInput}
             ></S.Input>
-            <S.Button>검색</S.Button>
-          </div>
+            {/* <S.Button>검색</S.Button> */}
+          </S.SearchBar>
         </S.SearchContainer>
 
-        {/* 반응형 때문에 몇 개 렌더링 되는지 확인해야 함. 아니면 css 자체를 수정해야 함. */}
-        <S.ChallengeContainer>
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-          <ChallengeCard />
-        </S.ChallengeContainer>
+        <Flex justifyContent="center">
+          <S.ChallengeContainer>
+            {challenges?.map((challenge, index) => (
+              <ChallengeCard key={index} challenge={challenge} />
+            ))}
+          </S.ChallengeContainer>
+        </Flex>
 
         <S.PaginationWrapper>
-          <Pagination count={count} page={page} onChange={handleChangePage} />
+          <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
         </S.PaginationWrapper>
       </S.MainDashBoardContainer>
     </S.MainDashBoardLayout>

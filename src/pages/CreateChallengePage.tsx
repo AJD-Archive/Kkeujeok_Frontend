@@ -12,6 +12,7 @@ import {
 import { Challenge } from '../types/ChallengeType';
 import { createChallenge } from '../api/ChallengeApi';
 import { stringify } from 'querystring';
+import { useNavigate } from 'react-router-dom';
 
 // * 날짜 포맷 설정 함수
 const formatDate = (date: Date): string => {
@@ -22,6 +23,7 @@ const formatDate = (date: Date): string => {
 };
 
 const CreateChallengePage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<Challenge>({
     title: '',
     contents: '',
@@ -163,6 +165,7 @@ const CreateChallengePage = () => {
     }
 
     await createChallenge(data);
+    navigate('/challenge');
   };
 
   return (

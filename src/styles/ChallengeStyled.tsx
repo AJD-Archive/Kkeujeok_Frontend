@@ -88,14 +88,33 @@ export const SearchContainer = styled.div`
   align-items: center;
 `;
 
-export const SearchBar = styled.div``;
+export const SearchBar = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-export const Input = styled.input`
   width: 30rem;
   padding: 0.8rem 2rem;
   font-size: 0.8rem;
   border-radius: 5rem;
   border: 1px solid ${theme.color.lightGray};
+  &:focus {
+    outline: none;
+  }
+
+  svg {
+    margin-right: 1rem;
+  }
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  /* width: 30rem;
+  padding: 0.8rem 2rem;
+  font-size: 0.8rem;
+  border-radius: 5rem;
+  border: 1px solid ${theme.color.lightGray}; */
+  border: none;
   &:focus {
     outline: none;
   }
@@ -113,14 +132,14 @@ export const Button = styled.button`
 `;
 
 export const ChallengeContainer = styled.div`
-  width: 100%;
+  width: 80%;
   margin-top: 2rem;
-  height: 63%;
-  display: flex;
-  flex-wrap: wrap; /* 아이템이 컨테이너의 너비를 초과하면 자동으로 줄바꿈 */
-  gap: 1rem; /* 아이템 간의 간격 */
-  justify-content: center; /* 아이템들을 중앙 정렬 */
-  overflow: hidden;
+  display: grid;
+  gap: 2rem 0.5rem;
+
+  grid-template-columns: repeat(5, 1fr); /* 각 줄에 5개의 열 */
+  grid-template-rows: repeat(2, auto); /* 2줄로 고정 */
+  max-width: 100vw;
 `;
 
 export const ChallengeComponent = styled.div`
@@ -131,9 +150,9 @@ export const ChallengeComponent = styled.div`
   cursor: pointer;
 `;
 
-export const ChallengeImg = styled.div`
-  width: 9rem;
-  height: 9rem;
+export const ChallengeImg = styled.img`
+  width: 9vw;
+  height: 9vw;
   border-radius: 50%;
   background-color: ${theme.color.lightGray};
 `;
@@ -153,7 +172,7 @@ export const ChallengeHeadCount = styled.p`
 
 export const PaginationWrapper = styled.div`
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
 `;

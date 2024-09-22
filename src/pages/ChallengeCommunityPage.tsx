@@ -68,7 +68,7 @@ const ChallengeCommunityPage = () => {
       <S.MainDashBoardContainer>
         <S.Header>
           <Flex>
-            <img src={leftarrow} />
+            {/* <img src={leftarrow} /> */}
             <Flex flexDirection="column" alignItems="flex-start" margin="0 0 0 10px">
               <S.Title>챌린지</S.Title>
               <S.SubTitle>다른 참여자와 함께 이뤄나가요.</S.SubTitle>

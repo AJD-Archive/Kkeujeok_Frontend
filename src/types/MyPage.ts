@@ -1,3 +1,6 @@
+import { DashboardItem } from './PersonalDashBoard';
+
+//* 사용자 프로필 타입
 export interface ProfileInfo {
   statusCode: number;
   message: 'string';
@@ -11,41 +14,72 @@ export interface ProfileInfo {
   };
 }
 
+//* 페이지네이션 타입
 interface PageInfoResDto {
   currentPage: number;
   totalPages: number;
   totalItems: number;
 }
 
+//* 마이페이지 개인,팀,챌린지 대시보드 타입
+export interface ReturnData {
+  data: {
+    personalDashboardList: PersonalDashboardList;
+    teamDashboardList: TeamDashboardList;
+    challengeList: ChallengeList;
+  };
+}
+
+//* 팀 대시보드 정보 타입
 interface TeamDashboardInfoResDto {
-  // 팀 대시보드 정보에 맞는 속성들을 추가해야 합니다. 예시로는 아래와 같이 비워둡니다.
+  blockProgress: number;
+  creatorId: string;
+  dashboardId: string;
+  description: string;
+  joinMembers: number | null;
+  myId: string;
+  title: string;
 }
 
+//* 챌린지 대시보드 정보 타입
 interface ChallengeInfoResDto {
-  // 챌린지 정보에 맞는 속성들을 추가해야 합니다. 예시로는 아래와 같이 비워둡니다.
+  challengeId: number;
+  title: string;
+  contents: string;
+  category: string;
+  cycle: string;
+  cycleDetails: string[];
+  startDate: number[];
+  endDate: number[];
+  representImage: string;
+  authorName: string;
+  authorProfileImage: string;
+  blockName: string;
 }
 
-interface TeamDashboardList {
+export interface PersonalDashboardList {
+  personalDashboardInfoResDto: DashboardItem[];
+  pageInfoResDto: PageInfoResDto;
+}
+export interface TeamDashboardList {
   teamDashboardInfoResDto: TeamDashboardInfoResDto[];
   pageInfoResDto: PageInfoResDto;
 }
 
-interface ChallengeList {
+export interface ChallengeList {
   challengeInfoResDto: ChallengeInfoResDto[];
   pageInfoResDto: PageInfoResDto;
 }
 
-interface ApiResponse {
-  statusCode: number;
+// * 알람 정보 타입
+type NotificationInfoResDto = {
+  id: number | null;
   message: string;
+  isRead: boolean;
+};
+
+export type NotificationResponse = {
   data: {
-    teamDashboardList: TeamDashboardList;
-    challengeList: ChallengeList;
+    notificationInfoResDto: NotificationInfoResDto[];
   };
-}
-export interface ReturnData {
-  data: {
-    teamDashboardList: TeamDashboardList;
-    challengeList: ChallengeList;
-  };
-}
+};

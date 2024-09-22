@@ -30,14 +30,15 @@ export const patchTeamDashBoard = async (
 };
 
 // * 팀 대시보드 상세 정보 get
-export const getTeamDashboard = async (id: string): Promise<TeamDashboardInfoResDto | null> => {
+export const getTeamDashboard = async (
+  dashboardId: string
+): Promise<TeamDashboardInfoResDto | undefined> => {
   try {
-    const response = await axiosInstance.get(`/dashboards/team/${id}`);
-    console.log(response);
+    const response = await axiosInstance.get(`/dashboards/team/${dashboardId}`);
+    console.log('팀 대시보드 중간 확인', response);
     return response.data.data;
   } catch (error) {
-    console.log('error');
-    return null;
+    console.error('팀 대시보드 중간 확인에서 error');
   }
 };
 
@@ -47,7 +48,16 @@ export const deleteTeamDashboard = async (id: string): Promise<void> => {
     const response = await axiosInstance.delete(`/dashboards/team/${id}`);
     console.log(response);
   } catch (error) {
-    console.log('error');
-    // return null;
+    console.error('error');
+  }
+};
+
+// * 팀 대시보드 참여 수락
+export const postTeamDashboard = async (dashboardId: string) => {
+  try {
+    const response = await axiosInstance.post(`/dashboards/team/${dashboardId}/join`);
+    console.log(response.data);
+  } catch (error) {
+    console.error('error');
   }
 };

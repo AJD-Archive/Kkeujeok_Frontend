@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -25,6 +25,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import ProfileEdit from './components/ProfileEdit';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+import { useSSE } from './hooks/useSSE';
 
 const queryClient = new QueryClient();
 
@@ -33,6 +38,7 @@ const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true); // 로딩 상태 추가
 
+  useSSE();
   useEffect(() => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
@@ -72,6 +78,7 @@ const router = (isLoggedIn: boolean) =>
         <Route path="/createTeamBoard" element={<CreateTeamBoard />} />
         <Route path="/createTeamBoard/:id" element={<CreateTeamBoard />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/edit" element={<ProfileEdit />} />
         <Route path="/:id/teamdocument" element={<TeamDocumentBoard />}>
           <Route path=":documentId" element={<TeamDocument />} />
         </Route>
@@ -93,11 +100,23 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          style={{ width: '21.875rem', lineHeight: '1.5rem' }}
+        />
         <RouterProvider router={router(isLoggedIn)} />
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
-
 export default App;

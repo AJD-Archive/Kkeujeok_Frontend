@@ -4,12 +4,12 @@ import theme from '../styles/Theme/Theme';
 export const NavBarLayout = styled.nav`
   width: 12.5rem;
   min-width: 12.5rem;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: ${theme.color.navbar};
   padding: 2.5625rem 1.625rem;
-  z-index: 1;
+  z-index: 10;
 `;
 
 export const UserInfoContainer = styled.div`

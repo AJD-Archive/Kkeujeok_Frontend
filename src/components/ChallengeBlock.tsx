@@ -1,15 +1,25 @@
 import * as S from '../styles/MyPageStyled';
 
-const ChallengeBlock = () => {
+interface Props {
+  title?: string;
+  joinMembers?: number;
+  description?: string;
+  cycle?: string;
+}
+const ChallengeBlock = ({ title, joinMembers, description, cycle }: Props) => {
   return (
     <S.ChallengeLayout>
-      <S.ChallengeBoxTitle>대시보드 이름</S.ChallengeBoxTitle>
+      <S.ChallengeBoxTitle>{title}</S.ChallengeBoxTitle>
       <S.CahllengeInfo>
-        <span>주기</span>
-        <span>&nbsp;|&nbsp;</span>
-        <span>참여인원</span>
+        {cycle && (
+          <div>
+            <span>주기</span>
+            <span>&nbsp;|&nbsp;</span>
+            <span>{joinMembers ?? 1}</span>{' '}
+          </div>
+        )}
         <hr />
-        <p>챌린지 설명</p>
+        <p>{description}</p>
       </S.CahllengeInfo>
     </S.ChallengeLayout>
   );

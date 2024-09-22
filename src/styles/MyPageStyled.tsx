@@ -5,6 +5,7 @@ export const MyPageLayout = styled.section`
   width: 43%;
   margin: 0 auto;
   margin-top: 4.125rem;
+  position: relative;
 `;
 export const ChanllengeBlockContainer = styled.div`
   display: grid;
@@ -15,6 +16,8 @@ export const ChanllengeBlockContainer = styled.div`
 export const MainText = styled.span`
   font-size: ${theme.font.size.main};
   font-weight: ${theme.font.weight.medium};
+  font-weight: 700;
+  font-size: 20px;
 `;
 
 export const CaptionText = styled.span`
@@ -29,9 +32,17 @@ export const GoogleImageIcon = styled.img`
 `;
 
 export const ImageWrapper = styled.div`
-  width: 25px;
-  height: 25px;
+  width: 32px;
+  height: 32px;
   position: relative;
+  cursor: pointer;
+  align-self: flex-start;
+  position: absolute;
+  right: 0px;
+  top: -10px;
+  background: white;
+  border-radius: 1rem;
+  z-index: 1;
   img {
     width: 100%;
     height: 100%;
@@ -59,21 +70,11 @@ export const PagenateBox = styled.div`
     margin: 80px 0;
     gap: 0.3125rem;
   }
-
-  li {
-    min-width: 1.1875rem;
-    min-height: 1.1875rem;
-    border: 1px solid ${theme.color.border};
-    padding: 0.1875rem 0.3125rem;
-    border-radius: 0.3125rem;
-    font-size: ${theme.font.size.main};
-    color: ${theme.color.lightGray};
-  }
 `;
 
 export const ChallengeLayout = styled.div`
   width: 100%;
-  border: 1px solid ${theme.color.border};
+  border: 1px solid ${theme.color.stroke2};
   padding: 1.1875rem 1.625rem 2.625rem 1.625rem;
   border-radius: 0.625rem;
 `;
@@ -97,6 +98,105 @@ export const CahllengeInfo = styled.div`
   }
 
   hr {
-    border: 0.3px solid ${theme.color.border};
+    border: 0.3px solid ${theme.color.stroke2};
   }
+`;
+
+export const ButtonContainer = styled.div<{ teamBool: string }>`
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  align-self: start;
+
+  button {
+    height: 2.5rem;
+    border: 1px solid ${theme.color.stroke2};
+    border-radius: 0.5rem 0 0 0.5rem;
+    background: white;
+  }
+
+  button:first-child {
+    background: ${props => props.teamBool === 'personal' && theme.color.gradation};
+    color: ${props => props.teamBool === 'personal' && 'white'};
+    border: ${props => props.teamBool === 'personal' && theme.color.stroke2};
+  }
+
+  button:nth-child(2) {
+    background: ${props => props.teamBool === 'team' && theme.color.gradation};
+    color: ${props => props.teamBool === 'team' && 'white'};
+    border: ${props => props.teamBool === 'team' && theme.color.stroke2};
+  }
+  button:last-child {
+    background: ${props => props.teamBool === 'challenge' && theme.color.gradation};
+    color: ${props => props.teamBool === 'challenge' && 'white'};
+    border: ${props => props.teamBool === 'challenge' && theme.color.stroke2};
+  }
+`;
+
+export const TeamBlockWrapper = styled.div`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const ButtonWrapper = styled.button`
+  font-weight: 400;
+  font-size: ${theme.font.size.caption};
+  padding: 0.4375rem 0.75rem;
+  border-radius: 0.625rem;
+  width: 5.125rem;
+  color: ${theme.color.gray};
+  &:first-child {
+    background-color: ${theme.color.stroke2};
+  }
+  &:last-child {
+    border: 1px solid ${theme.color.stroke2};
+  }
+`;
+
+export const EditLayout = styled.section`
+  display: flex;
+  width: 100%;
+`;
+export const EditContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+
+  form {
+    width: 40rem;
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  input {
+    border: none;
+    background: #f4f4f4;
+    width: 15rem;
+    padding: 1rem;
+    border-radius: 2rem;
+    margin: 0.5rem 0 2rem 0;
+  }
+`;
+
+export const AlarmDataContainer = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  width: 20.25rem;
+  max-height: 40.25rem;
+  background: white;
+  border: 1px solid #f4f4f4;
+  border-radius: 1rem;
+  overflow: scroll;
+  box-shadow: 0px 0px 10px rgba(1, 1, 1, 0.07);
+`;
+
+export const DashboardContainer = styled.div`
+  flex: 1;
 `;

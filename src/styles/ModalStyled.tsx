@@ -8,6 +8,7 @@ export const customStyles = {
   overlay: {
     background: 'rgba(0, 0, 0, 0.4)',
     backdropFilter: 'blur(2px)',
+    zIndex: 1,
   },
 };
 
@@ -76,5 +77,42 @@ export const BtnNo = styled.button`
 
   &:hover {
     background: ${theme.color.main};
+  }
+`;
+
+export const BtnUpdate = styled.button`
+  width: 7rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid ${theme.color.stroke2};
+  background: ${theme.color.gradation};
+  color: ${theme.color.white};
+  border-radius: 0.625rem;
+`;
+
+export const StyledModalUpdate = styled(Modal)`
+  width: 27rem;
+  padding: 2rem 3rem;
+
+  /* 화면 중앙에 고정 (navbar 크기 제외) */
+  position: fixed;
+  top: 50%;
+  left: calc(50% + 6.25rem);
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  border-radius: 0.625rem;
+  border: 1px solid ${theme.color.stroke2};
+  box-shadow: ${theme.boxShadow.default};
+
+  background-color: ${theme.color.white};
+
+  gap: 40px;
+
+  input:focus {
+    outline: none; /* 포커스 시 outline을 제거 */
   }
 `;

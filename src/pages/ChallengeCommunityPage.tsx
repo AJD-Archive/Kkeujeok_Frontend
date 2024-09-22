@@ -49,7 +49,7 @@ const ChallengeCommunityPage = () => {
 
   // * 팀 문서 카테고리별 검색 get
   const fetchDocumentData = async () => {
-    const response = await getSearchChallenge(keyword, selectedCategory, pageInfo?.currentPage, 8);
+    const response = await getSearchChallenge(keyword, selectedCategory, pageInfo?.currentPage, 10);
 
     if (response) {
       console.log('이만큼 받아옴!', response);

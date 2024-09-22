@@ -189,7 +189,7 @@ export const CreateDashBoardContainer = styled.section`
 `;
 
 export const CreateDashBoardModal = styled.div`
-  padding: 5rem;
+  padding: 4rem 5rem;
   border-radius: 1rem;
   border: 1px solid ${theme.color.stroke2};
   box-shadow: ${theme.boxShadow.default};
@@ -220,13 +220,20 @@ export const Label = styled.label`
 `;
 
 export const FileLabel = styled.label`
-  width: 13.8rem;
+  /* width: 13.8rem; */
+  z-index: 1;
+  width: 6rem;
+  height: 6rem;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   border-radius: 0.3rem;
   border: 1px solid ${theme.color.stroke2};
   color: ${theme.color.gray};
   overflow-x: scroll;
+  cursor: pointer;
+  input[type='file'] {
+    display: none;
+  }
   input[type='file']::file-selector-button {
     padding: 0.2rem 0.5rem;
     background: #fff;
@@ -289,6 +296,19 @@ export const Select = styled.select<StyledTextareaProps>`
   }
 `;
 
+export const JoinSelect = styled.select`
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0.3rem;
+  border: 1px solid ${theme.color.stroke2};
+  color: ${theme.color.black};
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: ${theme.color.lightGray};
+  }
+`;
 export const SubmitBtn = styled.button`
   margin-top: 3rem;
   padding: 0.65rem 3rem;
@@ -475,6 +495,13 @@ export const JoinButton = styled.div`
   cursor: pointer;
 `;
 
+export const EditDelButtonWrapper = styled.div`
+  display: flex;
+  margin-right: 1.5rem;
+  /* position: absolute;
+  right: 10rem; */
+`;
+
 export const EditDelButton = styled.img`
   width: 1rem;
   cursor: pointer;
@@ -503,9 +530,11 @@ export const ChallengeDetailContainer = styled.div`
 `;
 
 // 추후 img로 변환
-export const ChallengeThumbnail = styled.div`
+export const ChallengeThumbnail = styled.img`
   width: 35%;
   height: 40vh;
+
+  object-fit: cover;
   border-radius: 1.25rem 0 0 1.25rem;
   background-color: ${theme.color.stroke2};
 `;
@@ -527,6 +556,13 @@ export const DetailSquareWrapper = styled.div`
   & > *:first-child {
     margin-bottom: 0.7rem;
   }
+`;
+
+export const DetailDate = styled.p`
+  margin-top: 0.5rem;
+  line-height: 1.4rem;
+  /* font-weight: ${theme.font.weight.bold}; */
+  color: ${theme.color.gray};
 `;
 
 export const DetailContent = styled.div`
@@ -563,6 +599,7 @@ export const DetailRealTimeCountSquare = styled(DetailTermSquare)`
 
 export const ChallengeBlockPriview = styled.div`
   width: fit-content;
+  min-width: 20rem;
   max-width: 30rem;
   margin-top: 0.5rem;
 
@@ -610,7 +647,7 @@ export const ChallengeCreatorContainer = styled.div`
   }
 `;
 
-export const ProfileImage = styled.div`
+export const ProfileImage = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5rem;
@@ -641,7 +678,7 @@ export const RealTimeComponent = styled.div`
   align-items: center;
 `;
 
-export const RealTimeUserImg = styled.div`
+export const RealTimeUserImg = styled.img`
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
@@ -657,4 +694,9 @@ export const RealTimeUserName = styled.p`
   margin-top: 1.5rem;
   font-size: 1rem;
   color: ${theme.color.text};
+`;
+
+export const errorMessage = styled.p`
+  font-size: 1rem;
+  color: ${theme.color.gray};
 `;

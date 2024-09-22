@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Flex from '../components/Flex';
 import Navbar from '../components/Navbar';
 import * as S from '../styles/ChallengeStyled';
@@ -10,9 +10,11 @@ import {
   ChallengeCycleDetail_Weekly,
 } from '../types/ChallengeType';
 import { Challenge } from '../types/ChallengeType';
-import { createChallenge } from '../api/ChallengeApi';
+import { createChallenge, getChallengeDetail, patchChallenge } from '../api/ChallengeApi';
 import { stringify } from 'querystring';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useModal from '../hooks/useModal';
+import CustomModal from '../components/CustomModal';
 
 // * 날짜 포맷 설정 함수
 const formatDate = (date: Date): string => {
@@ -23,17 +25,55 @@ const formatDate = (date: Date): string => {
 };
 
 const CreateChallengePage = () => {
+  const location = useLocation();
+  let challengeId = location.pathname.split('/').pop() || null;
+  if (challengeId === 'create') challengeId = null;
+
+  const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
   const navigate = useNavigate();
   const [formData, setFormData] = useState<Challenge>({
+    challengeId: '0',
     title: '',
     contents: '',
     category: 'HEALTH_AND_FITNESS',
     cycle: 'DAILY',
     cycleDetails: [],
+    startDate: formatDate(new Date()),
     endDate: formatDate(new Date()),
     representImage: '',
+    authorName: '',
+    authorProfileImage: '',
     blockName: '',
   });
+  const [isHovering, setIsHovering] = useState(false); // 미리보기 상태 추가
+
+  // * 챌린지 수정시 챌린지 상세 데이터 불러오기
+  const fetchData = async () => {
+    if (challengeId) {
+      const data = await getChallengeDetail(challengeId);
+      setFormData({
+        challengeId: data?.challengeId ?? '0',
+        title: data?.title ?? '',
+        contents: data?.contents ?? '',
+        category: data?.category ?? 'HEALTH_AND_FITNESS',
+        cycle: data?.cycle ?? 'DAILY',
+        cycleDetails: data?.cycleDetails ?? [],
+        startDate: data?.startDate ?? formatDate(new Date()),
+        endDate: data?.endDate ?? formatDate(new Date()),
+        representImage:
+          data?.representImage instanceof File
+            ? URL.createObjectURL(data.representImage)
+            : (data?.representImage ?? ''), // 파일일 때만 URL 생성
+        authorName: data?.authorName ?? '',
+        authorProfileImage: data?.authorProfileImage ?? '',
+        blockName: data?.blockName ?? '',
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [challengeId]);
 
   // * 폼 데이터 변경 핸들러
   const handleChange = (
@@ -58,9 +98,6 @@ const CreateChallengePage = () => {
 
     if (file) {
       setFormData(prev => ({ ...prev, representImage: file }));
-    } else {
-      // 파일이 없을 경우 representImage를 빈 문자열로 설정하거나 필요에 따라 다른 처리를 할 수 있습니다
-      setFormData(prev => ({ ...prev, representImage: '' }));
     }
   };
 
@@ -139,8 +176,24 @@ const CreateChallengePage = () => {
     return dayKey ? (formData.cycleDetails?.includes(dayKey) ?? false) : false;
   };
 
+  // * 제출시 빈 칸이 있나 확인하는 함수 (있다면 true, 대표 이미지는 선택이라 제외)
+  const validateFormData = (formData: Challenge): boolean => {
+    return Object.entries(formData).some(([key, value]) => {
+      // representImage 필드는 검사에서 제외
+      if (key === 'representImage') return false;
+      return value === '';
+    });
+  };
+
   // * 폼 제출 핸들러
   const handleSubmit = async () => {
+    // 빈 작성란이 있으면 모달창 띄우기
+    if (validateFormData(formData)) {
+      openModal('normal'); // 모달 띄우기 (yes/no 모달)
+      return; // 폼 제출 중단
+    }
+
+    // 폼 데이터 생성
     const data = new FormData();
 
     const challengeSaveReqDto = {
@@ -164,8 +217,16 @@ const CreateChallengePage = () => {
       data.append('representImage', formData.representImage);
     }
 
-    await createChallenge(data);
-    navigate('/challenge');
+    try {
+      const responseChallengeId = challengeId
+        ? await patchChallenge(challengeId, data) // 기존 대시보드 수정
+        : await createChallenge(data); // 새 대시보드 생성
+
+      // 챌린지 페이지로 이동
+      navigate(responseChallengeId ? `/challenge/${responseChallengeId}` : `/challenge`);
+    } catch (error) {
+      console.error('챌린지 생성 및 수정 중 오류 발생!', error);
+    }
   };
 
   return (
@@ -173,7 +234,7 @@ const CreateChallengePage = () => {
       <Navbar />
       <S.CreateDashBoardContainer>
         <S.CreateDashBoardModal>
-          <S.Title>챌린지 생성</S.Title>
+          <S.Title>챌린지 {challengeId ? '수정' : '생성'}</S.Title>
           <S.CreateSubTitle>챌린지 팀원 모집 게시글</S.CreateSubTitle>
 
           <S.RowWrapper>
@@ -205,7 +266,7 @@ const CreateChallengePage = () => {
               <S.Label>카테고리</S.Label>
               <S.Select
                 name="category"
-                width="10rem"
+                width="17.8rem"
                 value={formData.category}
                 onChange={handleChange}
               >
@@ -218,10 +279,39 @@ const CreateChallengePage = () => {
             </S.RowWrapper>
 
             <S.RowWrapper>
-              <S.Label>이미지</S.Label>
-              <S.FileLabel htmlFor="file">
+              <S.Label>대표 이미지</S.Label>
+              <S.FileLabel
+                htmlFor="file"
+                onMouseEnter={() => setIsHovering(true)} // 마우스 오버 시 상태 업데이트
+                onMouseLeave={() => setIsHovering(false)}
+              >
                 <input type="file" accept="image/*" id="file" onChange={handleFileChange} />
               </S.FileLabel>
+              {formData.representImage && (
+                <Flex
+                  flexDirection="column"
+                  style={{
+                    position: 'absolute',
+                    right: '5rem',
+                  }}
+                >
+                  {/* <p>미리보기</p> */}
+                  <img
+                    src={
+                      typeof formData.representImage === 'string'
+                        ? formData.representImage
+                        : URL.createObjectURL(formData.representImage)
+                    }
+                    alt="챌린지 이미지"
+                    style={{
+                      width: '6rem',
+                      height: '6rem',
+                      borderRadius: '0.3rem',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </Flex>
+              )}
             </S.RowWrapper>
           </Flex>
 
@@ -309,8 +399,18 @@ const CreateChallengePage = () => {
             </S.EndDateWrapper>
           </S.RowWrapper>
 
-          <S.SubmitBtn onClick={handleSubmit}>챌린지 생성</S.SubmitBtn>
+          <S.SubmitBtn onClick={handleSubmit}>챌린지 {challengeId ? '수정' : '생성'}</S.SubmitBtn>
         </S.CreateDashBoardModal>
+
+        {/* 작성되지 않은 부분이 있으면 모달창으로 알림 */}
+        {isModalOpen && (
+          <CustomModal
+            title="모든 칸을 작성해주세요."
+            subTitle="잠깐! 작성되지 않은 칸이 있습니다."
+            onYesClick={handleYesClick}
+            onNoClick={handleNoClick}
+          />
+        )}
       </S.CreateDashBoardContainer>
     </S.MainDashBoardLayout>
   );

@@ -6,7 +6,7 @@ import editBtn from '../img/edit.png';
 import delBtn from '../img/delete2.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { deleteChallenge, getChallengeDetail } from '../api/ChallengeApi';
+import { deleteChallenge, getChallengeDetail, withdrawChallenge } from '../api/ChallengeApi';
 import {
   Challenge,
   ChallengeCategory,
@@ -29,6 +29,8 @@ const ChallengeDetailPage = () => {
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
   const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
   const [join, setJoin] = useState<boolean>(false);
+  const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState<boolean>(false);
 
   // * 챌린지 상세보기 데이터 받아오기
   const fetchedData = async () => {
@@ -76,14 +78,29 @@ const ChallengeDetailPage = () => {
 
   // * 챌린지 삭제 모달창
   const submitDelChallenge = () => {
-    // setIsDelModalOpen(true);
-    // const handleModalClose = () => setIsDelModalOpen(false);
-    openModal('yes', delChallenge); // yes 버튼이 눌릴 때만 대시보드 삭제 api 요청
+    setIsDelModalOpen(true);
+    const handleModalClose = () => setIsDelModalOpen(false);
+    openModal('yes', delChallenge, handleModalClose); // yes 버튼이 눌릴 때만 대시보드 삭제 api 요청
   };
 
   // * 챌린지 참여
   const joinChallenge = () => {
     setJoin(!join);
+  };
+
+  // * 챌린지 탈퇴
+  const cancelChallenge = async () => {
+    if (challengeId) {
+      await withdrawChallenge(challengeId);
+      fetchedData();
+    }
+  };
+
+  // * 챌린지 탈퇴 모달창
+  const submitWithdrawChallenge = () => {
+    setIsWithdrawModalOpen(true);
+    const isWithdrawModalOpen = () => setIsWithdrawModalOpen(false);
+    openModal('yes', cancelChallenge, isWithdrawModalOpen);
   };
 
   return (
@@ -118,12 +135,16 @@ const ChallengeDetailPage = () => {
 
             {/* 참여하기 or 탈퇴하기 버튼 */}
             {challengeData.isParticipant ? (
-              <S.QuitButton>탈퇴하기</S.QuitButton>
+              <S.QuitButton onClick={submitWithdrawChallenge}>탈퇴하기</S.QuitButton>
             ) : (
               <S.JoinButton onClick={joinChallenge}>참여하기</S.JoinButton>
             )}
             {join && challengeId && (
-              <JoinChallengeModal challengeId={challengeId} onNoClick={joinChallenge} />
+              <JoinChallengeModal
+                challengeId={challengeId}
+                onNoClick={joinChallenge}
+                fetchedData={fetchedData}
+              />
             )}
           </Flex>
         </S.DetailHeader>
@@ -236,10 +257,20 @@ const ChallengeDetailPage = () => {
         </S.RealTimeContainer>
 
         {/* 삭제 동의 모달창 */}
-        {isModalOpen && (
+        {isModalOpen && isDelModalOpen && (
           <CustomModal
             title="대시보드를 삭제하시겠습니까?"
             subTitle="한 번 삭제된 대시보드는 되돌릴 수 없습니다."
+            onYesClick={handleYesClick}
+            onNoClick={handleNoClick}
+          />
+        )}
+
+        {/* 탈퇴 동의 모달창 */}
+        {isModalOpen && isWithdrawModalOpen && (
+          <CustomModal
+            title="챌린지를 탈퇴하시겠습니까?"
+            subTitle="새로운 도전이 기다리고 있습니다!"
             onYesClick={handleYesClick}
             onNoClick={handleNoClick}
           />

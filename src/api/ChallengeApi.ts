@@ -87,3 +87,14 @@ export const joinChallenge = async (challengeId: string, dashboardId: string): P
     console.error('Error fetching data:', error);
   }
 };
+
+// * 챌린지 탈퇴
+export const withdrawChallenge = async (id: string): Promise<void> => {
+  try {
+    const response = await axiosInstance.delete(`/challenges/${id}/withdraw`);
+
+    console.log(response);
+  } catch (error) {
+    console.log('error');
+  }
+};

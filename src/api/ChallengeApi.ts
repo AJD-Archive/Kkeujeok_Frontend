@@ -2,14 +2,13 @@ import { Challenge, ChallengeResponse } from '../types/ChallengeType';
 import { axiosInstance } from '../utils/apiConfig';
 
 // * 챌린지 create
-export const createChallenge = async (data: FormData): Promise<void> => {
+export const createChallenge = async (data: FormData): Promise<void | string> => {
   try {
-    console.log('챌린지 생성 데이터', JSON.stringify(data));
     const response = await axiosInstance.post('/challenges', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     console.log(response.data);
-    //   return response.data.data.dashboardId;
+    return '';
   } catch (error) {
     console.error('Error fetching data:', error);
     //   return null;
@@ -17,11 +16,13 @@ export const createChallenge = async (data: FormData): Promise<void> => {
 };
 
 // * 챌린지 update
-export const updateChallenge = async (data: Challenge, id: string): Promise<void> => {
+export const patchChallenge = async (id: string, data: FormData): Promise<void> => {
   try {
-    const response = await axiosInstance.post(`/challenges/${id}`, data);
-    console.log(response.data);
-    //   return response.data.data.dashboardId;
+    const response = await axiosInstance.patch(`/challenges/${id}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    // console.log(response.data);
+    return response.data.data.challengeId;
   } catch (error) {
     console.error('Error fetching data:', error);
     //   return null;
@@ -54,3 +55,35 @@ export const getSearchChallenge = async (
 };
 
 // * 챌린지 상세보기 get
+export const getChallengeDetail = async (challengeId: string): Promise<Challenge | null> => {
+  try {
+    const response = await axiosInstance.get(`/challenges/${challengeId}`);
+    // console.log(response.data.data);
+
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
+  }
+};
+
+// * 챌린지 삭제
+export const deleteChallenge = async (id: string): Promise<void> => {
+  try {
+    const response = await axiosInstance.delete(`/challenges/${id}`);
+
+    console.log(response);
+  } catch (error) {
+    console.log('error');
+  }
+};
+
+// * 챌린지 참여
+export const joinChallenge = async (challengeId: string, dashboardId: string): Promise<void> => {
+  try {
+    const response = await axiosInstance.post(`/challenges/${challengeId}/${dashboardId}`);
+    console.log(response.data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};

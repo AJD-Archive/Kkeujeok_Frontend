@@ -1,13 +1,28 @@
 // * 챌린지 타입
 export interface Challenge {
+  challengeId?: string;
   title?: string;
   contents?: string;
   category?: string;
   cycle?: string;
   cycleDetails?: string[] | string;
+  startDate?: string;
   endDate?: string;
   representImage?: File | string;
+  authorName?: string;
+  authorProfileImage?: string;
   blockName?: string;
+  participantCount?: 0;
+  isParticipant?: false;
+  isAuthor?: true;
+  completedMembers?: completedMember[];
+}
+
+// * 실시간 완료 멤버 타입
+export interface completedMember {
+  memberId?: string;
+  picture?: string;
+  nickname?: string;
 }
 
 // * 페이지 정보 타입

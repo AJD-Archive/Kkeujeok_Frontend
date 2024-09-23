@@ -3,13 +3,27 @@ import Navbar from '../components/Navbar';
 import * as S from '../styles/TutorialPageStyled';
 import personal_tutorial from '../img/personal_tutorial.png';
 import team_tutorial from '../img/team_tutorial.png';
+import { useQuery } from '@tanstack/react-query';
+import { userInfoApi } from '../api/UserApi';
+import { useAtom } from 'jotai';
+import { nicknameAtom } from '../contexts/NickName';
 
 const TutorialPage = () => {
+  const { data: UserInfo, refetch } = useQuery({ queryKey: ['userinfo'], queryFn: userInfoApi });
+  const [nickname, setNickname] = useAtom(nicknameAtom);
+
+  // 닉네임을 API에서 받아와서 atom에 저장
+  useEffect(() => {
+    if (UserInfo?.data.nickName && nickname === null) {
+      setNickname(UserInfo.data.nickName);
+    }
+  }, [UserInfo, nickname, setNickname]);
+
   return (
     <S.MainDashBoardLayout>
       <Navbar />
       <S.MainDashBoardContainer>
-        <S.Title>홍길동님, 안녕하세요.</S.Title>
+        <S.Title>{nickname}님, 안녕하세요.</S.Title>
 
         <div>
           <S.SubTitle>개인 대시보드</S.SubTitle>

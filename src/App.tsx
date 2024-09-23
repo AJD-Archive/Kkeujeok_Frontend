@@ -20,6 +20,7 @@ import SidePage from './pages/SidePage';
 import ChallengeCommunityPage from './pages/ChallengeCommunityPage';
 import CreateChallengePage from './pages/CreateChallengePage';
 import ChallengeDetailPage from './pages/ChallengeDetailPage';
+import TutorialPage from './pages/TutorialPage';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -86,6 +87,7 @@ const router = (isLoggedIn: boolean) =>
         <Route path="/challenge/create" element={<CreateChallengePage />} />
         <Route path="/challenge/create/:id" element={<CreateChallengePage />} />
         <Route path="/challenge/:id" element={<ChallengeDetailPage />} />
+        <Route path="/tutorial" element={<TutorialPage />} />
       </Route>
     )
   );

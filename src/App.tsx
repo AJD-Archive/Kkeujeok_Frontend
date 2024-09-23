@@ -22,6 +22,7 @@ import ChallengeCommunityPage from './pages/ChallengeCommunityPage';
 import CreateChallengePage from './pages/CreateChallengePage';
 import ChallengeDetailPage from './pages/ChallengeDetailPage';
 import TutorialPage from './pages/TutorialPage';
+import ErrorPage from './pages/ErrorPage';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -60,10 +61,22 @@ const router = (isLoggedIn: boolean) =>
   createBrowserRouter(
     createRoutesFromElements(
       <Route>
-        {/* 로그인 상관없이 접근 가능한 라우터 */}
-        {/* 이전에는 /login 라우터를 따로 두고, 기본 라우터에 접속시 조건문으로 이동할 페이지를 계산. 하지만 로그인 보호 라우터 적용하면서 /login 라우터를 기본 라우터로 변경함. */}
+        {/* 기본 라우터를 로그인 페이지로 변경 */}
         <Route path="/" element={<LoginPage />} />
+        {/* <Route
+          path="/"
+          element={
+            isLoggedIn ? (
+              <Navigate to={`/${localStorage.getItem('LatestBoard') ?? 'tutorial'}`} replace />
+            ) : (
+              <LoginPage />
+            )
+          }
+        /> */}
+
+        {/* 로그인 상관없이 접근 가능한 라우터. 보호되지 않는 라우터 */}
         <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
+        <Route path="*" element={<ErrorPage />} />
 
         {/* 보호된 경로들에 ProtectedRoute 적용 */}
         <Route

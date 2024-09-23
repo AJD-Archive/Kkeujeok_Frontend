@@ -10,7 +10,7 @@ interface LoginToken {
 }
 
 const OAuthRedirectHandler = () => {
-  const { provider } = useParams(); // Get the provider from the route parameters
+  const { provider } = useParams();
   const navigate = useNavigate();
   const { login } = useAuth();
   const [loginToken, setLoginToken] = useState<LoginToken>({
@@ -30,7 +30,10 @@ const OAuthRedirectHandler = () => {
   useEffect(() => {
     if (loginToken.accessToken) {
       login(loginToken);
-      navigate('/'); // 기본 대시보드 불러올 라우터로 설정 (가장 마지막에 방문한 대시보드를 기준으로)
+
+      // * 마지막에 방문한 대시보드가 있다면 해당 대시보드로 이동, 없다면 튜토리얼 페이지로 이동
+      const latestBoard = localStorage.getItem('LatestBoard');
+      navigate(latestBoard ? `/${latestBoard}` : '/tutorial');
     }
   }, [loginToken, login, navigate]);
 
@@ -55,6 +58,7 @@ const OAuthRedirectHandler = () => {
     }
   };
 
+  // * 로그인 처리 중일때 보여질 로딩창
   return <Loading />;
 };
 

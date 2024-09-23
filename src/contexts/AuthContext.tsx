@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
-    // fetchMemberInfo();
+    fetchMemberInfo();
   };
 
   const logout = async () => {

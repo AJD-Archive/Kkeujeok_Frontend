@@ -27,15 +27,18 @@ export const useSSE = (
     }
 
     // SSE 연결 설정
-    eventSource.current = new EventSourcePolyfill(`${apiBaseUrl}/notifications/stream`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        Connection: '',
-        Accept: 'text/event-stream',
-      },
-      heartbeatTimeout: 86400000,
-      withCredentials: true,
-    });
+    eventSource.current = new EventSourcePolyfill(
+      `${process.env.REACT_APP_API_SERVER_URL}/notifications/stream`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          Connection: '',
+          Accept: 'text/event-stream',
+        },
+        heartbeatTimeout: 86400000,
+        withCredentials: true,
+      }
+    );
 
     // 메시지 수신 처리
     eventSource.current.onmessage = event => {

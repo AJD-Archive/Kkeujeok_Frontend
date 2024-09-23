@@ -165,6 +165,9 @@ export const EditContainer = styled.div`
   align-items: center;
   font-size: 0.8rem;
 
+  label {
+    margin-bottom: 2rem;
+  }
   form {
     width: 40rem;
     border-radius: 2rem;
@@ -179,8 +182,14 @@ export const EditContainer = styled.div`
     background: #f4f4f4;
     width: 15rem;
     padding: 1rem;
-    border-radius: 2rem;
-    margin: 0.5rem 0 2rem 0;
+    border-radius: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  p {
+    color: red;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
   }
 `;
 

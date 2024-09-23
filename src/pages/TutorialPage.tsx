@@ -7,8 +7,10 @@ import { useQuery } from '@tanstack/react-query';
 import { userInfoApi } from '../api/UserApi';
 import { useAtom } from 'jotai';
 import { nicknameAtom } from '../contexts/NickName';
+import { useNavigate } from 'react-router-dom';
 
 const TutorialPage = () => {
+  const navigate = useNavigate();
   const { data: UserInfo, refetch } = useQuery({ queryKey: ['userinfo'], queryFn: userInfoApi });
   const [nickname, setNickname] = useAtom(nicknameAtom);
 
@@ -27,7 +29,7 @@ const TutorialPage = () => {
 
         <div>
           <S.SubTitle>개인 대시보드</S.SubTitle>
-          <S.tutorialContainer>
+          <S.tutorialContainer onClick={() => navigate('/createPersonalBoard')}>
             <div>
               <div>
                 <svg
@@ -71,7 +73,7 @@ const TutorialPage = () => {
 
         <div>
           <S.SubTitle>팀 대시보드</S.SubTitle>
-          <S.tutorialContainer>
+          <S.tutorialContainer onClick={() => navigate('/createTeamBoard')}>
             <div>
               <div>
                 <svg

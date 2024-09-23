@@ -140,20 +140,24 @@ export const AddButtonWrapper = styled.div`
 `;
 
 export const GraphContainer = styled.div`
+  span {
+    width: 4rem;
+    color: black;
+    font-weight: 600;
+    margin-left: 0.3rem;
+    color: ${theme.color.gray};
+  }
+`;
+export const GraphWrapper = styled.div`
   width: 13.1875rem;
   height: 1.3125rem;
 
   background: none;
   border: 1px solid ${theme.color.lightGray};
   border-radius: 30px;
-
-  p {
-    margin-left: 1rem;
-    font-size: ${theme.font.size.caption};
-    color: ${theme.color.white};
-  }
+  display: flex;
+  align-items: center;
 `;
-
 export const GraphProgress = styled.div<{ blockProgress: number }>`
   width: ${({ blockProgress }) =>
     blockProgress}%; /*todo의 완료도에 따라 부모 width의 퍼센테이지로 맞춰 크기 조정*/
@@ -165,6 +169,8 @@ export const GraphProgress = styled.div<{ blockProgress: number }>`
 
   display: flex;
   align-items: center;
+  z-index: -1;
+  transition: width 1s ease;
 `;
 
 /* 블록 스타일*/

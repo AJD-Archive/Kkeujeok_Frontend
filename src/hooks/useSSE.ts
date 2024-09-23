@@ -4,6 +4,7 @@ import { EventSourcePolyfill } from 'event-source-polyfill';
 import { unreadCount } from '../contexts/sseAtom';
 import { customErrToast } from '../utils/customErrorToast';
 import { NotificationResponse } from '../types/MyPage';
+import { apiBaseUrl } from '../utils/apiConfig';
 
 const sseConnectedAtom = atom(false); // SSE 연결 상태
 const sseMessagesAtom = atom<string[]>([]); // SSE 메시지 상태
@@ -26,18 +27,15 @@ export const useSSE = (
     }
 
     // SSE 연결 설정
-    eventSource.current = new EventSourcePolyfill(
-      'https://dev.kkeujeok.store/api/notifications/stream',
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          Connection: '',
-          Accept: 'text/event-stream',
-        },
-        heartbeatTimeout: 259200,
-        withCredentials: true,
-      }
-    );
+    eventSource.current = new EventSourcePolyfill(`${apiBaseUrl}/notifications/stream`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        Connection: '',
+        Accept: 'text/event-stream',
+      },
+      heartbeatTimeout: 86400000,
+      withCredentials: true,
+    });
 
     // 메시지 수신 처리
     eventSource.current.onmessage = event => {

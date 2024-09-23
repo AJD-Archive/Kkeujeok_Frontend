@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import * as S from '../styles/DashboardStyled';
+import Flex from './Flex';
 
 type GraphProps = {
   blockProgress: number;
@@ -7,9 +9,12 @@ type GraphProps = {
 const Graph = ({ blockProgress }: GraphProps) => {
   return (
     <S.GraphContainer>
-      <S.GraphProgress blockProgress={blockProgress}>
-        <p>{blockProgress}%</p>
-      </S.GraphProgress>
+      <Flex>
+        <S.GraphWrapper>
+          <S.GraphProgress blockProgress={blockProgress}></S.GraphProgress>
+        </S.GraphWrapper>
+        <span>{blockProgress}%</span>
+      </Flex>
     </S.GraphContainer>
   );
 };

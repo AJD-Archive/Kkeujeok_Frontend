@@ -179,14 +179,16 @@ const CreateChallengePage = () => {
   // * 제출시 빈 칸이 있나 확인하는 함수 (있다면 true, 대표 이미지는 선택이라 제외)
   const validateFormData = (formData: Challenge): boolean => {
     return Object.entries(formData).some(([key, value]) => {
-      // representImage 필드는 검사에서 제외
-      if (key === 'representImage') return false;
+      // representImage, authorName, authorProfileImage 필드는 검사에서 제외
+      if (key === 'representImage' || key === 'authorName' || key === 'authorProfileImage')
+        return false;
       return value === '';
     });
   };
 
   // * 폼 제출 핸들러
   const handleSubmit = async () => {
+    console.log(formData);
     // 빈 작성란이 있으면 모달창 띄우기
     if (validateFormData(formData)) {
       openModal('normal'); // 모달 띄우기 (yes/no 모달)

@@ -54,13 +54,14 @@ export const CategoriesContainer = styled.p`
   overflow-y: scroll;
 `;
 
-export const Category = styled.p`
+export const Category = styled.p<{ isSelected: boolean }>`
   width: fit-content;
   padding: 0.5rem 1rem;
   border-radius: 2rem;
   margin-right: 0.7rem;
   white-space: nowrap;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+
   color: ${theme.color.gray};
   background-color: ${theme.color.stroke2};
   cursor: pointer;
@@ -68,10 +69,16 @@ export const Category = styled.p`
     linear-gradient(white, white) padding-box,
     linear-gradient(45deg, rgba(76, 140, 255, 0.5), rgba(152, 71, 255, 0.5)) border-box;
   border: 3px solid transparent;
+
   &:hover {
     background: linear-gradient(45deg, ${theme.color.main}, ${theme.color.main2}) border-box;
     color: ${theme.color.white};
   }
+
+  background: ${props =>
+    props.isSelected &&
+    `linear-gradient(45deg, ${theme.color.main}, ${theme.color.main2}) border-box`};
+  color: ${props => (props.isSelected ? `${theme.color.white}` : `${theme.color.gray}`)};
 `;
 
 export const SearchContainer = styled.div`
@@ -81,14 +88,33 @@ export const SearchContainer = styled.div`
   align-items: center;
 `;
 
-export const SearchBar = styled.div``;
+export const SearchBar = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-export const Input = styled.input`
   width: 30rem;
   padding: 0.8rem 2rem;
   font-size: 0.8rem;
   border-radius: 5rem;
   border: 1px solid ${theme.color.lightGray};
+  &:focus {
+    outline: none;
+  }
+
+  svg {
+    margin-right: 1rem;
+  }
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  /* width: 30rem;
+  padding: 0.8rem 2rem;
+  font-size: 0.8rem;
+  border-radius: 5rem;
+  border: 1px solid ${theme.color.lightGray}; */
+  border: none;
   &:focus {
     outline: none;
   }
@@ -106,14 +132,14 @@ export const Button = styled.button`
 `;
 
 export const ChallengeContainer = styled.div`
-  width: 100%;
+  width: 80%;
   margin-top: 2rem;
-  height: 63%;
-  display: flex;
-  flex-wrap: wrap; /* 아이템이 컨테이너의 너비를 초과하면 자동으로 줄바꿈 */
-  gap: 1rem; /* 아이템 간의 간격 */
-  justify-content: center; /* 아이템들을 중앙 정렬 */
-  overflow: hidden;
+  display: grid;
+  gap: 2rem 0.5rem;
+
+  grid-template-columns: repeat(5, 1fr); /* 각 줄에 5개의 열 */
+  grid-template-rows: repeat(2, auto); /* 2줄로 고정 */
+  max-width: 100vw;
 `;
 
 export const ChallengeComponent = styled.div`
@@ -124,9 +150,9 @@ export const ChallengeComponent = styled.div`
   cursor: pointer;
 `;
 
-export const ChallengeImg = styled.div`
-  width: 9rem;
-  height: 9rem;
+export const ChallengeImg = styled.img`
+  width: 9vw;
+  height: 9vw;
   border-radius: 50%;
   background-color: ${theme.color.lightGray};
 `;
@@ -146,7 +172,7 @@ export const ChallengeHeadCount = styled.p`
 
 export const PaginationWrapper = styled.div`
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
 `;
@@ -163,7 +189,7 @@ export const CreateDashBoardContainer = styled.section`
 `;
 
 export const CreateDashBoardModal = styled.div`
-  padding: 5rem;
+  padding: 4rem 5rem;
   border-radius: 1rem;
   border: 1px solid ${theme.color.stroke2};
   box-shadow: ${theme.boxShadow.default};
@@ -194,13 +220,20 @@ export const Label = styled.label`
 `;
 
 export const FileLabel = styled.label`
-  width: 13.8rem;
+  /* width: 13.8rem; */
+  z-index: 1;
+  width: 6rem;
+  height: 6rem;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   border-radius: 0.3rem;
   border: 1px solid ${theme.color.stroke2};
   color: ${theme.color.gray};
   overflow-x: scroll;
+  cursor: pointer;
+  input[type='file'] {
+    display: none;
+  }
   input[type='file']::file-selector-button {
     padding: 0.2rem 0.5rem;
     background: #fff;
@@ -263,6 +296,19 @@ export const Select = styled.select<StyledTextareaProps>`
   }
 `;
 
+export const JoinSelect = styled.select`
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0.3rem;
+  border: 1px solid ${theme.color.stroke2};
+  color: ${theme.color.black};
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: ${theme.color.lightGray};
+  }
+`;
 export const SubmitBtn = styled.button`
   margin-top: 3rem;
   padding: 0.65rem 3rem;
@@ -272,13 +318,18 @@ export const SubmitBtn = styled.button`
   color: ${theme.color.white};
 `;
 
-export const SelectTerm = styled.div`
+export const SelectTerm = styled.div<{ isSelected: boolean }>`
   margin-right: 0.3rem;
   padding: 0.55rem 1rem;
   border-radius: 0.3rem;
   border: 1px solid ${theme.color.stroke2};
   color: ${theme.color.gray};
   font-size: 0.9rem;
+  white-space: nowrap;
+
+  background-color: ${({ isSelected }) => (isSelected ? `${theme.color.stroke2}` : 'white')};
+  color: ${({ isSelected }) => isSelected && `${theme.color.text}`};
+
   cursor: pointer;
 `;
 
@@ -291,12 +342,37 @@ export const TermWrapper = styled.div`
   /* background-color: red; */
 `;
 
-export const Week = styled(SelectTerm)`
+export const Week = styled(SelectTerm)<{ isSelected: boolean }>`
   width: fit-content;
   padding: 0.5rem;
+
+  background-color: ${({ isSelected }) => (isSelected ? `${theme.color.stroke2}` : 'white')};
+  color: ${({ isSelected }) => isSelected && `${theme.color.text}`};
+
   &:last-child {
     margin-right: 0;
   }
+`;
+
+export const Month = styled.div<{ isSelected: boolean }>`
+  width: 2rem;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  padding: 0.55rem 1rem;
+  border-radius: 0.3rem;
+  border: 1px solid ${theme.color.stroke2};
+  color: ${theme.color.gray};
+  font-size: 0.9rem;
+  white-space: nowrap;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: ${({ isSelected }) => (isSelected ? `${theme.color.stroke2}` : 'white')};
+  color: ${({ isSelected }) => isSelected && `${theme.color.text}`};
+
+  cursor: pointer;
 `;
 
 export const Date = styled.div``;
@@ -312,6 +388,7 @@ export const StyledDatePicker = styled.div`
   align-items: center;
   border: none;
   font-size: 0.9rem;
+
   p {
     color: ${theme.color.gray};
     white-space: nowrap;
@@ -418,6 +495,13 @@ export const JoinButton = styled.div`
   cursor: pointer;
 `;
 
+export const EditDelButtonWrapper = styled.div`
+  display: flex;
+  margin-right: 1.5rem;
+  /* position: absolute;
+  right: 10rem; */
+`;
+
 export const EditDelButton = styled.img`
   width: 1rem;
   cursor: pointer;
@@ -446,9 +530,11 @@ export const ChallengeDetailContainer = styled.div`
 `;
 
 // 추후 img로 변환
-export const ChallengeThumbnail = styled.div`
+export const ChallengeThumbnail = styled.img`
   width: 35%;
   height: 40vh;
+
+  object-fit: cover;
   border-radius: 1.25rem 0 0 1.25rem;
   background-color: ${theme.color.stroke2};
 `;
@@ -470,6 +556,13 @@ export const DetailSquareWrapper = styled.div`
   & > *:first-child {
     margin-bottom: 0.7rem;
   }
+`;
+
+export const DetailDate = styled.p`
+  margin-top: 0.5rem;
+  line-height: 1.4rem;
+  /* font-weight: ${theme.font.weight.bold}; */
+  color: ${theme.color.gray};
 `;
 
 export const DetailContent = styled.div`
@@ -506,6 +599,7 @@ export const DetailRealTimeCountSquare = styled(DetailTermSquare)`
 
 export const ChallengeBlockPriview = styled.div`
   width: fit-content;
+  min-width: 20rem;
   max-width: 30rem;
   margin-top: 0.5rem;
 
@@ -553,7 +647,7 @@ export const ChallengeCreatorContainer = styled.div`
   }
 `;
 
-export const ProfileImage = styled.div`
+export const ProfileImage = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5rem;
@@ -584,7 +678,7 @@ export const RealTimeComponent = styled.div`
   align-items: center;
 `;
 
-export const RealTimeUserImg = styled.div`
+export const RealTimeUserImg = styled.img`
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
@@ -600,4 +694,9 @@ export const RealTimeUserName = styled.p`
   margin-top: 1.5rem;
   font-size: 1rem;
   color: ${theme.color.text};
+`;
+
+export const errorMessage = styled.p`
+  font-size: 1rem;
+  color: ${theme.color.gray};
 `;

@@ -84,6 +84,7 @@ const router = (isLoggedIn: boolean) =>
         </Route>
         <Route path="/challenge" element={<ChallengeCommunityPage />} />
         <Route path="/challenge/create" element={<CreateChallengePage />} />
+        <Route path="/challenge/create/:id" element={<CreateChallengePage />} />
         <Route path="/challenge/:id" element={<ChallengeDetailPage />} />
       </Route>
     )

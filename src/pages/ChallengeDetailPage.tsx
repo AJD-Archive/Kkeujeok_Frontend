@@ -256,17 +256,17 @@ const ChallengeDetailPage = () => {
           )}
         </S.RealTimeContainer>
 
-        {/* 삭제 동의 모달창 */}
+        {/* 챌린지 삭제 동의 모달창 */}
         {isModalOpen && isDelModalOpen && (
           <CustomModal
-            title="대시보드를 삭제하시겠습니까?"
-            subTitle="한 번 삭제된 대시보드는 되돌릴 수 없습니다."
+            title="챌린지를 삭제하시겠습니까?"
+            subTitle="한 번 삭제된 챌린지는 되돌릴 수 없습니다."
             onYesClick={handleYesClick}
             onNoClick={handleNoClick}
           />
         )}
 
-        {/* 탈퇴 동의 모달창 */}
+        {/* 챌린지 탈퇴 동의 모달창 */}
         {isModalOpen && isWithdrawModalOpen && (
           <CustomModal
             title="챌린지를 탈퇴하시겠습니까?"

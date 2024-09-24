@@ -131,7 +131,8 @@ const CreateTeamBoard = () => {
   const deleteDashboard = async () => {
     if (dashboardId) {
       await deleteTeamDashboard(dashboardId);
-      navigate('/');
+      navigate(`/tutorial`);
+      localStorage.removeItem('LatestBoard');
     }
   };
 
@@ -146,7 +147,8 @@ const CreateTeamBoard = () => {
   const quitDashboard = async () => {
     if (dashboardId) {
       await quitTeamDashboard(dashboardId);
-      navigate('/');
+      navigate(`/tutorial`);
+      localStorage.removeItem('LatestBoard');
     }
   };
 

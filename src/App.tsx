@@ -5,6 +5,7 @@ import {
   createRoutesFromElements,
   Route,
   Navigate,
+  Routes,
 } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
@@ -20,6 +21,8 @@ import SidePage from './pages/SidePage';
 import ChallengeCommunityPage from './pages/ChallengeCommunityPage';
 import CreateChallengePage from './pages/CreateChallengePage';
 import ChallengeDetailPage from './pages/ChallengeDetailPage';
+import TutorialPage from './pages/TutorialPage';
+import ErrorPage from './pages/ErrorPage';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -30,6 +33,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { useSSE } from './hooks/useSSE';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const queryClient = new QueryClient();
 
@@ -57,35 +61,160 @@ const router = (isLoggedIn: boolean) =>
   createBrowserRouter(
     createRoutesFromElements(
       <Route>
-        <Route
+        {/* 기본 라우터를 로그인 페이지로 변경 */}
+        <Route path="/" element={<LoginPage />} />
+        {/* <Route
           path="/"
           element={
             isLoggedIn ? (
-              <Navigate to={`/${localStorage.getItem('LatestBoard') ?? 1}`} replace />
+              <Navigate to={`/${localStorage.getItem('LatestBoard') ?? 'tutorial'}`} replace />
             ) : (
-              <Navigate to="/login" replace />
+              <LoginPage />
             )
           }
-        />
-        <Route path="/:id" element={<MainPage />}>
+        /> */}
+
+        {/* 로그인 상관없이 접근 가능한 라우터. 보호되지 않는 라우터 */}
+        <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
+        <Route path="*" element={<ErrorPage />} />
+
+        {/* 보호된 경로들에 ProtectedRoute 적용 */}
+        <Route
+          path="/:id"
+          element={
+            <ProtectedRoute>
+              <MainPage />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/:id/personalBlock/:blockId" element={<SidePage />} />
         </Route>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
-        <Route path="/createBoard" element={<CreateBoard />} />
-        <Route path="/createPersonalBoard" element={<CreatePersonalBoard />} />
-        <Route path="/createPersonalBoard/:id" element={<CreatePersonalBoard />} />
-        <Route path="/createTeamBoard" element={<CreateTeamBoard />} />
-        <Route path="/createTeamBoard/:id" element={<CreateTeamBoard />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/mypage/edit" element={<ProfileEdit />} />
-        <Route path="/:id/teamdocument" element={<TeamDocumentBoard />}>
-          <Route path=":documentId" element={<TeamDocument />} />
+
+        <Route
+          path="/createBoard"
+          element={
+            <ProtectedRoute>
+              <CreateBoard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/createPersonalBoard"
+          element={
+            <ProtectedRoute>
+              <CreatePersonalBoard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/createPersonalBoard/:id"
+          element={
+            <ProtectedRoute>
+              <CreatePersonalBoard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/createTeamBoard"
+          element={
+            <ProtectedRoute>
+              <CreateTeamBoard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/createTeamBoard/:id"
+          element={
+            <ProtectedRoute>
+              <CreateTeamBoard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mypage"
+          element={
+            <ProtectedRoute>
+              <MyPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mypage/edit"
+          element={
+            <ProtectedRoute>
+              <ProfileEdit />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/:id/teamdocument"
+          element={
+            <ProtectedRoute>
+              <TeamDocumentBoard />
+            </ProtectedRoute>
+          }
+        >
+          <Route
+            path=":documentId"
+            element={
+              <ProtectedRoute>
+                <TeamDocument />
+              </ProtectedRoute>
+            }
+          />
         </Route>
-        <Route path="/challenge" element={<ChallengeCommunityPage />} />
-        <Route path="/challenge/create" element={<CreateChallengePage />} />
-        <Route path="/challenge/create/:id" element={<CreateChallengePage />} />
-        <Route path="/challenge/:id" element={<ChallengeDetailPage />} />
+
+        <Route
+          path="/challenge"
+          element={
+            <ProtectedRoute>
+              <ChallengeCommunityPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/challenge/create"
+          element={
+            <ProtectedRoute>
+              <CreateChallengePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/challenge/create/:id"
+          element={
+            <ProtectedRoute>
+              <CreateChallengePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/challenge/:id"
+          element={
+            <ProtectedRoute>
+              <ChallengeDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/tutorial"
+          element={
+            <ProtectedRoute>
+              <TutorialPage />
+            </ProtectedRoute>
+          }
+        />
       </Route>
     )
   );

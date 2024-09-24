@@ -95,7 +95,8 @@ const usePersonalDashBoard = (dashboardId: string | null) => {
   const deleteDashboard = async () => {
     if (dashboardId) {
       await deletePersonalDashboard(dashboardId);
-      navigate('/');
+      navigate(`/tutorial`);
+      localStorage.removeItem('LatestBoard');
     }
   };
 

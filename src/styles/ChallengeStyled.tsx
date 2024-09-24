@@ -159,12 +159,18 @@ export const ChallengeImg = styled.img`
 `;
 
 export const ChallengeName = styled.p`
+  width: 100%;
+  text-align: center;
+
   margin-top: 1rem;
   font-size: 1.1rem;
   font-weight: ${theme.font.weight.semiBold};
 `;
 
 export const ChallengeHeadCount = styled.p`
+  width: 100%;
+  text-align: center;
+
   margin-top: 0.3rem;
   font-size: 0.8rem;
   font-weight: ${theme.font.weight.medium};

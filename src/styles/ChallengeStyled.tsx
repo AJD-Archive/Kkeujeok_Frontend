@@ -153,6 +153,7 @@ export const ChallengeComponent = styled.div`
 export const ChallengeImg = styled.img`
   width: 9vw;
   height: 9vw;
+  object-fit: cover;
   border-radius: 50%;
   background-color: ${theme.color.lightGray};
 `;
@@ -689,6 +690,7 @@ export const RealTimeComponent = styled.div`
 export const RealTimeUserImg = styled.img`
   width: 5rem;
   height: 5rem;
+  object-fit: cover;
   border-radius: 50%;
   background-color: ${theme.color.stroke2};
 `;

@@ -126,6 +126,7 @@ const TeamDocument = () => {
               list="categoryList"
               value={data.category}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <datalist id="categoryList">
               {categories.map((category, index) => (

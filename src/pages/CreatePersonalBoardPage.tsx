@@ -88,6 +88,7 @@ const CreatePersonalBoard = () => {
                   list="categoryList"
                   value={formData.category}
                   onChange={handleChange}
+                  autoComplete="off"
                 />
                 <datalist id="categoryList">
                   {categoryList.map((category, index) => (

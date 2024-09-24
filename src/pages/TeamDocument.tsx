@@ -138,7 +138,7 @@ const TeamDocument = () => {
 
         {/* 본문 작성 */}
         <StyledEditorWrapper>
-          <BlockNoteView editor={editor} onChange={onChange} />
+          <BlockNoteView editor={editor} onChange={onChange} theme="light" />
         </StyledEditorWrapper>
 
         {isModalOpen && (

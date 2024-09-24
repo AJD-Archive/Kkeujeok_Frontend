@@ -7,8 +7,9 @@ import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main from '../img/main.png';
 import { BlockListResDto } from '../types/PersonalBlock';
-import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
+
 
 type Props = {
   list: BlockListResDto[];
@@ -62,6 +63,7 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
       onLoadMore(); // 부모 컴포넌트에 새로운 데이터 요청
     }
   }, [inView]);
+
   return (
     <S.CardContainer backGroundColor={settings.backGroundColor}>
       <header>
@@ -79,10 +81,25 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
+
+            {/* {list?.map((block, index) => (
+              <Block
+                dashboardId={dashboardId}
+                key={block.blockId}
+                index={index}
+                title={block.title ?? ''}
+                dDay={block.dDay ?? 0}
+                contents={block.contents ?? ''}
+                blockId={block.blockId ?? '0'}
+                dType={block.dType ?? 'TeamDashboard'}
+                name={block.nickname ?? '이름 없음'}
+                picture={block.picture ?? ''}
+              />
+            ))} */}
             {list?.map((block, index) => {
               const isLastBlock = index === list.length - 1;
               return (
-                <div key={block.blockId}>
+                <div key={block.blockId} ref={isLastBlock ? lastBlockRef : null}>
                   <Block
                     dashboardId={dashboardId}
                     index={index}

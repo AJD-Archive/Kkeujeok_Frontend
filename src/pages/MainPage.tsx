@@ -124,7 +124,67 @@ const MainPage = () => {
     [dashboardId]
   );
 
-  const updateProgress = async () => {
+  // 데이터 fetch 후 팀 또는 개인 대시보드 데이터를 설정
+  useEffect(() => {
+    setPage(0);
+    setColumns(prevColumns => ({
+      ...prevColumns,
+      todo: {
+        ...prevColumns.todo,
+        list: [],
+        pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
+      },
+      doing: {
+        ...prevColumns.doing,
+        list: [],
+        pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
+      },
+      done: {
+        ...prevColumns.done,
+        list: [],
+        pageInfo: { currentPage: 0, totalPages: 1, totalItems: 1 },
+      },
+      delete: {
+        ...prevColumns.delete,
+        list: prevColumns.delete.list, // 휴지통 리스트 유지
+        pageInfo: prevColumns.delete.pageInfo, // 휴지통 페이지 정보 유지
+      },
+    }));
+
+    fetchData(0);
+    fetchDashboardData();
+  }, [location.pathname, fetchData]);
+
+  // 페이지가 변경될 때 데이터를 다시 가져옴
+  useEffect(() => {
+    if (page > 0) {
+      fetchData(page);
+    }
+  }, [page, fetchData]);
+
+  useEffect(() => {
+    fetchBlockData(0); // 페이지가 로드될 때 처음으로 데이터를 불러옵니다.
+  }, [dashboardId]);
+
+  // fetchTrigger 상태가 변경되면 데이터를 다시 불러옴
+  useEffect(() => {
+    fetchBlockData(0); // 트리거가 변경되면 다시 데이터 호출
+  }, [fetchTrigger]);
+  // 블록 순서 변경 디바운스 처리
+  const debouncedData = useDebounce(columns, 10);
+
+  useEffect(() => {
+    const orderArray = {
+      notStartedList: columns.todo.list.map(item => item.blockId),
+      inProgressList: columns.doing.list.map(item => item.blockId),
+      completedList: columns.done.list.map(item => item.blockId),
+    };
+    updateOrderBlock(orderArray);
+  }, [debouncedData]);
+
+  // * get 대시보드 블록
+  const fetchBlockData = async (page: number = 0) => {
+
     try {
       // 완료된 블록의 진행률을 다시 받아옴
       const updatedDashboardDetail = await getPersonalDashboard(dashboardId);
@@ -162,6 +222,7 @@ const MainPage = () => {
       const [movedItem] = newList.splice(source.index, 1);
       newList.splice(destination.index, 0, movedItem);
 
+      // ! 강제 렌더링
       flushSync(() => {
         setColumns({
           ...columns,

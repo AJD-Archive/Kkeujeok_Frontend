@@ -7,12 +7,13 @@ export const MyPageLayout = styled.section`
   margin-top: 4.125rem;
   position: relative;
 `;
-export const ChanllengeBlockContainer = styled.div`
+export const GridContainer = styled.div`
   display: grid;
+  height: 23.875rem;
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 1.0625rem;
 `;
-
 export const MainText = styled.span`
   font-size: ${theme.font.size.main};
   font-weight: ${theme.font.weight.medium};
@@ -204,8 +205,21 @@ export const AlarmDataContainer = styled.div`
   border-radius: 1rem;
   overflow: scroll;
   box-shadow: 0px 0px 10px rgba(1, 1, 1, 0.07);
+
+  span {
+    color: gray;
+    font-weight: 600;
+  }
 `;
 
 export const DashboardContainer = styled.div`
   flex: 1;
+`;
+
+export const NoContentComponent = styled.div`
+  border: 1px solid ${theme.color.stroke2};
+  border-radius: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: ${theme.color.lightGray};
 `;

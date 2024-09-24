@@ -1,11 +1,11 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Navbar from '../components/Navbar';
 import Header from '../components/Header';
 import * as S from '../styles/MainPageStyled';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { handleAutoScroll } from '../utils/handleAutoScroll';
 import { useLocation } from 'react-router-dom';
-import { StatusPersonalBlock } from '../types/PersonalBlock';
+import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
 import {
   deleteBlock,
   getDeleteBlock,
@@ -23,12 +23,19 @@ import { getTeamDashboard } from '../api/TeamDashBoardApi';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 import 'react-toastify/dist/ReactToastify.css';
 import { flushSync } from 'react-dom';
+
 export type TItemStatus = 'todo' | 'doing' | 'done' | 'delete';
+
+type Props = {
+  list: BlockListResDto[];
+  id: string;
+  dashboardId: string;
+  onLoadMore: () => void;
+};
 
 const MainPage = () => {
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[1];
-
   const [page, setPage] = useState<number>(0);
   const [fetchTrigger] = useAtom(fetchTriggerAtom); // 상태 트리거 가져오기
   const [dashboardDetail, setDashboardDetail] = useState<DashboardItem | null>(null);
@@ -36,21 +43,17 @@ const MainPage = () => {
     null
   );
 
-  // const { data } = useQuery({ queryKey: ['alarm'], queryFn: getAlarmEnrollment });
-
   const [columns, setColumns] = useState<{
     [key in TItemStatus]: {
       id: string;
       list: StatusPersonalBlock['blockListResDto'];
       pageInfo?: StatusPersonalBlock['pageInfoResDto'];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      component?: React.ComponentType<any>;
-      backGroundColor?: string;
-      highlightColor?: string;
-      progress?: string;
-      imgSrc?: string;
+      component?: React.ComponentType<Props>;
     };
   }>(initialColumns);
+
+  // 블록 순서 변경 디바운스 처리
+  const debouncedData = useDebounce(columns, 10);
 
   // 개인 및 팀 대시보드 데이터를 가져오는 useCallback 함수
   const fetchData = useCallback(
@@ -104,11 +107,16 @@ const MainPage = () => {
         }
 
         // 개인 대시보드 데이터 업데이트
-        setDashboardDetail(personalDashboardData);
+        if (personalDashboardData) {
+          setDashboardDetail(personalDashboardData);
+          setTeamDashboardDetail(null);
+        }
 
-        if (teamDashboardData)
-          // 팀 대시보드 데이터 업데이트
+        //팀 대시보드 데이터 업데이트
+        if (teamDashboardData) {
+          setDashboardDetail(null);
           setTeamDashboardDetail(teamDashboardData);
+        }
       } catch (error) {
         console.error('Error fetching data', error);
       }
@@ -176,53 +184,13 @@ const MainPage = () => {
 
   // * get 대시보드 블록
   const fetchBlockData = async (page: number = 0) => {
+
     try {
-      const [todo, doing, done, remove] = await Promise.all([
-        getPersonalBlock(dashboardId, page, 10, 'NOT_STARTED'),
-        getPersonalBlock(dashboardId, page, 10, 'IN_PROGRESS'),
-        getPersonalBlock(dashboardId, page, 10, 'COMPLETED'),
-        getDeleteBlock(dashboardId),
-      ]);
-
-      const removeBlockList = Array.isArray(remove?.blockListResDto) ? remove.blockListResDto : [];
-
-      // 데이터가 존재하는지 확인
-      if (todo && doing && done) {
-        setColumns(prevColumns => ({
-          ...prevColumns,
-          todo: {
-            ...prevColumns.todo,
-            list:
-              page === 0
-                ? todo.blockListResDto
-                : [...prevColumns.todo.list, ...todo.blockListResDto],
-            pageInfo: todo.pageInfoResDto,
-          },
-          doing: {
-            ...prevColumns.doing,
-            list:
-              page === 0
-                ? doing.blockListResDto
-                : [...prevColumns.doing.list, ...doing.blockListResDto],
-            pageInfo: doing.pageInfoResDto,
-          },
-          done: {
-            ...prevColumns.done,
-            list:
-              page === 0
-                ? done.blockListResDto
-                : [...prevColumns.done.list, ...done.blockListResDto],
-            pageInfo: done.pageInfoResDto,
-          },
-          delete: {
-            ...prevColumns.delete,
-            list: page === 0 ? remove.blockListResDto : [...remove.blockListResDto],
-            pageInfo: remove.pageInfoResDto,
-          },
-        }));
-      }
+      // 완료된 블록의 진행률을 다시 받아옴
+      const updatedDashboardDetail = await getPersonalDashboard(dashboardId);
+      setDashboardDetail(updatedDashboardDetail); // 진행률 업데이트
     } catch (error) {
-      console.error('Failed to fetch block data:', error);
+      console.error('Error updating progress', error);
     }
   };
 
@@ -232,7 +200,7 @@ const MainPage = () => {
   };
 
   // 드래그 앤 드롭 핸들러
-  const onDragEnd = ({ source, destination }: DropResult) => {
+  const onDragEnd = async ({ source, destination }: DropResult) => {
     if (!destination) return;
 
     const sourceKey = source.droppableId as TItemStatus;
@@ -246,9 +214,6 @@ const MainPage = () => {
       return;
     }
 
-    // const sourceList = columns[sourceKey].list;
-    // const destinationList = columns[destinationKey].list;
-
     const blockId = sourceList[source.index]?.blockId;
     if (!blockId) return;
 
@@ -256,6 +221,7 @@ const MainPage = () => {
       const newList = Array.from(sourceList);
       const [movedItem] = newList.splice(source.index, 1);
       newList.splice(destination.index, 0, movedItem);
+
       // ! 강제 렌더링
       flushSync(() => {
         setColumns({
@@ -269,36 +235,85 @@ const MainPage = () => {
     } else {
       const [movedItem] = sourceList.splice(source.index, 1);
       destinationList.splice(destination.index, 0, movedItem);
-      if (destinationKey !== 'delete') updatePersonalBlock(blockId, status(destinationKey));
-      else deleteBlock(blockId);
-      if (sourceKey === 'delete') {
-        deleteBlock(blockId);
+
+      if (destinationKey !== 'delete') {
+        await updatePersonalBlock(blockId, status(destinationKey)); // 블록 상태 업데이트
+      } else {
+        await deleteBlock(blockId); // 블록 삭제
       }
-      setColumns({
-        ...columns,
-        [sourceKey]: {
-          ...columns[sourceKey],
-          list: sourceList,
-        },
-        [destinationKey]: {
-          ...columns[destinationKey],
-          list: destinationList,
-        },
+
+      if (sourceKey === 'delete' && destinationKey !== 'delete') {
+        await deleteBlock(blockId); // 블록 복구
+      }
+
+      // 상태 업데이트
+      flushSync(() => {
+        setColumns({
+          ...columns,
+          [sourceKey]: {
+            ...columns[sourceKey],
+            list: sourceList,
+          },
+          [destinationKey]: {
+            ...columns[destinationKey],
+            list: destinationList,
+          },
+        });
       });
+
+      if (
+        destinationKey === 'done' ||
+        destinationKey === 'doing' ||
+        destinationKey === 'todo' ||
+        destinationKey === 'delete'
+      ) {
+        await updateProgress(); // 최신 진행률을 다시 받아와서 업데이트
+      }
     }
   };
 
   // 대시보드 상세 정보 가져오기
   const fetchDashboardData = async () => {
     const data = await getPersonalDashboard(dashboardId);
-
     if (data) setDashboardDetail(data);
   };
+
   // 유효한 데이터에 따라 mainTitle과 subTitle을 설정
   const mainTitle = teamDashboardDetail?.title || dashboardDetail?.title || '대시보드 제목';
   const subTitle =
     teamDashboardDetail?.description || dashboardDetail?.description || '대시보드 설명';
-  const blockProgress = teamDashboardDetail?.blockProgress || dashboardDetail?.blockProgress || 0;
+  const blockProgress =
+    Math.round((teamDashboardDetail?.blockProgress || dashboardDetail?.blockProgress || 0) * 10) /
+    10;
+
+  useEffect(() => {
+    const orderArray = {
+      notStartedList: columns.todo.list.map(item => item.blockId),
+      inProgressList: columns.doing.list.map(item => item.blockId),
+      completedList: columns.done.list.map(item => item.blockId),
+    };
+    updateOrderBlock(orderArray);
+  }, [debouncedData]);
+
+  useEffect(() => {
+    // fetchTrigger 변경될 때 데이터를 다시 가져옴
+    fetchData(0);
+  }, [fetchTrigger]);
+
+  // 데이터 fetch 후 팀 또는 개인 대시보드 데이터를 설정
+  useEffect(() => {
+    setPage(0);
+    fetchData(0);
+    fetchDashboardData(); //대시보드 헤더 상세 정보 가져오기
+  }, [location.pathname, fetchData, page]);
+
+  useEffect(() => {
+    fetchDashboardData(); // 대시보드 헤더 정보를 가져옴
+  }, [fetchData]);
+
+  useEffect(() => {
+    fetchData(page);
+  }, [page]);
 
   return (
     <S.MainDashBoardLayout>

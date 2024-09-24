@@ -34,5 +34,9 @@ const globalCss = () => css`
         display: none !important;
       }
     }
+
+    button:focus {
+      outline: none;
+    }
   }
 `;

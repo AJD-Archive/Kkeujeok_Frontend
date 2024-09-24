@@ -10,8 +10,8 @@ import { BlockListResDto } from '../types/PersonalBlock';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
+
 type Props = {
-  // list: StatusPersonalBlock | undefined;
   list: BlockListResDto[];
   id: string;
   dashboardId: string;
@@ -81,6 +81,7 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
+
             {/* {list?.map((block, index) => (
               <Block
                 dashboardId={dashboardId}

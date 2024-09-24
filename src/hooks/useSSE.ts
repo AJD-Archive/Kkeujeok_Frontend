@@ -1,19 +1,20 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { atom, useAtom } from 'jotai';
 import { EventSourcePolyfill } from 'event-source-polyfill';
-import { unreadCount } from '../contexts/sseAtom';
+import { notifications, unreadCount } from '../contexts/sseAtom';
 import { customErrToast } from '../utils/customErrorToast';
 import { NotificationResponse } from '../types/MyPage';
+import { apiBaseUrl } from '../utils/apiConfig';
+import { getAlarmList } from '../api/MyPageApi';
+import { useQuery } from '@tanstack/react-query';
 
 const sseConnectedAtom = atom(false); // SSE 연결 상태
 const sseMessagesAtom = atom<string[]>([]); // SSE 메시지 상태
 
-export const useSSE = (
-  setAlarmNoti?: React.Dispatch<React.SetStateAction<NotificationResponse | undefined>>
-) => {
+export const useSSE = () => {
   const [, setConnected] = useAtom(sseConnectedAtom);
   const [, setMessages] = useAtom(sseMessagesAtom);
-  const [unReadCount, setUnReadCount] = useAtom(unreadCount);
+  const [, setUnReadCount] = useAtom(unreadCount);
 
   const eventSource = useRef<EventSourcePolyfill | null>(null);
   // 재연결 타임아웃 관리
@@ -27,36 +28,39 @@ export const useSSE = (
 
     // SSE 연결 설정
     eventSource.current = new EventSourcePolyfill(
-      'https://dev.kkeujeok.store/api/notifications/stream',
+      `${process.env.REACT_APP_API_SERVER_URL}/notifications/stream`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           Connection: '',
           Accept: 'text/event-stream',
         },
-        heartbeatTimeout: 259200,
+        heartbeatTimeout: 86400000,
         withCredentials: true,
       }
     );
 
     // 메시지 수신 처리
     eventSource.current.onmessage = event => {
+      console.log(event.data);
       if (!event.data.includes('연결')) {
         const modifiedMessage = event.data.replace(/\d+$/, '');
+
         customErrToast(modifiedMessage);
         setUnReadCount(prev => prev + 1);
-        if (setAlarmNoti)
-          setAlarmNoti(prev => {
-            if (prev) {
-              return {
-                ...prev,
-                data: {
-                  ...prev.data,
-                  notificationInfoResDto: [modifiedMessage, ...prev.data.notificationInfoResDto],
-                },
-              };
-            }
-          });
+
+        // if (setAlarmNoti)
+        //   setAlarmNoti(prev => {
+        //     if (prev) {
+        //       return {
+        //         ...prev,
+        //         data: {
+        //           ...prev.data,
+        //           notificationInfoResDto: [modifiedMessage, ...prev.data.notificationInfoResDto],
+        //         },
+        //       };
+        //     }
+        //   });
       }
     };
 

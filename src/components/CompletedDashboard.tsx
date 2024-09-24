@@ -2,7 +2,6 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import Block from './Block';
 import * as S from '../styles/DashboardStyled';
 import { createPersonalBlock } from '../api/PersonalBlockApi';
-import SidePage from '../pages/SidePage';
 import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main2 from '../img/main2.png';
@@ -11,7 +10,6 @@ import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 
 type Props = {
-  // list: StatusPersonalBlock | undefined;
   list: BlockListResDto[];
   id: string;
   dashboardId: string;
@@ -20,8 +18,6 @@ type Props = {
 
 const CompletedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
   const navigate = useNavigate();
-  // const blocks = list.flatMap((item: StatusPersonalBlock) => item.blockListResDto);
-  // const blocks = list?.blockListResDto;
 
   const settings = {
     backGroundColor: '#F7F1FF',
@@ -81,6 +77,7 @@ const CompletedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
+
             {/* {list?.map((block, index) => (
               <Block
                 dashboardId={dashboardId}
@@ -122,3 +119,6 @@ const CompletedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
   );
 };
 export default CompletedDashboard;
+function onLoadMore() {
+  throw new Error('Function not implemented.');
+}

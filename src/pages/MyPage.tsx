@@ -18,13 +18,17 @@ import { fetchBlockData, fetchData, getAlarmList, updateAlarmIsRead } from '../a
 import { useAtom } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
 import Pagination from '@mui/material/Pagination';
-import { unreadCount } from '../contexts/sseAtom';
-import { useSSE } from '../hooks/useSSE';
+import { notifications, unreadCount } from '../contexts/sseAtom';
+import useTeamDashBoard from '../hooks/useTeamDashBoard';
+import { postTeamDashboard } from '../api/TeamDashBoardApi';
 
 const MyPage = () => {
   const navigate = useNavigate();
   const { data, refetch } = useQuery({ queryKey: ['profile'], queryFn: fetchData });
-  const { data: alarmNoti } = useQuery({ queryKey: ['alarmNoti'], queryFn: getAlarmList });
+  const { data: alarmNoti, refetch: AlarmRefetch } = useQuery({
+    queryKey: ['alarmNoti'],
+    queryFn: getAlarmList,
+  });
 
   console.log(alarmNoti);
   const [teamBool, setTeamBool] = useState<string>('personal'); // 기본값으로 팀 탭을 보여줌
@@ -37,15 +41,16 @@ const MyPage = () => {
 
   //* 알람 관련 변수
   const [unReadCount, setUnReadCount] = useAtom(unreadCount);
+  const [alarmList, setAlarmList] = useAtom(notifications);
   const [visibleAlarm, setAlarmVisible] = useState(false);
   const [visibleModal, setModalVisible] = useState(false);
-  const [alarmList, setAlarmList] = useState(alarmNoti);
-
-  useSSE(setAlarmList); //스트림 연결
 
   const onAlarmVisibleFunc = () => {
     setAlarmVisible(prev => !prev);
-    setUnReadCount(0);
+    if (unReadCount !== 0) {
+      // unReadCount가 0이 아닐 때만 업데이트
+      setUnReadCount(0);
+    }
     updateAlarmIsRead();
   };
 
@@ -94,6 +99,13 @@ const MyPage = () => {
     }
   };
 
+  //로그아웃
+  const onLogoutHandler = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    navigate('/login');
+  };
+
   // 처음 렌더링 시 팀 탭 데이터 호출
   useEffect(() => {
     const fetchInitialBlockData = async () => {
@@ -120,88 +132,112 @@ const MyPage = () => {
     }
   }, [alarmNoti]);
 
+  useEffect(() => {
+    AlarmRefetch();
+    setAlarmList(alarmNoti);
+  }, [unReadCount]);
+
   let content;
   if (teamBool === 'personal') {
     content = (
       <S.DashboardContainer>
-        <S.ChanllengeBlockContainer>
-          {personalBlockData?.personalDashboardInfoResDto.map((item, idx) => {
-            const { dashboardId, title, description } = item;
-            return (
-              <S.TeamBlockWrapper
-                key={idx}
-                onClick={() => {
-                  navigate(`/${dashboardId}`);
-                }}
-              >
-                <ChallengeBlock title={title} description={description} />
-              </S.TeamBlockWrapper>
-            );
-          })}
-        </S.ChanllengeBlockContainer>
-        <S.PagenateBox>
-          <Pagination
-            page={pageNumber}
-            count={personalBlockData?.pageInfoResDto.totalPages}
-            defaultPage={0}
-            onChange={onChangePageNation}
-          />
-        </S.PagenateBox>
+        {personalBlockData?.personalDashboardInfoResDto.length === 0 ? (
+          NoContentComponent
+        ) : (
+          <div>
+            <S.GridContainer>
+              {personalBlockData?.personalDashboardInfoResDto.map((item, idx) => {
+                const { dashboardId, title, description } = item;
+                return (
+                  <S.TeamBlockWrapper
+                    key={idx}
+                    onClick={() => {
+                      navigate(`/${dashboardId}`);
+                    }}
+                  >
+                    <ChallengeBlock title={title} description={description} />
+                  </S.TeamBlockWrapper>
+                );
+              })}
+            </S.GridContainer>
+
+            <S.PagenateBox>
+              <Pagination
+                page={pageNumber}
+                count={personalBlockData?.pageInfoResDto.totalPages}
+                defaultPage={0}
+                onChange={onChangePageNation}
+              />
+            </S.PagenateBox>
+          </div>
+        )}
       </S.DashboardContainer>
     );
   } else if (teamBool === 'team') {
     content = (
       <S.DashboardContainer>
-        <S.ChanllengeBlockContainer>
-          {teamBlockData?.teamDashboardInfoResDto.map((item, idx) => {
-            const { dashboardId, title, joinMembers, description } = item;
-            return (
-              <S.TeamBlockWrapper
-                key={idx}
-                onClick={() => {
-                  navigate(`/${dashboardId}`);
-                }}
-              >
-                <ChallengeBlock
-                  title={title}
-                  joinMembers={joinMembers ?? 0}
-                  description={description}
-                />
-              </S.TeamBlockWrapper>
-            );
-          })}
-        </S.ChanllengeBlockContainer>
-        <S.PagenateBox>
-          <Pagination
-            page={pageNumber}
-            count={teamBlockData?.pageInfoResDto.totalPages}
-            defaultPage={0}
-            onChange={onChangePageNation}
-          />
-        </S.PagenateBox>
+        {teamBlockData?.teamDashboardInfoResDto.length === 0 ? (
+          NoContentComponent
+        ) : (
+          <div>
+            <S.GridContainer>
+              {teamBlockData?.teamDashboardInfoResDto.map((item, idx) => {
+                const { dashboardId, title, joinMembers, description } = item;
+                return (
+                  <S.TeamBlockWrapper
+                    key={idx}
+                    onClick={() => {
+                      navigate(`/${dashboardId}`);
+                    }}
+                  >
+                    <ChallengeBlock
+                      title={title}
+                      joinMembers={joinMembers ?? 0}
+                      description={description}
+                    />
+                  </S.TeamBlockWrapper>
+                );
+              })}
+            </S.GridContainer>
+            <S.PagenateBox>
+              <Pagination
+                page={pageNumber}
+                count={teamBlockData?.pageInfoResDto.totalPages}
+                defaultPage={0}
+                onChange={onChangePageNation}
+              />
+            </S.PagenateBox>
+          </div>
+        )}
       </S.DashboardContainer>
     );
   } else if (teamBool === 'challenge') {
     content = (
       <S.DashboardContainer>
-        <S.ChanllengeBlockContainer>
-          {challengeBlockData?.challengeInfoResDto.map((item, idx) => {
-            const { title, cycle } = item;
-            return (
-              <div key={idx}>
-                <ChallengeBlock key={idx} />
-              </div>
-            );
-          })}
-        </S.ChanllengeBlockContainer>
-        <S.PagenateBox>
-          <Pagination
-            page={pageNumber}
-            count={challengeBlockData?.pageInfoResDto.totalPages}
-            defaultPage={0}
-            onChange={onChangePageNation}
-          />
-        </S.PagenateBox>
+        {challengeBlockData?.challengeInfoResDto.length === 0 ? (
+          NoContentComponent
+        ) : (
+          <div>
+            <S.GridContainer>
+              {challengeBlockData?.challengeInfoResDto.map((item, idx) => {
+                const { title, cycle } = item;
+                return (
+                  <div key={idx}>
+                    <ChallengeBlock key={idx} />
+                  </div>
+                );
+              })}
+            </S.GridContainer>
+            <S.PagenateBox>
+              <Pagination
+                page={pageNumber}
+                count={challengeBlockData?.pageInfoResDto.totalPages}
+                defaultPage={0}
+                onChange={onChangePageNation}
+              />
+            </S.PagenateBox>
+          </div>
+        )}
       </S.DashboardContainer>
     );
   }
@@ -239,7 +275,7 @@ const MyPage = () => {
 
             <Flex flexDirection="column" gap="0.75rem">
               <S.ButtonWrapper onClick={onModalVisibleFunc}>프로필 수정</S.ButtonWrapper>
-              <S.ButtonWrapper> 로그아웃 </S.ButtonWrapper>
+              <S.ButtonWrapper onClick={onLogoutHandler}> 로그아웃 </S.ButtonWrapper>
             </Flex>
           </Flex>
 
@@ -249,9 +285,18 @@ const MyPage = () => {
           </S.ImageWrapper>
           {visibleAlarm && (
             <S.AlarmDataContainer>
-              {alarmNoti?.data.notificationInfoResDto.map((item, idx) => (
-                <AlarmBlock key={idx} message={item.message} isRead={item.isRead} />
-              ))}
+              {alarmList?.data.notificationInfoResDto.length === 0 ? (
+                <Flex height={96} justifyContent="center" alignItems="center">
+                  <span>생성된 알림이 없어요</span>
+                </Flex>
+              ) : (
+                alarmList?.data.notificationInfoResDto
+                  .slice()
+                  .reverse()
+                  .map((item, idx) => (
+                    <AlarmBlock key={idx} message={item.message} isRead={item.isRead} />
+                  ))
+              )}
             </S.AlarmDataContainer>
           )}
         </Flex>
@@ -273,3 +318,11 @@ const MyPage = () => {
 };
 
 export default MyPage;
+
+const NoContentComponent = (
+  <S.NoContentComponent>
+    <Flex height={500} alignItems="center" justifyContent="center">
+      생성된 내용이 없어요
+    </Flex>
+  </S.NoContentComponent>
+);

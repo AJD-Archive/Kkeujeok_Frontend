@@ -2,18 +2,14 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import Block from './Block';
 import * as S from '../styles/DashboardStyled';
 import { createPersonalBlock } from '../api/PersonalBlockApi';
-import { useAtom } from 'jotai';
-import { visibleAtom } from '../contexts/sideScreenAtom';
-import SidePage from '../pages/SidePage';
 import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main3 from '../img/main3.png';
-import { BlockListResDto, StatusPersonalBlock } from '../types/PersonalBlock';
+import { BlockListResDto } from '../types/PersonalBlock';
 import { useInView } from 'react-intersection-observer';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 type Props = {
-  // list: StatusPersonalBlock | undefined;
   list: BlockListResDto[];
   id: string;
   dashboardId: string;
@@ -60,6 +56,7 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
 
   useEffect(() => {
     if (inView) {
+      console.log('되긴함?');
       onLoadMore(); // 부모 컴포넌트에 새로운 데이터 요청
     }
   }, [inView]);
@@ -83,21 +80,10 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
-            {/* {list?.map((block, index) => (
-              <Block
-                dashboardId={dashboardId}
-                key={block.blockId}
-                index={index}
-                title={block.title ?? ''}
-                dDay={block.dDay ?? 0}
-                contents={block.contents ?? ''}
-                blockId={block.blockId ?? '0'}
-              />
-            ))} */}
             {list?.map((block, index) => {
               const isLastBlock = index === list.length - 1;
               return (
-                <div key={block.blockId} ref={isLastBlock ? lastBlockRef : null}>
+                <div key={block.blockId}>
                   <Block
                     dashboardId={dashboardId}
                     index={index}

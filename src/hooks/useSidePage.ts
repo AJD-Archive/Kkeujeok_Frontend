@@ -4,6 +4,7 @@ import { BlockNoteEditor } from '@blocknote/core';
 import { getPersonalBlock, patchPersonalBlock } from '../api/PersonalBlockApi';
 import { useDebounce } from './useDebounce';
 import { BlockListResDto } from '../types/PersonalBlock';
+import { patch } from '@mui/system';
 
 // 훅의 반환값 타입 정의
 export interface SidePageState {
@@ -73,15 +74,41 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
     return dateString ? new Date(dateString) : null;
   };
 
-  // DatePicker의 날짜 선택 핸들러
-  const handleDateChange = (date: Date | null, type: 'start' | 'end') => {
-    setData(prevData => ({
-      ...prevData,
-      [type === 'start' ? 'startDate' : 'deadLine']: date ? date.toISOString() : null,
-    }));
+  // D-Day 계산 함수
+  const calculateDDay = (startDate: Date | null, endDate: Date | null): number => {
+    if (!startDate || !endDate) return 0;
+
+    // 시간 정보는 제거하고 날짜만 비교
+    const startDateOnly = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate()
+    );
+    const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+    const timeDifference = endDateOnly.getTime() - startDateOnly.getTime();
+    const dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // 하루 단위로 계산
+
+    return dayDifference;
   };
 
-  // startDate가 deadLine보다 이후로 설정되면 deadLine을 startDate로 변경
+  // DatePicker의 날짜 선택 핸들러
+  // DatePicker의 날짜 선택 핸들러
+  const handleDateChange = (date: Date | null, type: 'start' | 'end') => {
+    const newData = {
+      ...data,
+      [type === 'start' ? 'startDate' : 'deadLine']: date ? date.toISOString() : null,
+    };
+
+    // D-Day 값 업데이트: 시작일과 마감일을 비교하여 D-Day 계산
+    if (newData.startDate && newData.deadLine) {
+      const dDayValue = calculateDDay(new Date(newData.startDate), new Date(newData.deadLine));
+      newData.dDay = dDayValue;
+    }
+
+    setData(newData);
+  };
+  // useEffect로 startDate와 deadLine을 검증
   useEffect(() => {
     if (data.startDate && data.deadLine) {
       const start = new Date(data.startDate);
@@ -125,12 +152,15 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
     const formattedEndDate = formatDate(endDate);
 
     // 포맷된 날짜를 포함하여 요청할 데이터 객체 생성
+    console.log(data);
     const patchData = {
-      ...data,
+      title: data.title,
+      contents: data.contents,
       startDate: formattedStartDate,
       deadLine: formattedEndDate,
     };
 
+    console.log(patchData);
     // patch 요청 수행
     patchPersonalBlock(blockId, patchData);
   };

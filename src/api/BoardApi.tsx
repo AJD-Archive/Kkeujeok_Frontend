@@ -86,7 +86,7 @@ export const getPersonalDashboard = async (id: string): Promise<DashboardItem | 
     const response = await axiosInstance.get(`/dashboards/personal/${id}`);
     return response.data.data;
   } catch (error) {
-    console.log('error');
+    console.error('error', error);
     return null;
   }
 };

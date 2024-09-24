@@ -79,6 +79,7 @@ const Block = ({
           <>
             <S.BlockContainer
               marginValue={remove ? '0' : '1'}
+              dayCount={dDay ?? 999}
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
@@ -99,7 +100,7 @@ const Block = ({
                   <S.ProfileImageWrapper>
                     <Profile width="" height="" profile={picture} />
                   </S.ProfileImageWrapper>
-                  <span>{name}</span>
+                  <S.UserName>{name}</S.UserName>
                 </Flex>
               )}
             </S.BlockContainer>

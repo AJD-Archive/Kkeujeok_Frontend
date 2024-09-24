@@ -91,6 +91,14 @@ export const CreateDashBoardModal = styled.div`
   position: relative;
 `;
 
+export const ImgWrapper = styled.img`
+  width: 1rem;
+  cursor: pointer;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+`;
+
 export const CreateForm = styled.form`
   margin: 3rem;
   display: flex;

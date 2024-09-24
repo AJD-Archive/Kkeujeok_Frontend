@@ -27,11 +27,9 @@ export const patchPersonalBlock = async (
   try {
     const response = await axiosInstance.patch(`/blocks/${blockId}`, data);
     console.log(response.data);
-
-    return response.data.data.blockId;
+    return response.data;
   } catch (error) {
     console.error('Error fetching data:', error);
-
     return null;
   }
 };
@@ -40,7 +38,6 @@ export const patchPersonalBlock = async (
 export const getPersonalBlock = async (blockId: string | null): Promise<BlockListResDto | null> => {
   try {
     const response = await axiosInstance.get(`/blocks/${blockId}`);
-    // console.log(response.data.data);
     return response.data.data;
   } catch (error) {
     console.error('Error fetching data:', error);

@@ -23,9 +23,6 @@ import {
 } from '../styles/SidePageStyled';
 import { useSidePage } from '../hooks/useSidePage';
 import { BlockNoteView } from '@blocknote/mantine';
-import useInterval from '../hooks/useInterval';
-import { getPersonalBlock } from '../api/PersonalBlockApi';
-import { BlockListResDto } from '../types/PersonalBlock';
 
 const SidePage = () => {
   const navigate = useNavigate();
@@ -110,12 +107,11 @@ const SidePage = () => {
         {/* 날짜 및 시간 설정 */}
         <DateContainer>
           <Flex justifyContent="space-between">
-            <D_Day>D-{data.dDay}</D_Day>
+            <D_Day>D-{data.dDay === -1 ? 0 : data.dDay}</D_Day>
             <StyledDatePicker>
               <DatePicker
                 selected={parseDate(data.startDate)}
                 onChange={(date: Date | null) => handleDateChange(date, 'start')}
-                showTimeSelect
                 dateFormat="yyyy.MM.dd HH:mm"
                 timeIntervals={10} // 10분 간격으로 시간 선택
               />
@@ -129,7 +125,7 @@ const SidePage = () => {
                 minDate={data.startDate ? new Date(data.startDate) : undefined}
               />
             </StyledDatePicker>
-            <ImgWrapper src={trash} alt="휴지통 버튼" />
+            <div></div>
           </Flex>
           <hr />
         </DateContainer>

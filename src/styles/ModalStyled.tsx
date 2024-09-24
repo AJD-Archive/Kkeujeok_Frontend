@@ -113,6 +113,10 @@ export const StyledModalUpdate = styled(Modal)`
   gap: 40px;
 
   input:focus {
-    outline: none; /* 포커스 시 outline을 제거 */
+    outline: none;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;

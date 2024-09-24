@@ -2,9 +2,7 @@ import Graph from '../components/Graph';
 import Flex from './Flex';
 import setting from '../img/setting.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import leftarrow from '../img/leftarrow.png';
 import * as S from '../styles/HeaderStyled';
-import { dashboardType } from '../contexts/DashboardAtom';
 
 type Props = {
   mainTitle: string;
@@ -17,10 +15,6 @@ const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) =>
   const navigate = useNavigate();
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[1];
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
 
   // URL에 "teamdocument"가 포함되어 있는지 확인하는 함수
   // => 전역 변수로 개인 대시보드인지 팀 대시보드인지 확인할 예정이라 주석 처리
@@ -56,6 +50,7 @@ const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) =>
         </S.HeaderContentContainer>
         <Flex>
           <Graph blockProgress={blockProgress} />
+
           {!dashboardType && (
             <Link to={`/${dashboardId}/teamdocument`}>
               <S.TeamDocButton>팀문서</S.TeamDocButton>

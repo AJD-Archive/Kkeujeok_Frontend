@@ -1,5 +1,6 @@
 import { TeamDashboardInfoResDto, TeamDashboardResponse } from '../types/TeamDashBoard';
 import { axiosInstance } from '../utils/apiConfig';
+import { customErrToast } from '../utils/customErrorToast';
 
 // * 팀 대시보드 create
 export const createTeamDashBoard = async (
@@ -56,8 +57,9 @@ export const deleteTeamDashboard = async (id: string): Promise<void> => {
 export const postTeamDashboard = async (dashboardId: string) => {
   try {
     const response = await axiosInstance.post(`/dashboards/team/${dashboardId}/join`);
-    console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error('error');
+    customErrToast('이미 수락한 초대입니다');
   }
 };

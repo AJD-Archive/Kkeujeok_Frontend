@@ -1,15 +1,11 @@
 import Flex from './Flex';
-import edit from '../img/edit.png';
-import deleteicon from '../img/delete.png';
 import * as S from '../styles/DashboardStyled';
 import { Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import CustomModal from './CustomModal';
-import { dashboardType } from '../contexts/DashboardAtom';
-import { Link } from 'react-router-dom';
 import Profile from './Profile';
 import useModal from '../hooks/useModal';
-import { realDeleteBlock, restoreBlockFunc } from '../api/PersonalBlockApi';
+import { getPersonalBlock, realDeleteBlock, restoreBlockFunc } from '../api/PersonalBlockApi';
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { fetchTriggerAtom } from '../contexts/atoms';
@@ -94,7 +90,7 @@ const Block = ({
             >
               <Flex justifyContent="space-between">
                 <h3>{title}</h3>
-                <span>D-{dDay}</span>
+                <span>D-{dDay === -1 ? 0 : dDay}</span>
               </Flex>
               {dType === 'PersonalDashboard' ? (
                 <p>{contents}</p>

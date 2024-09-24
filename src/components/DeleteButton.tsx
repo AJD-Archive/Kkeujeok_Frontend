@@ -4,8 +4,6 @@ import * as S from '../styles/MainPageStyled';
 import { Droppable } from 'react-beautiful-dnd';
 import Block from './Block';
 import { BlockListResDto } from '../types/PersonalBlock';
-import CustomModal from './CustomModal';
-import useModal from '../hooks/useModal';
 
 interface Props {
   id: string;
@@ -23,6 +21,7 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
   const onBlockIdHandler = (num: string | null | undefined) => {
     if (num) setBlockId(num);
   };
+
   return (
     <S.DeleteContainer>
       {value && (
@@ -64,13 +63,6 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
       <S.DeleteIconWrapper onClick={onValueFunction}>
         <img src={deleteicon} alt="휴지통아이콘" />
       </S.DeleteIconWrapper>
-      {/* {isModalOpen && (
-        <CustomModal
-          title={info.title}
-          subTitle={info.subTitle}
-          onClose={onModalHandler}
-        />
-      )} */}
     </S.DeleteContainer>
   );
 };

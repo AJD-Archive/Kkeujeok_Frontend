@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import Flex from './Flex';
 import theme from '../styles/Theme/Theme';
 import { postTeamDashboard } from '../api/TeamDashBoardApi';
+import { customErrToast } from '../utils/customErrorToast';
+import { useAtom } from 'jotai';
+import { navbarUpdateTriggerAtom } from '../contexts/atoms';
 
 type Props = {
   message: string;
@@ -9,18 +12,22 @@ type Props = {
 };
 const AlarmBlock = ({ message, isRead }: Props) => {
   const nameMatch = message.match(/([가-힣]+)(?=님)/);
-
   const dashboardMatch = message.match(/\s(.+?)\s대시보드/);
-
   const numberMatch = message.match(/\d+$/);
 
   const name = nameMatch ? nameMatch[0] : null;
   const dashboard = dashboardMatch ? dashboardMatch[0] : null;
   const number = numberMatch ? numberMatch[0] : '';
+  const [, setUpdate] = useAtom(navbarUpdateTriggerAtom);
 
-  const onAcceptHandler = () => {
-    postTeamDashboard(number);
+  const onAcceptHandler = async () => {
+    const response = await postTeamDashboard(number);
+    if (response) {
+      customErrToast(`${dashboard} 초대를 수락했습니다.`);
+    }
+    setUpdate(prev => !prev);
   };
+
   return (
     <AlarmContainer isRead={isRead}>
       <Flex alignItems="center">

@@ -10,12 +10,25 @@ import { useQuery } from '@tanstack/react-query';
 import { userInfoApi } from '../api/UserApi';
 import { useAtom } from 'jotai';
 import { nicknameAtom } from '../contexts/NickName';
+import { searchPersonalDashBoard, searchTeamDashBoard } from '../api/BoardApi';
+import { navbarUpdateTriggerAtom } from '../contexts/atoms';
+import { unreadCount } from '../contexts/sseAtom';
 
 const Navbar = () => {
-  const { dashboard } = usePersonalDashBoardSearch();
-  const { teamDashboard } = useTeamDashBoard();
-  const { data: UserInfo, refetch } = useQuery({ queryKey: ['userinfo'], queryFn: userInfoApi });
+  const { data: dashboard } = useQuery({
+    queryKey: ['personalDashboard'],
+    queryFn: searchPersonalDashBoard,
+  });
+  const { data: teamDashboard, refetch } = useQuery({
+    queryKey: ['teamDashBoard'],
+    queryFn: searchTeamDashBoard,
+  });
+  const { data: UserInfo, refetch: refetchTeamDashboard } = useQuery({
+    queryKey: ['userinfo'],
+    queryFn: userInfoApi,
+  });
   const [nickname, setNickname] = useAtom(nicknameAtom);
+  const [update] = useAtom(navbarUpdateTriggerAtom);
 
   // 닉네임을 API에서 받아와서 atom에 저장
   useEffect(() => {
@@ -24,6 +37,10 @@ const Navbar = () => {
     }
   }, [UserInfo, nickname, setNickname]);
 
+  //네브바 렌더링 트리거
+  useEffect(() => {
+    refetch();
+  }, [update]);
   return (
     <S.NavBarLayout>
       <div>

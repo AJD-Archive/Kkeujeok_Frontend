@@ -68,6 +68,14 @@ const ChallengeDetailPage = () => {
     return `${year}년 ${month}월 ${day}일`;
   };
 
+  // * 오늘 날짜와 비교 함수 : 오늘이 챌린지 종료 날짜보다 지났으면 false
+  const isDateValid = (dateString?: string) => {
+    if (!dateString) return false;
+    const today = new Date();
+    const givenDate = new Date(dateString);
+    return givenDate <= today;
+  };
+
   // * 챌린지 삭제 api
   const delChallenge = async () => {
     if (challengeId) {
@@ -134,11 +142,14 @@ const ChallengeDetailPage = () => {
             )}
 
             {/* 참여하기 or 탈퇴하기 버튼 */}
-            {challengeData.isParticipant ? (
+            {isDateValid(challengeData?.endDate) ? (
+              <S.QuitButton>챌린지 마감</S.QuitButton> // 챌린지 종료됨
+            ) : challengeData.isParticipant ? ( // 챌린지 종료되지 않음, 참여 여부에 따라 버튼 표시
               <S.QuitButton onClick={submitWithdrawChallenge}>탈퇴하기</S.QuitButton>
             ) : (
               <S.JoinButton onClick={joinChallenge}>참여하기</S.JoinButton>
             )}
+
             {join && challengeId && (
               <JoinChallengeModal
                 challengeId={challengeId}
@@ -256,17 +267,17 @@ const ChallengeDetailPage = () => {
           )}
         </S.RealTimeContainer>
 
-        {/* 삭제 동의 모달창 */}
+        {/* 챌린지 삭제 동의 모달창 */}
         {isModalOpen && isDelModalOpen && (
           <CustomModal
-            title="대시보드를 삭제하시겠습니까?"
-            subTitle="한 번 삭제된 대시보드는 되돌릴 수 없습니다."
+            title="챌린지를 삭제하시겠습니까?"
+            subTitle="한 번 삭제된 챌린지는 되돌릴 수 없습니다."
             onYesClick={handleYesClick}
             onNoClick={handleNoClick}
           />
         )}
 
-        {/* 탈퇴 동의 모달창 */}
+        {/* 챌린지 탈퇴 동의 모달창 */}
         {isModalOpen && isWithdrawModalOpen && (
           <CustomModal
             title="챌린지를 탈퇴하시겠습니까?"

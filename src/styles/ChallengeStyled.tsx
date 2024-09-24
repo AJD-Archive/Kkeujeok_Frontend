@@ -153,17 +153,24 @@ export const ChallengeComponent = styled.div`
 export const ChallengeImg = styled.img`
   width: 9vw;
   height: 9vw;
+  object-fit: cover;
   border-radius: 50%;
   background-color: ${theme.color.lightGray};
 `;
 
 export const ChallengeName = styled.p`
+  width: 100%;
+  text-align: center;
+
   margin-top: 1rem;
   font-size: 1.1rem;
   font-weight: ${theme.font.weight.semiBold};
 `;
 
 export const ChallengeHeadCount = styled.p`
+  width: 100%;
+  text-align: center;
+
   margin-top: 0.3rem;
   font-size: 0.8rem;
   font-weight: ${theme.font.weight.medium};
@@ -309,6 +316,14 @@ export const JoinSelect = styled.select`
     color: ${theme.color.lightGray};
   }
 `;
+
+export const ErrorMessage = styled.p`
+  color: ${theme.color.main};
+  font-size: 0.9rem;
+  text-align: center;
+  line-height: 1.3rem;
+`;
+
 export const SubmitBtn = styled.button`
   margin-top: 3rem;
   padding: 0.65rem 3rem;
@@ -681,6 +696,7 @@ export const RealTimeComponent = styled.div`
 export const RealTimeUserImg = styled.img`
   width: 5rem;
   height: 5rem;
+  object-fit: cover;
   border-radius: 50%;
   background-color: ${theme.color.stroke2};
 `;

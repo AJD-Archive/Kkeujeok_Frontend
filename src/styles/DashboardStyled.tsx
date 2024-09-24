@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { styled, keyframes } from 'styled-components';
 import theme from '../styles/Theme/Theme';
 import rightArrowImg from '../img/rightarrow.png';
 
@@ -12,6 +12,21 @@ interface DashboardContainerProps {
   text: string;
 }
 
+// 애니메이션 정의
+const shake = keyframes`
+  /* 0% { transform: translateX(0); }
+  25% { transform: translate(-1.5px, -1.5px); }
+  50% { transform: translateX(1.5px); }
+  75% { transform: translate(-1.5px, -1.5px); }
+  100% { transform: translateX(0); } */
+
+
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg)};
+  75%{transform: rotate(-10deg)};
+  100%{transform: rotate()(0deg)};
+
+`;
 export const DashboardContainer = styled.section<DashboardContainerProps>`
   /* margin-bottom: 3.3125rem; */
   /* overflow: hidden; */
@@ -175,7 +190,11 @@ export const GraphProgress = styled.div<{ blockProgress: number }>`
 `;
 
 /* 블록 스타일*/
-export const BlockContainer = styled.div<{ marginValue: string; dayCount: number }>`
+export const BlockContainer = styled.div<{
+  marginValue: string;
+  dayCount: number;
+  isDone: boolean;
+}>`
   background: ${theme.color.white};
   padding: 1.375rem 1.375rem 1.375rem 1.375em;
   border: 1px solid #f4f4f4;
@@ -210,13 +229,20 @@ export const BlockContainer = styled.div<{ marginValue: string; dayCount: number
   }
 
   span {
+    /* 날짜 색상 : 만료일 가까워지면 다른 스타일 */
+
     font-size: ${theme.font.size.caption};
-    /* color: ${theme.color.gray}; */
-    /* font-weight: ${theme.font.weight.light}; */
-    /* 날짜 색상 : 만료일 가까워지면 빨갛고 두껍게 */
-    color: ${({ dayCount }) => (dayCount < 8 ? 'red' : theme.color.gray)};
-    font-weight: ${({ dayCount }) =>
-      dayCount < 4 ? theme.font.weight.bold : theme.font.weight.light};
+    color: ${theme.color.gray};
+    font-weight: ${theme.font.weight.light};
+
+    color: ${({ dayCount, isDone }) => (dayCount < 8 && !isDone ? 'red' : theme.color.gray)};
+    /* font-weight: ${({ dayCount }) =>
+      dayCount < 4 ? theme.font.weight.bold : theme.font.weight.light}; */
+
+    animation-name: ${({ dayCount, isDone }) => (dayCount < 8 && !isDone ? shake : 'none')};
+
+    animation-duration: 0.5s; /* 애니메이션 지속 시간 설정 */
+    animation-iteration-count: infinite; /* 애니메이션 반복 설정 */
   }
 
   &:hover {

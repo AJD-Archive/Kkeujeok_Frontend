@@ -22,6 +22,7 @@ import { fetchTriggerAtom } from '../contexts/atoms';
 import { getTeamDashboard } from '../api/TeamDashBoardApi';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 import 'react-toastify/dist/ReactToastify.css';
+import { flushSync } from 'react-dom';
 export type TItemStatus = 'todo' | 'doing' | 'done' | 'delete';
 
 const MainPage = () => {
@@ -153,7 +154,6 @@ const MainPage = () => {
     }
   }, [page, fetchData]);
 
-  useEffect(() => {}, []);
   useEffect(() => {
     fetchBlockData(0); // 페이지가 로드될 때 처음으로 데이터를 불러옵니다.
   }, [dashboardId]);
@@ -256,12 +256,15 @@ const MainPage = () => {
       const newList = Array.from(sourceList);
       const [movedItem] = newList.splice(source.index, 1);
       newList.splice(destination.index, 0, movedItem);
-      setColumns({
-        ...columns,
-        [sourceKey]: {
-          ...columns[sourceKey],
-          list: newList,
-        },
+      // ! 강제 렌더링
+      flushSync(() => {
+        setColumns({
+          ...columns,
+          [sourceKey]: {
+            ...columns[sourceKey],
+            list: newList,
+          },
+        });
       });
     } else {
       const [movedItem] = sourceList.splice(source.index, 1);

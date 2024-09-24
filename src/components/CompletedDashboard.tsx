@@ -7,15 +7,18 @@ import { Droppable } from 'react-beautiful-dnd';
 import theme from '../styles/Theme/Theme';
 import main2 from '../img/main2.png';
 import { BlockListResDto } from '../types/PersonalBlock';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
 
 type Props = {
   // list: StatusPersonalBlock | undefined;
   list: BlockListResDto[];
   id: string;
   dashboardId: string;
+  onLoadMore: () => void;
 };
 
-const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
+const CompletedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
   const navigate = useNavigate();
   // const blocks = list.flatMap((item: StatusPersonalBlock) => item.blockListResDto);
   // const blocks = list?.blockListResDto;
@@ -50,6 +53,17 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
     navigate(`personalBlock/${blockId}`, { state: { highlightColor, progress, blockId } });
   };
 
+  // 세로 무한 스크롤
+  const { ref: lastBlockRef, inView } = useInView({
+    threshold: 0, // 마지막 블록이 0% 보였을 때를 감지
+  });
+
+  useEffect(() => {
+    if (inView) {
+      onLoadMore(); // 부모 컴포넌트에 새로운 데이터 요청
+    }
+  }, [inView]);
+
   return (
     <S.CardContainer backGroundColor={settings.backGroundColor}>
       <header>
@@ -67,7 +81,7 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
-            {list?.map((block, index) => (
+            {/* {list?.map((block, index) => (
               <Block
                 dashboardId={dashboardId}
                 key={block.blockId}
@@ -80,7 +94,25 @@ const CompletedDashboard = ({ list, id, dashboardId }: Props) => {
                 name={block.nickname ?? '이름 없음'}
                 picture={block.picture ?? ''}
               />
-            ))}
+            ))} */}
+            {list?.map((block, index) => {
+              const isLastBlock = index === list.length - 1;
+              return (
+                <div key={block.blockId} ref={isLastBlock ? lastBlockRef : null}>
+                  <Block
+                    dashboardId={dashboardId}
+                    index={index}
+                    title={block.title ?? ''}
+                    dDay={block.dDay ?? 0}
+                    contents={block.contents ?? ''}
+                    blockId={block.blockId ?? '0'}
+                    dType={block.dType ?? 'TeamDashboard'}
+                    name={block.nickname ?? '이름 없음'}
+                    picture={block.picture ?? ''}
+                  />
+                </div>
+              );
+            })}
             {provided.placeholder}
           </S.BoxContainer>
         )}

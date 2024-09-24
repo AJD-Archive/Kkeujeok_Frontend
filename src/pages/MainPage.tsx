@@ -170,8 +170,6 @@ const MainPage = () => {
   useEffect(() => {
     fetchBlockData(0); // 트리거가 변경되면 다시 데이터 호출
   }, [fetchTrigger]);
-  // 블록 순서 변경 디바운스 처리
-  const debouncedData = useDebounce(columns, 10);
 
   useEffect(() => {
     const orderArray = {
@@ -184,7 +182,6 @@ const MainPage = () => {
 
   // * get 대시보드 블록
   const fetchBlockData = async (page: number = 0) => {
-
     try {
       // 완료된 블록의 진행률을 다시 받아옴
       const updatedDashboardDetail = await getPersonalDashboard(dashboardId);
@@ -194,6 +191,15 @@ const MainPage = () => {
     }
   };
 
+  const updateProgress = async () => {
+    try {
+      // 완료된 블록의 진행률을 다시 받아옴
+      const updatedDashboardDetail = await getPersonalDashboard(dashboardId);
+      setDashboardDetail(updatedDashboardDetail); // 진행률 업데이트
+    } catch (error) {
+      console.error('Error updating progress', error);
+    }
+  };
   // 세로 무한 스크롤 감지 이벤트
   const handleLoadMore = async () => {
     setPage(prevPage => prevPage + 1);

@@ -23,6 +23,8 @@ type Props = {
   dType: string | undefined;
   name: string | undefined;
   picture?: string;
+  progress?: string;
+  highlightColor?: string;
 };
 
 const Block = ({
@@ -37,6 +39,8 @@ const Block = ({
   dType,
   name,
   picture,
+  progress,
+  highlightColor,
 }: Props) => {
   const [isRemove, setIsRemove] = useState(true);
   const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal();
@@ -45,7 +49,10 @@ const Block = ({
   const navigate = useNavigate();
 
   const clickHandler = () => {
-    navigate(`personalBlock/${blockId}`);
+    // navigate(`personalBlock/${blockId}`);
+    navigate(`personalBlock/${blockId}`, {
+      state: { highlightColor, progress },
+    });
   };
   const removeFunc = async () => {
     if (blockId) {

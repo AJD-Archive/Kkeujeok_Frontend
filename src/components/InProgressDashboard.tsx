@@ -10,7 +10,6 @@ import { BlockListResDto } from '../types/PersonalBlock';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-
 type Props = {
   list: BlockListResDto[];
   id: string;
@@ -50,7 +49,9 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
     // console.log(blockId);
 
     const { highlightColor, progress } = settings;
-    navigate(`personalBlock/${blockId}`, { state: { highlightColor, progress, blockId } });
+    navigate(`personalBlock/${blockId}`, {
+      state: { highlightColor, progress, blockId },
+    });
   };
 
   // 세로 무한 스크롤
@@ -81,7 +82,6 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
-
             {/* {list?.map((block, index) => (
               <Block
                 dashboardId={dashboardId}
@@ -110,6 +110,8 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
                     dType={block.dType ?? 'TeamDashboard'}
                     name={block.nickname ?? '이름 없음'}
                     picture={block.picture ?? ''}
+                    progress={settings.progress ?? ''}
+                    highlightColor={settings.highlightColor ?? ''}
                   />
                 </div>
               );

@@ -153,6 +153,7 @@ export const GraphWrapper = styled.div`
   height: 1.3125rem;
 
   background: none;
+  overflow: hidden;
   border: 1px solid ${theme.color.lightGray};
   border-radius: 30px;
   display: flex;

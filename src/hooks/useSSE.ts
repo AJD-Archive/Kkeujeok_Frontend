@@ -28,7 +28,7 @@ export const useSSE = () => {
 
     // SSE 연결 설정
     eventSource.current = new EventSourcePolyfill(
-      `${process.env.REACT_APP_API_SERVER_URL}/notifications/stream`,
+      `${process.env.REACT_APP_API_BASE_URL}/notifications/stream`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

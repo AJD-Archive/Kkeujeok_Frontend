@@ -7,16 +7,19 @@ import { useAtom } from 'jotai';
 import { descriptionAtom, nicknameAtom } from '../contexts/NickName';
 import { useQuery } from '@tanstack/react-query';
 import { userInfoApi } from '../api/UserApi';
+import closebutton from '../img/closebutton.png';
 import { unreadCount } from '../contexts/sseAtom';
 
 type Props = {
   onModalVisibleFunc: () => void;
+  nickname: string | undefined;
+  introduction: string | undefined;
 };
-const ProfileUpdateModal = ({ onModalVisibleFunc }: Props) => {
+const ProfileUpdateModal = ({ onModalVisibleFunc, nickname, introduction }: Props) => {
   const [, setNicknameAtom] = useAtom(nicknameAtom);
   const [, setDescriptionAtom] = useAtom(descriptionAtom);
-  const [newNickname, setNewNickname] = useState<string>('');
-  const [newDescription, setNewDescription] = useState<string>('');
+  const [newNickname, setNewNickname] = useState<string>(nickname || '');
+  const [newDescription, setNewDescription] = useState<string>(introduction || '');
   const [errMsg, setErrMsg] = useState<string>('한글자 이상은 작성해주세요!');
   const [descriptionErrMsg, setDescriptionErrMsg] = useState<string>('한글자 이상은 작성해주세요!');
 
@@ -69,6 +72,9 @@ const ProfileUpdateModal = ({ onModalVisibleFunc }: Props) => {
 
   return (
     <StyledModalUpdate isOpen={true} style={customStyles}>
+      <S.CloseButtonWrapper>
+        <img src={closebutton} onClick={onModalVisibleFunc} />
+      </S.CloseButtonWrapper>
       <Flex flexDirection="column">
         <Title>내 정보수정</Title>
       </Flex>

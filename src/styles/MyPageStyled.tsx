@@ -103,6 +103,20 @@ export const CahllengeInfo = styled.div`
   }
 `;
 
+export const CloseButtonWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: end;
+
+  img {
+    width: 1rem;
+  }
+
+  img:hover {
+    cursor: pointer;
+  }
+`;
+
 export const ButtonContainer = styled.div<{ teamBool: string }>`
   display: flex;
   justify-content: space-around;
@@ -188,7 +202,7 @@ export const EditContainer = styled.div`
   }
 
   p {
-    color: red;
+    color: ${theme.color.main};
     margin-top: 0.5rem;
     margin-left: 0.5rem;
   }

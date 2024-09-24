@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import theme from '../styles/Theme/Theme';
 
 export const NavBarLayout = styled.nav`
+  position: sticky;
   width: 12.5rem;
   min-width: 12.5rem;
   height: 100vh;

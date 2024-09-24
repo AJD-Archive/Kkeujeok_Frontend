@@ -318,7 +318,13 @@ const MyPage = () => {
         </Flex>
       </S.MyPageLayout>
 
-      {visibleModal && <ProfileUpdateModal onModalVisibleFunc={onModalVisibleFunc} />}
+      {visibleModal && (
+        <ProfileUpdateModal
+          onModalVisibleFunc={onModalVisibleFunc}
+          nickname={data?.data.nickName}
+          introduction={data?.data.introduction}
+        />
+      )}
     </Flex>
   );
 };

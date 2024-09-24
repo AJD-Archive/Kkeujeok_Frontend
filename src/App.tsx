@@ -22,7 +22,6 @@ import ChallengeCommunityPage from './pages/ChallengeCommunityPage';
 import CreateChallengePage from './pages/CreateChallengePage';
 import ChallengeDetailPage from './pages/ChallengeDetailPage';
 import TutorialPage from './pages/TutorialPage';
-import ErrorPage from './pages/ErrorPage';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -34,6 +33,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { useSSE } from './hooks/useSSE';
 import ProtectedRoute from './components/ProtectedRoute';
+import Error404Page from './pages/Error404Page';
+import Error403Page from './pages/Error403Page';
 
 const queryClient = new QueryClient();
 
@@ -76,7 +77,8 @@ const router = (isLoggedIn: boolean) =>
 
         {/* 로그인 상관없이 접근 가능한 라우터. 보호되지 않는 라우터 */}
         <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<Error404Page />} />
+        <Route path="/error/403" element={<Error403Page />} />
 
         {/* 보호된 경로들에 ProtectedRoute 적용 */}
         <Route

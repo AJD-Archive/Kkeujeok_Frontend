@@ -91,7 +91,7 @@ export const BtnUpdate = styled.button`
 
 export const StyledModalUpdate = styled(Modal)`
   width: 27rem;
-  padding: 2rem 3rem;
+  padding: 1rem 1rem 2rem 1rem;
 
   /* 화면 중앙에 고정 (navbar 크기 제외) */
   position: fixed;

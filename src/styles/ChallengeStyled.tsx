@@ -309,6 +309,14 @@ export const JoinSelect = styled.select`
     color: ${theme.color.lightGray};
   }
 `;
+
+export const ErrorMessage = styled.p`
+  color: ${theme.color.main};
+  font-size: 0.9rem;
+  text-align: center;
+  line-height: 1.3rem;
+`;
+
 export const SubmitBtn = styled.button`
   margin-top: 3rem;
   padding: 0.65rem 3rem;

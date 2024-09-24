@@ -74,23 +74,40 @@ const JoinChallengeModal = ({ challengeId, onNoClick, fetchedData }: CustomModal
           챌린지를 추가할 대시보드를 선택해주세요.
         </SubTitle>
       </Flex>
-      <S.JoinSelect onChange={handleSelectChange}>
-        {data?.data.personalDashboardListResDto?.map((item: DashboardItem) => (
-          <option
-            key={item.dashboardId}
-            value={
-              item.dashboardId !== null && item.dashboardId !== undefined ? item.dashboardId : ''
-            }
-          >
-            {item.title}
-          </option>
-        ))}
-      </S.JoinSelect>
+      {data?.data.personalDashboardListResDto &&
+      data.data.personalDashboardListResDto.length > 0 ? (
+        <>
+          <S.JoinSelect onChange={handleSelectChange}>
+            {data?.data.personalDashboardListResDto?.map((item: DashboardItem) => (
+              <option
+                key={item.dashboardId}
+                value={
+                  item.dashboardId !== null && item.dashboardId !== undefined
+                    ? item.dashboardId
+                    : ''
+                }
+              >
+                {item.title}
+              </option>
+            ))}
+          </S.JoinSelect>
 
-      <Flex>
-        <BtnYes onClick={onNoClick}>취소</BtnYes>
-        <BtnNo onClick={submitJoin}>참여</BtnNo>
-      </Flex>
+          <Flex>
+            <BtnYes onClick={onNoClick}>취소</BtnYes>
+            <BtnNo onClick={submitJoin}>참여</BtnNo>
+          </Flex>
+        </>
+      ) : (
+        <>
+          <S.ErrorMessage>
+            참여할 수 있는 대시보드가 없어요. <br />
+            개인 대시보드를 생성하고 다시 시도해주세요!
+          </S.ErrorMessage>
+          <BtnYes onClick={onNoClick} style={{ margin: 0 }}>
+            취소
+          </BtnYes>
+        </>
+      )}
     </StyledModal>
   );
 };

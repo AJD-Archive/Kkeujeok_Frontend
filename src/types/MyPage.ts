@@ -3,14 +3,14 @@ import { DashboardItem } from './PersonalDashBoard';
 //* 사용자 프로필 타입
 export interface ProfileInfo {
   statusCode: number;
-  message: 'string';
+  message: string;
   data: {
-    picture: 'string';
-    email: 'string';
-    name: 'string';
-    nickName: 'string';
+    picture: string;
+    email: string;
+    name: string;
+    nickName: string;
     socialType: 'KAKAO' | 'GOOGLE';
-    introduction: 'string';
+    introduction: string;
   };
 }
 
@@ -55,6 +55,10 @@ interface ChallengeInfoResDto {
   authorName: string;
   authorProfileImage: string;
   blockName: string;
+  participantCount: number;
+  isParticipant: boolean;
+  isAuthor: boolean;
+  completedMembers: string[];
 }
 
 export interface PersonalDashboardList {

@@ -7,14 +7,14 @@ import { useAtom } from 'jotai';
 import { descriptionAtom, nicknameAtom } from '../contexts/NickName';
 import { useQuery } from '@tanstack/react-query';
 import { userInfoApi } from '../api/UserApi';
-import { customErrToast } from '../utils/customErrorToast';
+import { unreadCount } from '../contexts/sseAtom';
 
 type Props = {
   onModalVisibleFunc: () => void;
 };
 const ProfileUpdateModal = ({ onModalVisibleFunc }: Props) => {
-  const [nickname, setNicknameAtom] = useAtom(nicknameAtom);
-  const [description, setDescriptionAtom] = useAtom(descriptionAtom);
+  const [, setNicknameAtom] = useAtom(nicknameAtom);
+  const [, setDescriptionAtom] = useAtom(descriptionAtom);
   const [newNickname, setNewNickname] = useState<string>('');
   const [newDescription, setNewDescription] = useState<string>('');
   const [errMsg, setErrMsg] = useState<string>('한글자 이상은 작성해주세요!');
@@ -62,7 +62,7 @@ const ProfileUpdateModal = ({ onModalVisibleFunc }: Props) => {
     if (e.target.value === '') {
       setDescriptionErrMsg('한글자 이상은 작성해주세요!');
     } else if (e.target.value.length > 20) {
-      setDescriptionErrMsg('닉네임은 20자 이하로 작성해주세요');
+      setDescriptionErrMsg('자기소개는 20자 이하로 작성해주세요');
     }
     setNewDescription(e.target.value);
   };

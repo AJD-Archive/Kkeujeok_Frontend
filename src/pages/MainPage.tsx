@@ -107,11 +107,16 @@ const MainPage = () => {
         }
 
         // 개인 대시보드 데이터 업데이트
-        setDashboardDetail(personalDashboardData);
+        if (personalDashboardData) {
+          setDashboardDetail(personalDashboardData);
+          setTeamDashboardDetail(null);
+        }
 
-        if (teamDashboardData)
-          // 팀 대시보드 데이터 업데이트
+        //팀 대시보드 데이터 업데이트
+        if (teamDashboardData) {
+          setDashboardDetail(null);
           setTeamDashboardDetail(teamDashboardData);
+        }
       } catch (error) {
         console.error('Error fetching data', error);
       }

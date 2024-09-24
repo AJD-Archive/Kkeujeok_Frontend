@@ -297,7 +297,6 @@ const CreateChallengePage = () => {
                     right: '5rem',
                   }}
                 >
-                  {/* <p>미리보기</p> */}
                   <img
                     src={
                       typeof formData.representImage === 'string'
@@ -395,6 +394,7 @@ const CreateChallengePage = () => {
                   onChange={handleDateChange} // 날짜 선택 시 호출될 핸들러
                   showTimeSelect
                   dateFormat="yyyy.MM.dd"
+                  minDate={new Date()}
                 />
                 <p>까지</p>
               </S.StyledDatePicker2>

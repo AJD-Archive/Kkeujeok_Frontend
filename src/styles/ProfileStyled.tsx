@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import { Props } from '../components/Profile';
 
 export const ProfileImgWrapper = styled.div<Props>`
+  min-width: ${props => props.width};
   width: ${props => props.width};
   height: ${props => props.height};
   border-radius: 50%;

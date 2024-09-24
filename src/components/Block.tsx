@@ -87,6 +87,7 @@ const Block = ({
             <S.BlockContainer
               marginValue={remove ? '0' : '1'}
               dayCount={dDay ?? 999}
+              isDone={progress === '완료'}
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...provided.dragHandleProps}

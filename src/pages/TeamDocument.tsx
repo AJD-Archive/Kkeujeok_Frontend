@@ -102,9 +102,9 @@ const TeamDocument = () => {
           <Flex justifyContent="space-between">
             <Flex>
               <S.DocumentWriterImg>
-                <img src={info?.data.picture} alt="프로필 사진" />
+                <img src={data.picture} alt="프로필 사진" />
               </S.DocumentWriterImg>
-              <S.DocumnetWriter>{info?.data.nickName}</S.DocumnetWriter>
+              <S.DocumnetWriter>{data.author}</S.DocumnetWriter>
             </Flex>
             {/* 팀 문서 삭제 */}
             <DeleteIcon onClick={submitDelTeamDocument}>

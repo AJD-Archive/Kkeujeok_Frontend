@@ -101,9 +101,8 @@ const MyPage = () => {
 
   //로그아웃
   const onLogoutHandler = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    navigate('/login');
+    localStorage.clear();
+    navigate('/');
   };
 
   // 처음 렌더링 시 팀 탭 데이터 호출

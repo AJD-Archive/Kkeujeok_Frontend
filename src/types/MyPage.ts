@@ -42,6 +42,11 @@ interface TeamDashboardInfoResDto {
 }
 
 //* 챌린지 대시보드 정보 타입
+interface MemberInfo {
+  memberId: number;
+  picture: string;
+  nickname: string;
+}
 interface ChallengeInfoResDto {
   challengeId: number;
   title: string;
@@ -58,7 +63,7 @@ interface ChallengeInfoResDto {
   participantCount: number;
   isParticipant: boolean;
   isAuthor: boolean;
-  completedMembers: string[];
+  completedMembers: MemberInfo[];
 }
 
 export interface PersonalDashboardList {

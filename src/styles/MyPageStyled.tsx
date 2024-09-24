@@ -199,7 +199,7 @@ export const AlarmDataContainer = styled.div`
   right: 10px;
   top: 0px;
   width: 20.25rem;
-  max-height: 40.25rem;
+  max-height: 39.25rem;
   background: white;
   border: 1px solid #f4f4f4;
   border-radius: 1rem;

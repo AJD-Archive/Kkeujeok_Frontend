@@ -11,11 +11,29 @@ type Props = {
   isRead: boolean;
 };
 const AlarmBlock = ({ message, isRead }: Props) => {
-  const nameMatch = message.match(/([가-힣]+)(?=님)/);
-  const dashboardMatch = message.match(/\s(.+?)\s대시보드/);
-  const numberMatch = message.match(/\d+$/);
+  const modifiedMessage = message.replace(/^[^:]+: /, '');
 
-  const name = nameMatch ? nameMatch[0] : null;
+  let nameMatch;
+  let dashboardMatch;
+  let description;
+  if (message.includes('팀 대시보드 초대')) {
+    nameMatch = modifiedMessage.split('님')[0];
+    dashboardMatch = modifiedMessage.match(/\s(.+?)\s대시보드/);
+    description = `${dashboardMatch ? dashboardMatch[1] : ''} 대시보드 초대`;
+  } else if (message.includes('팀 초대 수락')) {
+    nameMatch = modifiedMessage.split('님')[0];
+    description = `초대를 수락하였습니다`;
+  } else if (message.includes('챌린지 블록이 생성되었습니다')) {
+    const index = modifiedMessage.indexOf('챌린지 블록이 생성되었습니다');
+    nameMatch = message.slice(0, index).trim();
+    description = '챌린지 블록이 생성되었습니다';
+  } else {
+    nameMatch = `반가워요! ${modifiedMessage.split('님')[0]}님이`;
+    description = `챌린지에 참여했습니다`;
+  }
+  const numberMatch = modifiedMessage.match(/\d+$/);
+
+  const name = nameMatch ? nameMatch : null;
   const dashboard = dashboardMatch ? dashboardMatch[0] : null;
   const number = numberMatch ? numberMatch[0] : '';
   const [, setUpdate] = useAtom(navbarUpdateTriggerAtom);
@@ -33,7 +51,7 @@ const AlarmBlock = ({ message, isRead }: Props) => {
       <Flex alignItems="center">
         <UserInfoContainer>
           <h6>{name}</h6>
-          <p>{dashboard} 초대</p>
+          <p>{description}</p>
         </UserInfoContainer>
         {number !== '' ? <button onClick={onAcceptHandler}>수락</button> : ''}
       </Flex>

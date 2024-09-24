@@ -44,23 +44,9 @@ export const useSSE = () => {
     eventSource.current.onmessage = event => {
       console.log(event.data);
       if (!event.data.includes('연결')) {
-        const modifiedMessage = event.data.replace(/\d+$/, '');
-
+        const modifiedMessage = event.data.replace(/^[^:]+: /, '').replace(/\d+$/, '');
         customErrToast(modifiedMessage);
         setUnReadCount(prev => prev + 1);
-
-        // if (setAlarmNoti)
-        //   setAlarmNoti(prev => {
-        //     if (prev) {
-        //       return {
-        //         ...prev,
-        //         data: {
-        //           ...prev.data,
-        //           notificationInfoResDto: [modifiedMessage, ...prev.data.notificationInfoResDto],
-        //         },
-        //       };
-        //     }
-        //   });
       }
     };
 
@@ -82,7 +68,7 @@ export const useSSE = () => {
         connectToSSE();
       }, 3000); // 3초 후 재연결
     };
-  }, [setConnected, setMessages, setUnReadCount]);
+  }, [setConnected, setMessages]);
 
   useEffect(() => {
     // 첫 연결 시도

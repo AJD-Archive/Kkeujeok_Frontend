@@ -45,13 +45,13 @@ const MyPage = () => {
   const [visibleAlarm, setAlarmVisible] = useState(false);
   const [visibleModal, setModalVisible] = useState(false);
 
-  const onAlarmVisibleFunc = () => {
+  const onAlarmVisibleFunc = async () => {
     setAlarmVisible(prev => !prev);
     if (unReadCount !== 0) {
       // unReadCount가 0이 아닐 때만 업데이트
       setUnReadCount(0);
     }
-    updateAlarmIsRead();
+    await updateAlarmIsRead();
   };
 
   const onModalVisibleFunc = () => {
@@ -183,6 +183,7 @@ const MyPage = () => {
             <S.GridContainer>
               {teamBlockData?.teamDashboardInfoResDto.map((item, idx) => {
                 const { dashboardId, title, joinMembers, description } = item;
+                console.log(dashboardId, title);
                 return (
                   <S.TeamBlockWrapper
                     key={idx}
@@ -220,10 +221,16 @@ const MyPage = () => {
           <div>
             <S.GridContainer>
               {challengeBlockData?.challengeInfoResDto.map((item, idx) => {
-                const { title, cycle } = item;
+                const { title, contents, cycle, challengeId } = item;
+
                 return (
-                  <div key={idx}>
-                    <ChallengeBlock key={idx} />
+                  <div
+                    key={idx}
+                    onClick={() => {
+                      navigate(`/challenge/${challengeId}`);
+                    }}
+                  >
+                    <ChallengeBlock key={idx} title={title} description={contents} />
                   </div>
                 );
               })}

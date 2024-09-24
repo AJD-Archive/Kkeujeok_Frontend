@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import closebutton from '../img/closebutton.png';
 import {
   CreateDashBoardLayout,
   CreateDashBoardContainer,
@@ -23,6 +23,7 @@ import {
   DelBtn,
   LastLabel,
   MemberWrapperMemberView,
+  ImgWrapper,
 } from '../styles/CreateBoardPageStyled';
 import Flex from '../components/Flex';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
@@ -48,13 +49,15 @@ const CreateTeamBoard = () => {
   const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
   const [isEmptyModalOpen, setIsEmptyModalOpen] = useState<boolean>(false);
   const [isQuitModalOpen, setIsQuitModalOpen] = useState<boolean>(false);
+  const [isBackModalOpen, setIsBackModalOpen] = useState<boolean>(false);
   const [emailInput, setEmailInput] = useState<string>(''); // 팀원 이메일 저장 (input) : 새로 입력된 팀원 이메일만 관리
   const [members, setMembers] = useState<string[]>([]); // 팀원 이메일 리스트
   const [joinMembers, setJoinMembers] = useState<ProfileData[]>([]); // 기존 팀원 리스트
   const [formData, setFormData] = useState<TeamDashboardInfoResDto>({
     title: '',
     description: '',
-    invitedEmails: [], // 기존 팀원 리스트
+    myId: '',
+    creatorId: '',
   });
 
   // * 사용자 대시보드 해시태그 불러오기 & 대시보드 수정이라면 대시보드 상세 데이터 불러오기
@@ -66,7 +69,8 @@ const CreateTeamBoard = () => {
       setFormData({
         title: data?.title ?? '', // 제목
         description: data?.description ?? '', // 설명
-        // invitedEmails: data?.invitedEmails ?? [], // 팀원 이메일
+        myId: data?.myId ?? '',
+        creatorId: data?.creatorId ?? '',
       });
     }
   };
@@ -159,11 +163,22 @@ const CreateTeamBoard = () => {
     openModal('yes', quitDashboard, handleModalClose); // yes 버튼이 눌릴 때만 대시보드 삭제 api 요청
   };
 
+  // * 뒤로가기 (초대할 팀원 이메일이 남아있는지 확인하고 모달창)
+  const back = () => {
+    if (members.length > 0) {
+      setIsBackModalOpen(true);
+      const handleModalClose = () => setIsBackModalOpen(false);
+      openModal('yes', () => navigate(`/${dashboardId}`), handleModalClose); // yes 버튼이 눌릴 때만 대시보드 삭제 api 요청
+    } else navigate(`/${dashboardId}`);
+  };
+
+  console.log(formData, '저장된 팀 대시보드 정보');
   return (
     <CreateDashBoardLayout>
       <Navbar />
       <CreateDashBoardContainer>
         <CreateDashBoardModal>
+          <ImgWrapper src={closebutton} alt="닫기 버튼" onClick={back} />
           {formData?.myId === formData.creatorId ? (
             <>
               <Title>팀 대시보드 {dashboardId ? '수정' : '생성'}</Title>
@@ -223,7 +238,7 @@ const CreateTeamBoard = () => {
                             <MemberImage src={member.picture} alt="프로필 사진"></MemberImage>
                             <MemberEmail>{member.name}</MemberEmail>
                             <MemberState>
-                              {formData?.myId !== formData.creatorId ? '멤버' : '방장'}
+                              {member.id !== formData.creatorId ? '멤버' : '방장'}
                             </MemberState>
                           </Member>
                         ))}
@@ -260,7 +275,7 @@ const CreateTeamBoard = () => {
                         <MemberImage src={member.picture} alt="프로필 사진"></MemberImage>
                         <MemberEmail>{member.name}</MemberEmail>
                         <MemberState>
-                          {formData?.myId !== formData.creatorId ? '멤버' : '방장'}
+                          {member.id !== formData.creatorId ? '멤버' : '방장'}
                         </MemberState>
                       </Member>
                     ))}
@@ -310,6 +325,16 @@ const CreateTeamBoard = () => {
         <CustomModal
           title="팀 대시보드를 탈퇴하시겠습니까?"
           subTitle="탈퇴 후 다시 초대를 받으면 팀원이 되실 수 있습니다."
+          onYesClick={handleYesClick}
+          onNoClick={handleNoClick}
+        />
+      )}
+
+      {/* 초대 알람이 가지 않았을 때 창 끌 때 동의 모달창 */}
+      {isModalOpen && isBackModalOpen && (
+        <CustomModal
+          title="팀원 초대를 취소하시겠습니까?"
+          subTitle="대시보드를 저장해주세요."
           onYesClick={handleYesClick}
           onNoClick={handleNoClick}
         />

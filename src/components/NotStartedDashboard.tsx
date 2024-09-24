@@ -8,6 +8,7 @@ import main3 from '../img/main3.png';
 import { BlockListResDto } from '../types/PersonalBlock';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
+import { progress } from 'framer-motion';
 
 type Props = {
   list: BlockListResDto[];
@@ -83,7 +84,7 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
             {list?.map((block, index) => {
               const isLastBlock = index === list.length - 1;
               return (
-                <div key={block.blockId}>
+                <div key={block.blockId} ref={isLastBlock ? lastBlockRef : null}>
                   <Block
                     dashboardId={dashboardId}
                     index={index}
@@ -94,6 +95,8 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
                     dType={block.dType ?? 'TeamDashboard'}
                     name={block.nickname ?? '이름 없음'}
                     picture={block.picture ?? ''}
+                    progress={settings.progress ?? ''}
+                    highlightColor={settings.highlightColor ?? ''}
                   />
                 </div>
               );

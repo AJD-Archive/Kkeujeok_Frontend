@@ -153,6 +153,7 @@ export const GraphWrapper = styled.div`
   height: 1.3125rem;
 
   background: none;
+  overflow: hidden;
   border: 1px solid ${theme.color.lightGray};
   border-radius: 30px;
   display: flex;
@@ -174,7 +175,7 @@ export const GraphProgress = styled.div<{ blockProgress: number }>`
 `;
 
 /* 블록 스타일*/
-export const BlockContainer = styled.div<{ marginValue: string }>`
+export const BlockContainer = styled.div<{ marginValue: string; dayCount: number }>`
   background: ${theme.color.white};
   padding: 1.375rem 1.375rem 1.375rem 1.375em;
   border: 1px solid #f4f4f4;
@@ -210,8 +211,12 @@ export const BlockContainer = styled.div<{ marginValue: string }>`
 
   span {
     font-size: ${theme.font.size.caption};
-    color: ${theme.color.gray};
-    font-weight: ${theme.font.weight.light};
+    /* color: ${theme.color.gray}; */
+    /* font-weight: ${theme.font.weight.light}; */
+    /* 날짜 색상 : 만료일 가까워지면 빨갛고 두껍게 */
+    color: ${({ dayCount }) => (dayCount < 8 ? 'red' : theme.color.gray)};
+    font-weight: ${({ dayCount }) =>
+      dayCount < 4 ? theme.font.weight.bold : theme.font.weight.light};
   }
 
   &:hover {
@@ -219,6 +224,12 @@ export const BlockContainer = styled.div<{ marginValue: string }>`
       visibility: visible;
     }
   }
+`;
+
+export const UserName = styled.p`
+  font-size: ${theme.font.size.caption};
+  color: ${theme.color.gray};
+  font-weight: ${theme.font.weight.light};
 `;
 
 /* 블록 이미지 아이콘 스타일*/

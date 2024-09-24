@@ -23,6 +23,7 @@ import {
 } from '../styles/SidePageStyled';
 import { useSidePage } from '../hooks/useSidePage';
 import { BlockNoteView } from '@blocknote/mantine';
+import { light } from '@mui/material/styles/createPalette';
 
 const SidePage = () => {
   const navigate = useNavigate();
@@ -132,7 +133,7 @@ const SidePage = () => {
 
         {/* 본문 작성 */}
         <StyledEditorWrapper>
-          <BlockNoteView editor={editor} onChange={onChange} />
+          <BlockNoteView editor={editor} onChange={onChange} theme="light" />
         </StyledEditorWrapper>
       </SideScreen>
     </SideScreenContainer>

@@ -77,7 +77,6 @@ const CompletedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
-
             {/* {list?.map((block, index) => (
               <Block
                 dashboardId={dashboardId}
@@ -106,6 +105,8 @@ const CompletedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
                     dType={block.dType ?? 'TeamDashboard'}
                     name={block.nickname ?? '이름 없음'}
                     picture={block.picture ?? ''}
+                    progress={settings.progress ?? ''}
+                    highlightColor={settings.highlightColor ?? ''}
                   />
                 </div>
               );

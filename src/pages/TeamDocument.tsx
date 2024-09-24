@@ -126,6 +126,7 @@ const TeamDocument = () => {
               list="categoryList"
               value={data.category}
               onChange={handleInputChange}
+              autoComplete="off"
             />
             <datalist id="categoryList">
               {categories.map((category, index) => (
@@ -138,7 +139,7 @@ const TeamDocument = () => {
 
         {/* 본문 작성 */}
         <StyledEditorWrapper>
-          <BlockNoteView editor={editor} onChange={onChange} />
+          <BlockNoteView editor={editor} onChange={onChange} theme="light" />
         </StyledEditorWrapper>
 
         {isModalOpen && (

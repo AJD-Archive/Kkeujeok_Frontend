@@ -6,6 +6,7 @@ import {
 } from '../types/PersonalDashBoard';
 import { TeamDashboardResponse } from '../types/TeamDashBoard';
 import { StatusPersonalBlock } from '../types/PersonalBlock';
+import { useNavigate } from 'react-router-dom';
 
 // * 개인 대시보드 블록 get (세로 무한 스크롤)
 export const getPersonalBlock = async (
@@ -85,8 +86,11 @@ export const getPersonalDashboard = async (id: string): Promise<DashboardItem | 
   try {
     const response = await axiosInstance.get(`/dashboards/personal/${id}`);
     return response.data.data;
-  } catch (error) {
-    console.error('error', error);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error('error', error.status);
+    if (error.status == 403) location.href = '/error/403';
     return null;
   }
 };

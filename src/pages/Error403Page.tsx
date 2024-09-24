@@ -2,12 +2,12 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import * as S from '../styles/ErrorPageStyled';
 
-const ErrorPage = () => {
+const Error403Page = () => {
   const navigate = useNavigate();
 
   return (
     <S.Layout>
-      {/* <svg
+      <svg
         width="110.625"
         height="34.6875"
         viewBox="0 0 177 55.5"
@@ -273,21 +273,15 @@ const ErrorPage = () => {
             <stop offset="1" stopColor="#9847FF" />
           </linearGradient>
         </defs>
-      </svg> */}
+      </svg>
 
-      <S.Title>404 ERROR</S.Title>
+      {/* <S.Title>ERROR</S.Title> */}
 
-      <S.Content>
-        죄송합니다. 페이지를 찾을 수 없습니다.
-        <br />
-        존재하지 않는 주소를 입력하셨거나,
-        <br />
-        요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.
-      </S.Content>
+      <S.Content>죄송합니다. 해당 대시보드에 접근할 권한이 없습니다.</S.Content>
 
-      <S.HomeLink onClick={() => navigate('/')}>홈으로</S.HomeLink>
+      <S.HomeLink onClick={() => navigate('/')}>뒤로가기</S.HomeLink>
     </S.Layout>
   );
 };
 
-export default ErrorPage;
+export default Error403Page;

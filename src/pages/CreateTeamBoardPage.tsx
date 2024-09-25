@@ -228,7 +228,7 @@ const CreateTeamBoard = () => {
               <Flex flexDirection="column" alignItems="center">
                 <RowWrapper>
                   {/* ! 팀원일 때 스타일 오류나면 고쳐야 할 곳 */}
-                  <LastLabel isNotCreator={isCreator?.myId !== isCreator.creatorId}>팀원</LastLabel>
+                  <LastLabel isNotCreator={isCreator?.myId === isCreator.creatorId}>팀원</LastLabel>
                   {/* 팀원일 때 보여질 팀원 리스트 */}
                   <Flex flexDirection="column">
                     {isCreator?.myId !== isCreator.creatorId && (

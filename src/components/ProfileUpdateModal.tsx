@@ -30,7 +30,7 @@ const ProfileUpdateModal = ({ onModalVisibleFunc, nickname, introduction }: Prop
     e.preventDefault();
 
     if (
-      newNickname.length >= 5 ||
+      newNickname.length >= 7 ||
       newNickname === '' ||
       newDescription.length > 20 ||
       newDescription === ''
@@ -56,7 +56,7 @@ const ProfileUpdateModal = ({ onModalVisibleFunc, nickname, introduction }: Prop
     if (e.target.value === '') {
       setErrMsg('한글자 이상은 작성해주세요!');
     } else if (e.target.value.length > 4) {
-      setErrMsg('닉네임은 4자 이하로 작성해주세요');
+      setErrMsg('닉네임은 6자 이하로 작성해주세요');
     }
     setNewNickname(e.target.value);
   };
@@ -87,7 +87,7 @@ const ProfileUpdateModal = ({ onModalVisibleFunc, nickname, introduction }: Prop
               onChange={onNickNameHandler}
               placeholder="닉네임을 입력해주세요"
             />
-            <p>{newNickname.length >= 5 && errMsg}</p>
+            <p>{newNickname.length >= 7 && errMsg}</p>
             <p>{newNickname.length === 0 && errMsg}</p>
           </label>
 

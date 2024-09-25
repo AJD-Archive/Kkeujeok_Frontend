@@ -274,7 +274,13 @@ const MyPage = () => {
                   />
                   <S.MainText>{data?.data.name}</S.MainText>
                 </Flex>
-                <S.CaptionText>{data?.data.introduction}</S.CaptionText>
+                <S.CaptionText>
+                  {data?.data.introduction ? (
+                    data?.data.introduction
+                  ) : (
+                    <span>자기 소개를 작성해주세요</span>
+                  )}
+                </S.CaptionText>
               </Flex>
             </Flex>
 

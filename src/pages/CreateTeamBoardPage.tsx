@@ -56,6 +56,10 @@ const CreateTeamBoard = () => {
   const [formData, setFormData] = useState<TeamDashboardInfoResDto>({
     title: '',
     description: '',
+    // myId: '',
+    // creatorId: '',
+  });
+  const [isCreator, setIsCreator] = useState({
     myId: '',
     creatorId: '',
   });
@@ -69,9 +73,12 @@ const CreateTeamBoard = () => {
       setFormData({
         title: data?.title ?? '', // 제목
         description: data?.description ?? '', // 설명
-        myId: data?.myId ?? '',
-        creatorId: data?.creatorId ?? '',
+        // myId: data?.myId ?? '',
+        // creatorId: data?.creatorId ?? '',
       });
+      setIsCreator({ myId: data?.myId ?? '', creatorId: data?.creatorId ?? '' });
+      // if (data?.myId !== data?.creatorId) setIsCreator(false); // 데이터 받아올 때 팀원이라면 false로
+      // if (data?.myId !== data?.creatorId) console.log('팀원입니다');
     }
   };
 
@@ -168,8 +175,8 @@ const CreateTeamBoard = () => {
     if (members.length > 0) {
       setIsBackModalOpen(true);
       const handleModalClose = () => setIsBackModalOpen(false);
-      openModal('yes', () => navigate(`/${dashboardId}`), handleModalClose); // yes 버튼이 눌릴 때만 대시보드 삭제 api 요청
-    } else navigate(`/${dashboardId}`);
+      openModal('yes', () => navigate(-1), handleModalClose); // yes 버튼이 눌릴 때만 대시보드 삭제 api 요청
+    } else navigate(-1);
   };
 
   console.log(formData, '저장된 팀 대시보드 정보');
@@ -179,7 +186,7 @@ const CreateTeamBoard = () => {
       <CreateDashBoardContainer>
         <CreateDashBoardModal>
           <ImgWrapper src={closebutton} alt="닫기 버튼" onClick={back} />
-          {formData?.myId === formData.creatorId ? (
+          {isCreator?.myId === isCreator.creatorId ? (
             <>
               <Title>팀 대시보드 {dashboardId ? '수정' : '생성'}</Title>
               <SubTitle>팀 이름과 팀 소개를 설정하고 팀원을 초대하세요.</SubTitle>
@@ -213,7 +220,7 @@ const CreateTeamBoard = () => {
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
-                    disabled={dashboardId && formData?.myId !== formData.creatorId ? true : false} // 방장일 때만 수정 가능
+                    disabled={dashboardId && isCreator?.myId !== isCreator.creatorId ? true : false} // 방장일 때만 수정 가능
                   />
                 </RowWrapper>
               </Flex>
@@ -221,10 +228,10 @@ const CreateTeamBoard = () => {
               <Flex flexDirection="column" alignItems="center">
                 <RowWrapper>
                   {/* ! 팀원일 때 스타일 오류나면 고쳐야 할 곳 */}
-                  <LastLabel isNotCreator={formData?.myId === formData.creatorId}>팀원</LastLabel>
+                  <LastLabel isNotCreator={isCreator?.myId !== isCreator.creatorId}>팀원</LastLabel>
                   {/* 팀원일 때 보여질 팀원 리스트 */}
                   <Flex flexDirection="column">
-                    {formData?.myId !== formData.creatorId && (
+                    {isCreator?.myId !== isCreator.creatorId && (
                       <MemberWrapperMemberView>
                         {members.map((member, index) => (
                           <Member key={index}>
@@ -238,7 +245,7 @@ const CreateTeamBoard = () => {
                             <MemberImage src={member.picture} alt="프로필 사진"></MemberImage>
                             <MemberEmail>{member.name}</MemberEmail>
                             <MemberState>
-                              {member.id !== formData.creatorId ? '멤버' : '방장'}
+                              {member.id !== isCreator.creatorId ? '멤버' : '방장'}
                             </MemberState>
                           </Member>
                         ))}
@@ -246,7 +253,7 @@ const CreateTeamBoard = () => {
                     )}
                   </Flex>
                   {/* 방장일 때 작성할 팀원 초대 이메일 (1) */}
-                  {formData?.myId === formData.creatorId && (
+                  {isCreator?.myId === isCreator.creatorId && (
                     <>
                       <Input
                         type="text"
@@ -261,7 +268,7 @@ const CreateTeamBoard = () => {
                 </RowWrapper>
 
                 {/* 방장일 때 보여질 멤버 리스트 (2)  */}
-                {formData?.myId === formData.creatorId && (
+                {isCreator?.myId === isCreator.creatorId && (
                   <MemberWrapper>
                     {members.map((member, index) => (
                       <Member key={index}>
@@ -275,7 +282,7 @@ const CreateTeamBoard = () => {
                         <MemberImage src={member.picture} alt="프로필 사진"></MemberImage>
                         <MemberEmail>{member.name}</MemberEmail>
                         <MemberState>
-                          {member.id !== formData.creatorId ? '멤버' : '방장'}
+                          {member.id !== isCreator.creatorId ? '멤버' : '방장'}
                         </MemberState>
                       </Member>
                     ))}
@@ -285,16 +292,16 @@ const CreateTeamBoard = () => {
             </Flex>
           </CreateForm>
 
-          {formData?.myId === formData.creatorId && (
+          {isCreator?.myId === isCreator.creatorId && (
             <SubmitBtn onClick={submitTeamDashboard}>
               팀원 초대 및 대시보드 {dashboardId ? '수정' : '생성'}
             </SubmitBtn>
           )}
 
-          {dashboardId && formData?.myId === formData.creatorId && (
+          {dashboardId && isCreator?.myId === isCreator.creatorId && (
             <DelBtn onClick={submitDelDashboard}>대시보드 삭제</DelBtn>
           )}
-          {dashboardId && formData?.myId !== formData.creatorId && (
+          {dashboardId && isCreator?.myId !== isCreator.creatorId && (
             <DelBtn onClick={submitQuitDashboard}>대시보드 탈퇴</DelBtn>
           )}
         </CreateDashBoardModal>

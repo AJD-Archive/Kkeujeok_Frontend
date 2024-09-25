@@ -15,7 +15,7 @@ type Props = {
   title: string | undefined;
   index: number;
   contents: string | undefined;
-  dDay: number | undefined;
+  dDay: string | undefined;
   dashboardId: string | undefined;
   remove?: boolean;
   onBlockIdHandler?: (num: string) => void;
@@ -86,7 +86,15 @@ const Block = ({
           <>
             <S.BlockContainer
               marginValue={remove ? '0' : '1'}
-              dayCount={dDay ?? 999}
+              dayCount={
+                dDay
+                  ? dDay === 'D-Day'
+                    ? 0
+                    : !isNaN(parseInt(dDay.replace('D-', '-').replace('D+', '')))
+                      ? parseInt(dDay.replace('D-', '-').replace('D+', ''))
+                      : 999
+                  : 999
+              }
               isDone={progress === '완료'}
               ref={provided.innerRef}
               {...provided.draggableProps}
@@ -99,7 +107,7 @@ const Block = ({
             >
               <Flex justifyContent="space-between">
                 <h3>{title}</h3>
-                <span>D-{dDay === -1 ? 0 : dDay}</span>
+                <span>{dDay}</span>
               </Flex>
               {dType === 'PersonalDashboard' ? (
                 <p>{contents}</p>

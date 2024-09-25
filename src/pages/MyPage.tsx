@@ -19,8 +19,6 @@ import { useAtom } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
 import Pagination from '@mui/material/Pagination';
 import { notifications, unreadCount } from '../contexts/sseAtom';
-import useTeamDashBoard from '../hooks/useTeamDashBoard';
-import { postTeamDashboard } from '../api/TeamDashBoardApi';
 
 const MyPage = () => {
   const navigate = useNavigate();

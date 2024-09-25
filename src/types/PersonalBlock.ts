@@ -13,7 +13,8 @@ export interface BlockListResDto {
   startDate?: string | null;
   deadLine?: string | null;
   nickname?: string;
-  dDay?: number;
+  // dDay?: number;
+  dDay?: string;
   dType?: 'PersonalDashboard';
   picture?: string;
 }

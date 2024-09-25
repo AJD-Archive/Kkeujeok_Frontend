@@ -108,11 +108,12 @@ const SidePage = () => {
         {/* 날짜 및 시간 설정 */}
         <DateContainer>
           <Flex justifyContent="space-between">
-            <D_Day>D-{data.dDay === -1 ? 0 : data.dDay}</D_Day>
+            <D_Day>{data.dDay}</D_Day>
             <StyledDatePicker>
               <DatePicker
                 selected={parseDate(data.startDate)}
                 onChange={(date: Date | null) => handleDateChange(date, 'start')}
+                showTimeSelect
                 dateFormat="yyyy.MM.dd HH:mm"
                 timeIntervals={10} // 10분 간격으로 시간 선택
               />

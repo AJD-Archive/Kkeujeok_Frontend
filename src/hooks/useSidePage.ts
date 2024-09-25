@@ -55,7 +55,7 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
     }));
   };
 
-  // 날짜 포맷 함수
+  // * 날짜 포맷 함수
   const formatDate = (date: Date | null): string => {
     if (!date) return '';
 
@@ -68,31 +68,61 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
     return `${year}.${month}.${day} ${hours}:${minutes}`;
   };
 
-  // 날짜 변환 함수
+  // * 날짜 변환 함수
   // string을 Date로 변환하는 함수
   const parseDate = (dateString?: string | null): Date | null => {
     return dateString ? new Date(dateString) : null;
   };
 
-  // D-Day 계산 함수
-  const calculateDDay = (startDate: Date | null, endDate: Date | null): number => {
-    if (!startDate || !endDate) return 0;
+  // * D-Day 계산 함수
+  const calculateDDay = (startDate: Date, endDate: Date): string => {
+    // if (!startDate || !endDate) return 0;
 
-    // 시간 정보는 제거하고 날짜만 비교
+    const today = new Date();
+    const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
     const startDateOnly = new Date(
       startDate.getFullYear(),
       startDate.getMonth(),
       startDate.getDate()
     );
+
     const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
 
-    const timeDifference = endDateOnly.getTime() - startDateOnly.getTime();
-    const dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // 하루 단위로 계산
+    // todo: 시작 날짜가 오늘 이후면 종료 - 시작
+    // todo: 시작 날짜는 오늘 전이면서 종료 날짜가 오늘 이후라면 종료 - 오늘
+    // todo: 종료 날짜가 오늘 이전이라면 오늘 - 종료
+    // todo: 종료 날짜가 오늘이라면 d-day
 
-    return dayDifference;
+    if (startDateOnly.getTime() > todayOnly.getTime()) {
+      // 시작 날짜가 오늘 이후면 종료 - 시작
+      const diffTime = endDateOnly.getTime() - startDateOnly.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      // console.log(`D-${diffDays}`);
+      return `D-${diffDays}`;
+    } else if (
+      startDateOnly.getTime() <= todayOnly.getTime() &&
+      endDateOnly.getTime() > todayOnly.getTime()
+    ) {
+      // 시작 날짜는 오늘 전이면서 종료 날짜가 오늘 이후라면 종료 - 오늘
+      const diffTime = endDateOnly.getTime() - todayOnly.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      // console.log(`D-${diffDays}`);
+      return `D-${diffDays}`;
+    } else if (endDateOnly.getTime() < todayOnly.getTime()) {
+      // 종료 날짜가 오늘 이전이라면 오늘 - 종료
+      const diffTime = todayOnly.getTime() - endDateOnly.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      // console.log(`D+${diffDays}`);
+      return `D+${diffDays}`;
+    } else if (endDateOnly.getTime() === todayOnly.getTime()) {
+      // 종료 날짜가 오늘이라면 D-Day
+      return 'D-Day';
+    }
+
+    return 'D-??';
   };
 
-  // DatePicker의 날짜 선택 핸들러
   // DatePicker의 날짜 선택 핸들러
   const handleDateChange = (date: Date | null, type: 'start' | 'end') => {
     const newData = {
@@ -100,13 +130,21 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
       [type === 'start' ? 'startDate' : 'deadLine']: date ? date.toISOString() : null,
     };
 
-    // D-Day 값 업데이트: 시작일과 마감일을 비교하여 D-Day 계산
-    if (newData.startDate && newData.deadLine) {
-      const dDayValue = calculateDDay(new Date(newData.startDate), new Date(newData.deadLine));
-      newData.dDay = dDayValue;
-    }
-
     setData(newData);
+
+    // D-Day 값 업데이트: 시작일과 마감일을 비교하여 D-Day 계산
+    // if (newData.startDate && newData.deadLine) {
+    //   const dDayValue = calculateDDay(new Date(newData.startDate), new Date(newData.deadLine));
+    //   newData.dDay = dDayValue;
+    // }
+    if (newData.startDate && newData.deadLine) {
+      const testDay = calculateDDay(new Date(newData.startDate), new Date(newData.deadLine));
+
+      setData(prevData => ({
+        ...prevData,
+        dDay: testDay,
+      }));
+    }
   };
   // useEffect로 startDate와 deadLine을 검증
   useEffect(() => {

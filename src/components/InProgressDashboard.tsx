@@ -104,7 +104,7 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
                     dashboardId={dashboardId}
                     index={index}
                     title={block.title ?? ''}
-                    dDay={block.dDay ?? 0}
+                    dDay={block.dDay ?? ''}
                     contents={block.contents ?? ''}
                     blockId={block.blockId ?? '0'}
                     dType={block.dType ?? 'TeamDashboard'}

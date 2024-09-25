@@ -35,6 +35,9 @@ import { useSSE } from './hooks/useSSE';
 import ProtectedRoute from './components/ProtectedRoute';
 import Error404Page from './pages/Error404Page';
 import Error403Page from './pages/Error403Page';
+import { useMediaQuery } from 'react-responsive';
+import Flex from './components/Flex';
+import { MobileDisplay } from './styles/ErrorPageStyled';
 
 const queryClient = new QueryClient();
 
@@ -222,11 +225,22 @@ const router = (isLoggedIn: boolean) =>
   );
 
 const App: React.FC = () => {
+  const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
   const { isLoggedIn, loading } = useAuth(); // 로그인 여부와 로딩 상태 체크
 
   if (loading) {
     // 로딩 중일 때는 아무것도 렌더링하지 않음
     return <div>Loading...</div>;
+  }
+
+  if (isMobile) {
+    return (
+      <MobileDisplay>
+        <Flex justifyContent="center" alignItems="center">
+          데스크톱만 지원 합니다
+        </Flex>
+      </MobileDisplay>
+    );
   }
 
   return (
@@ -247,6 +261,7 @@ const App: React.FC = () => {
         />
         <RouterProvider router={router(isLoggedIn)} />
       </AuthProvider>
+
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

@@ -37,3 +37,14 @@ export const HomeLink = styled(Content)`
     border-bottom: 1px solid ${theme.color.lightGray};
   }
 `;
+
+export const MobileDisplay = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: darkgray;
+`;

@@ -57,7 +57,6 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
 
   useEffect(() => {
     if (inView) {
-      console.log('되긴함?');
       onLoadMore(); // 부모 컴포넌트에 새로운 데이터 요청
     }
   }, [inView]);

@@ -102,7 +102,9 @@ const TeamDocumentBoard = () => {
         </S.Header>
 
         <S.CategoriesContainer>
-          {/* <S.Category>전체</S.Category> */}
+          <S.Category onClick={() => handleCategoryClick('')} isSelected={selectedCategory === ''}>
+            전체
+          </S.Category>
           {categories.map((category, index) => (
             <S.Category
               key={index}

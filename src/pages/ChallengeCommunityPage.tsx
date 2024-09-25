@@ -9,6 +9,7 @@ import ChallengeCard from '../components/ChallengeCard';
 import { Link } from 'react-router-dom';
 import { Challenge, ChallengeCategory, ChallengeResponse } from '../types/ChallengeType';
 import { getSearchChallenge } from '../api/ChallengeApi';
+import { NotExistingDocument } from '../styles/TeamDocumentStyled';
 
 const ChallengeCommunityPage = () => {
   const [count, setCount] = useState<number>(1); // 총 페이지 수
@@ -130,17 +131,25 @@ const ChallengeCommunityPage = () => {
           </S.SearchBar>
         </S.SearchContainer>
 
-        <Flex justifyContent="center">
-          <S.ChallengeContainer>
-            {challenges?.map((challenge, index) => (
-              <ChallengeCard key={index} challenge={challenge} />
-            ))}
-          </S.ChallengeContainer>
-        </Flex>
+        {challenges?.length !== 0 ? (
+          <>
+            <Flex justifyContent="center">
+              <S.ChallengeContainer>
+                {challenges?.map((challenge, index) => (
+                  <ChallengeCard key={index} challenge={challenge} />
+                ))}
+              </S.ChallengeContainer>
+            </Flex>
 
-        <S.PaginationWrapper>
-          <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
-        </S.PaginationWrapper>
+            <S.PaginationWrapper>
+              <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
+            </S.PaginationWrapper>
+          </>
+        ) : (
+          <Flex justifyContent="center" alignItems="center" height={400}>
+            <NotExistingDocument>해당하는 검색결과가 존재하지 않아요</NotExistingDocument>
+          </Flex>
+        )}
       </S.MainDashBoardContainer>
     </S.MainDashBoardLayout>
   );

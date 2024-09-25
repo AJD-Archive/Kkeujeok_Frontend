@@ -110,7 +110,7 @@ export const deletePersonalDashboard = async (id: string): Promise<void> => {
 // * 팀 대시보드 탈퇴
 export const quitTeamDashboard = async (id: string): Promise<void> => {
   try {
-    const response = await axiosInstance.delete(`/dashboards/team/${id}/leave}`);
+    const response = await axiosInstance.post(`/dashboards/team/${id}/leave`);
     // return response.data.data;
     console.log(response);
   } catch (error) {

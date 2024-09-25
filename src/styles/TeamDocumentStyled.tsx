@@ -172,3 +172,9 @@ export const FileImgWrapper = styled.div`
 export const FolderContainer = styled.div`
   padding: 1.1875rem 2.125rem;
 `;
+
+export const NotExistingDocument = styled.div`
+  font-size: 1.2rem;
+  color: lightgray;
+  font-weight: 600;
+`;

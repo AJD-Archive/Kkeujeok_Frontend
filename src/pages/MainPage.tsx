@@ -193,9 +193,12 @@ const MainPage = () => {
 
   const updateProgress = async () => {
     try {
-      // 완료된 블록의 진행률을 다시 받아옴
-      const updatedDashboardDetail = await getPersonalDashboard(dashboardId);
+      const [updatedDashboardDetail, updatedTeamDashboardDetail] = await Promise.all([
+        getPersonalDashboard(dashboardId),
+        getTeamDashboard(dashboardId),
+      ]);
       setDashboardDetail(updatedDashboardDetail); // 진행률 업데이트
+      setTeamDashboardDetail(updatedTeamDashboardDetail);
     } catch (error) {
       console.error('Error updating progress', error);
     }
@@ -280,8 +283,11 @@ const MainPage = () => {
 
   // 대시보드 상세 정보 가져오기
   const fetchDashboardData = async () => {
-    const data = await getPersonalDashboard(dashboardId);
-    if (data) setDashboardDetail(data);
+    const personalData = await getPersonalDashboard(dashboardId);
+    const teamData = await getTeamDashboard(dashboardId);
+
+    if (personalData) setDashboardDetail(personalData);
+    if (teamData) setTeamDashboardDetail(teamData);
   };
 
   // 유효한 데이터에 따라 mainTitle과 subTitle을 설정

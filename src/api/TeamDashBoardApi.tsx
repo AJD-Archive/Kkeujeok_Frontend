@@ -33,13 +33,14 @@ export const patchTeamDashBoard = async (
 // * 팀 대시보드 상세 정보 get
 export const getTeamDashboard = async (
   dashboardId: string
-): Promise<TeamDashboardInfoResDto | undefined> => {
+): Promise<TeamDashboardInfoResDto | null> => {
   try {
     const response = await axiosInstance.get(`/dashboards/team/${dashboardId}`);
     console.log('팀 대시보드 중간 확인', response);
     return response.data.data;
   } catch (error) {
     console.error('팀 대시보드 중간 확인에서 error');
+    return null;
   }
 };
 

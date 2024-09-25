@@ -1,9 +1,7 @@
 import Navbar from '../components/Navbar';
-import Folder from '../components/Folder';
 import Flex from '../components/Flex';
 import * as S from '../styles/TeamDocumentStyled';
 import { useLocation, useNavigate } from 'react-router-dom';
-import folderimg from '../img/folderimg.png';
 import { useEffect, useState } from 'react';
 import addbutton from '../img/addbutton.png';
 import leftarrow from '../img/leftarrow.png';
@@ -116,17 +114,25 @@ const TeamDocumentBoard = () => {
           ))}
         </S.CategoriesContainer>
 
-        {/* 팀 문서 컴포넌트 */}
-        <S.DocumentContainer>
-          {teamDocuments.map((document, index) => (
-            <DocumentCard key={index} document={document} />
-          ))}
-        </S.DocumentContainer>
+        {teamDocuments.length === 0 ? (
+          <Flex justifyContent="center" alignItems="center" height={300}>
+            <S.NotExistingDocument>생성된 팀 문서가 없어요</S.NotExistingDocument>
+          </Flex>
+        ) : (
+          <>
+            {/* 팀 문서 컴포넌트 */}
+            <S.DocumentContainer>
+              {teamDocuments.map((document, index) => (
+                <DocumentCard key={index} document={document} />
+              ))}
+            </S.DocumentContainer>
 
-        {/* 페이지네이션 */}
-        <S.PaginationWrapper>
-          <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
-        </S.PaginationWrapper>
+            {/* 페이지네이션 */}
+            <S.PaginationWrapper>
+              <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
+            </S.PaginationWrapper>
+          </>
+        )}
       </S.MainDashBoardContainer>
       <Outlet /> {/* 사이드 페이지를 위한 중첩 라우팅 */}
     </S.MainDashBoardLayout>

@@ -42,7 +42,7 @@ export const ErrorImg = styled.img`
 `;
 
 export const Title = styled.p`
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: ${theme.font.weight.bold};
   color: ${theme.color.text};
 `;

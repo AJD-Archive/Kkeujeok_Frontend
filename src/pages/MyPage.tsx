@@ -334,7 +334,7 @@ export default MyPage;
 const NoContentComponent = (
   <S.NoContentComponent>
     <Flex height={500} alignItems="center" justifyContent="center">
-      생성된 내용이 없어요
+      챌린지 참여 내역이 없습니다.
     </Flex>
   </S.NoContentComponent>
 );

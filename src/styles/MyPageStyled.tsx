@@ -15,14 +15,13 @@ export const GridContainer = styled.div`
   gap: 1.0625rem;
 `;
 export const MainText = styled.span`
-  font-size: ${theme.font.size.main};
-  font-weight: ${theme.font.weight.medium};
-  font-weight: 700;
+  font-size: ${theme.font.size.mainTitle};
+  font-weight: ${theme.font.weight.bold};
   font-size: 20px;
 `;
 
 export const CaptionText = styled.span`
-  font-size: ${theme.font.size.caption};
+  font-size: ${theme.font.size.main};
   font-weight: ${theme.font.weight.light};
   color: ${theme.color.gray};
 `;
@@ -124,6 +123,7 @@ export const ButtonContainer = styled.div<{ teamBool: string }>`
   align-self: start;
 
   button {
+    width: 4rem;
     height: 2.5rem;
     border: 1px solid ${theme.color.stroke2};
     border-radius: 0.5rem 0 0 0.5rem;
@@ -165,7 +165,7 @@ export const ButtonWrapper = styled.button`
     background-color: ${theme.color.stroke2};
   }
   &:last-child {
-    border: 1px solid ${theme.color.stroke2};
+    border: 1px solid ${theme.color.lightGray};
   }
 `;
 
@@ -179,6 +179,7 @@ export const EditContainer = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 0.8rem;
+  font-weight: ${theme.font.weight.bold};
 
   label {
     margin-bottom: 2rem;

@@ -235,14 +235,15 @@ export const BlockContainer = styled.div<{
     color: ${theme.color.gray};
     font-weight: ${theme.font.weight.light};
 
-    color: ${({ dayCount, isDone }) => (dayCount < 8 && !isDone ? 'red' : theme.color.gray)};
+    // * d-day 7일 남았을 때부터 다른 스타일
+    color: ${({ dayCount, isDone }) => (dayCount > -8 && !isDone ? 'red' : theme.color.gray)};
     /* font-weight: ${({ dayCount }) =>
       dayCount < 4 ? theme.font.weight.bold : theme.font.weight.light}; */
 
-    animation-name: ${({ dayCount, isDone }) => (dayCount < 8 && !isDone ? shake : 'none')};
+    animation-name: ${({ dayCount, isDone }) => (dayCount > -8 && !isDone ? shake : 'none')};
 
-    animation-duration: 0.5s; /* 애니메이션 지속 시간 설정 */
-    animation-iteration-count: infinite; /* 애니메이션 반복 설정 */
+    animation-duration: 0.2s; /* 애니메이션 지속 시간 설정 */
+    animation-iteration-count: 5;
   }
 
   &:hover {

@@ -38,6 +38,7 @@ import Error403Page from './pages/Error403Page';
 import { useMediaQuery } from 'react-responsive';
 import Flex from './components/Flex';
 import { MobileDisplay } from './styles/ErrorPageStyled';
+import RouteChangeTracker from './components/RouteChangeTracker';
 
 const queryClient = new QueryClient();
 
@@ -260,6 +261,8 @@ const App: React.FC = () => {
           style={{ width: '21.875rem', lineHeight: '1.5rem' }}
         />
         <RouterProvider router={router(isLoggedIn)} />
+
+        {/* <RouteChangeTracker /> */}
       </AuthProvider>
 
       <ReactQueryDevtools initialIsOpen={false} />

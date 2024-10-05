@@ -27,8 +27,12 @@ const ChallengeCard = ({ challenge }: { challenge: Challenge }) => {
     }
   }, [challenge.representImage]);
 
+  const handleNavigate = () => {
+    navigate(`${challenge.challengeId}`, { state: { title: challenge.title } });
+  };
+
   return (
-    <S.ChallengeComponent onClick={() => navigate(`${challenge.challengeId}`)}>
+    <S.ChallengeComponent onClick={handleNavigate}>
       {imageSrc ? <S.ChallengeImg src={imageSrc} /> : <S.ChallengeImg src={defaultImg} />}
       <S.ChallengeName>{challenge.title}</S.ChallengeName>
       <S.ChallengeHeadCount>

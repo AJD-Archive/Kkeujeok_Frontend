@@ -23,6 +23,7 @@ import { getTeamDashboard } from '../api/TeamDashBoardApi';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 import 'react-toastify/dist/ReactToastify.css';
 import { flushSync } from 'react-dom';
+import { Helmet } from 'react-helmet-async';
 
 export type TItemStatus = 'todo' | 'doing' | 'done' | 'delete';
 
@@ -328,37 +329,42 @@ const MainPage = () => {
   }, [page]);
 
   return (
-    <S.MainDashBoardLayout>
-      <Navbar />
-      <S.MainDashBoardContainer>
-        <Header
-          mainTitle={mainTitle}
-          subTitle={subTitle}
-          blockProgress={blockProgress}
-          dashboardType={dashboardDetail ? true : false}
-        />
-        <DragDropContext onDragEnd={onDragEnd} onDragUpdate={handleAutoScroll}>
-          <S.CardContainer>
-            {Object.values(columns).map(column => {
-              const { id, component: DashboardComponent, ...props } = column;
-              if (!DashboardComponent) {
-                return null;
-              }
-              return (
-                <DashboardComponent
-                  key={id}
-                  id={id}
-                  dashboardId={dashboardId}
-                  onLoadMore={handleLoadMore}
-                  {...props}
-                />
-              );
-            })}
-          </S.CardContainer>
-          <DeleteButton key="delete" id="delete" removeValue={true} list={columns.delete.list} />
-        </DragDropContext>
-      </S.MainDashBoardContainer>
-    </S.MainDashBoardLayout>
+    <>
+      <Helmet>
+        <title>끄적끄적 | &apos;{mainTitle}&apos; 대시보드</title>
+      </Helmet>
+      <S.MainDashBoardLayout>
+        <Navbar />
+        <S.MainDashBoardContainer>
+          <Header
+            mainTitle={mainTitle}
+            subTitle={subTitle}
+            blockProgress={blockProgress}
+            dashboardType={dashboardDetail ? true : false}
+          />
+          <DragDropContext onDragEnd={onDragEnd} onDragUpdate={handleAutoScroll}>
+            <S.CardContainer>
+              {Object.values(columns).map(column => {
+                const { id, component: DashboardComponent, ...props } = column;
+                if (!DashboardComponent) {
+                  return null;
+                }
+                return (
+                  <DashboardComponent
+                    key={id}
+                    id={id}
+                    dashboardId={dashboardId}
+                    onLoadMore={handleLoadMore}
+                    {...props}
+                  />
+                );
+              })}
+            </S.CardContainer>
+            <DeleteButton key="delete" id="delete" removeValue={true} list={columns.delete.list} />
+          </DragDropContext>
+        </S.MainDashBoardContainer>
+      </S.MainDashBoardLayout>
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import GlobalStyle from './styles/GlobalStyle';
 import ReactGA from 'react-ga4';
+import { HelmetProvider } from 'react-helmet-async';
 
 if (process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID) {
   ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID);
@@ -13,10 +14,12 @@ if (process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID) {
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <BrowserRouter>
-    <GlobalStyle />
-    <App />
-  </BrowserRouter>
+  <HelmetProvider>
+    <BrowserRouter>
+      <GlobalStyle />
+      <App />
+    </BrowserRouter>
+  </HelmetProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

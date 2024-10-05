@@ -19,6 +19,7 @@ import { useAtom } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
 import Pagination from '@mui/material/Pagination';
 import { notifications, unreadCount } from '../contexts/sseAtom';
+import { Helmet } from 'react-helmet-async';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -247,89 +248,94 @@ const MyPage = () => {
   }
 
   return (
-    <Flex alignItems="flex-start">
-      <Navbar />
-      <S.MyPageLayout>
-        <Flex alignItems="center" justifyContent="space-between">
-          <Flex
-            width="100%"
-            alignItems="center"
-            margin="0 0 2.125rem 0"
-            justifyContent="space-between"
-          >
-            <Flex justifyContent="space-between" gap="29px">
-              <Profile width="8.875rem" height="8.875rem" profile={data?.data.picture} />
-              <Flex
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="flex-start"
-                height="4rem"
-                gap="0.75rem"
-              >
-                <Flex alignItems="center" gap="0.5625rem">
-                  <S.GoogleImageIcon
-                    src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
-                    alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
-                  />
-                  <S.MainText>{data?.data.name}</S.MainText>
+    <>
+      <Helmet>
+        <title>끄적끄적 | 마이페이지</title>
+      </Helmet>
+      <Flex alignItems="flex-start">
+        <Navbar />
+        <S.MyPageLayout>
+          <Flex alignItems="center" justifyContent="space-between">
+            <Flex
+              width="100%"
+              alignItems="center"
+              margin="0 0 2.125rem 0"
+              justifyContent="space-between"
+            >
+              <Flex justifyContent="space-between" gap="29px">
+                <Profile width="8.875rem" height="8.875rem" profile={data?.data.picture} />
+                <Flex
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="flex-start"
+                  height="4rem"
+                  gap="0.75rem"
+                >
+                  <Flex alignItems="center" gap="0.5625rem">
+                    <S.GoogleImageIcon
+                      src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
+                      alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
+                    />
+                    <S.MainText>{data?.data.name}</S.MainText>
+                  </Flex>
+                  <S.CaptionText>
+                    {data?.data.introduction ? (
+                      data?.data.introduction
+                    ) : (
+                      <span>자기 소개를 작성해주세요</span>
+                    )}
+                  </S.CaptionText>
                 </Flex>
-                <S.CaptionText>
-                  {data?.data.introduction ? (
-                    data?.data.introduction
-                  ) : (
-                    <span>자기 소개를 작성해주세요</span>
-                  )}
-                </S.CaptionText>
+              </Flex>
+
+              <Flex flexDirection="column" gap="0.75rem">
+                <S.ButtonWrapper onClick={onModalVisibleFunc}>프로필 수정</S.ButtonWrapper>
+                <S.ButtonWrapper onClick={onLogoutHandler}> 로그아웃 </S.ButtonWrapper>
               </Flex>
             </Flex>
 
-            <Flex flexDirection="column" gap="0.75rem">
-              <S.ButtonWrapper onClick={onModalVisibleFunc}>프로필 수정</S.ButtonWrapper>
-              <S.ButtonWrapper onClick={onLogoutHandler}> 로그아웃 </S.ButtonWrapper>
-            </Flex>
+            <S.ImageWrapper onClick={onAlarmVisibleFunc}>
+              <img src={bell} alt="알림 아이콘" />
+              {unReadCount > 0 ? <div>!</div> : ''}
+            </S.ImageWrapper>
+            {visibleAlarm && (
+              <S.AlarmDataContainer>
+                {alarmList?.data.notificationInfoResDto.length === 0 ? (
+                  <Flex height={96} justifyContent="center" alignItems="center">
+                    <span>생성된 알림이 없어요</span>
+                  </Flex>
+                ) : (
+                  alarmList?.data.notificationInfoResDto
+                    .slice()
+                    .reverse()
+                    .map((item, idx) => (
+                      <AlarmBlock key={idx} message={item.message} isRead={item.isRead} />
+                    ))
+                )}
+              </S.AlarmDataContainer>
+            )}
           </Flex>
 
-          <S.ImageWrapper onClick={onAlarmVisibleFunc}>
-            <img src={bell} alt="알림 아이콘" />
-            {unReadCount > 0 ? <div>!</div> : ''}
-          </S.ImageWrapper>
-          {visibleAlarm && (
-            <S.AlarmDataContainer>
-              {alarmList?.data.notificationInfoResDto.length === 0 ? (
-                <Flex height={96} justifyContent="center" alignItems="center">
-                  <span>생성된 알림이 없어요</span>
-                </Flex>
-              ) : (
-                alarmList?.data.notificationInfoResDto
-                  .slice()
-                  .reverse()
-                  .map((item, idx) => (
-                    <AlarmBlock key={idx} message={item.message} isRead={item.isRead} />
-                  ))
-              )}
-            </S.AlarmDataContainer>
-          )}
-        </Flex>
+          <Flex>
+            <S.ButtonContainer teamBool={teamBool}>
+              <button onClick={onOpenPersonalFunc}>개인</button>
+              <button onClick={onOpenTeamFunc}>팀</button>
+              <button onClick={onOpenChallengeFunc}>챌린지</button>
+            </S.ButtonContainer>
 
-        <Flex>
-          <S.ButtonContainer teamBool={teamBool}>
-            <button onClick={onOpenPersonalFunc}>개인</button>
-            <button onClick={onOpenTeamFunc}>팀</button>
-            <button onClick={onOpenChallengeFunc}>챌린지</button>
-          </S.ButtonContainer>
+            {content}
+          </Flex>
+        </S.MyPageLayout>
 
-          {content}
-        </Flex>
-      </S.MyPageLayout>
-
-      {visibleModal && (
-        <ProfileUpdateModal
-          onModalVisibleFunc={onModalVisibleFunc}
-          nickname={data?.data.nickName}
-          introduction={data?.data.introduction}
-        />
-      )}
-    </Flex>
+        {visibleModal && (
+          <ProfileUpdateModal
+            onModalVisibleFunc={onModalVisibleFunc}
+            nickname={data?.data.nickName}
+            introduction={data?.data.introduction}
+          />
+        )}
+      </Flex>
+    </>
   );
 };
 

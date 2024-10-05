@@ -14,27 +14,24 @@ const RouteChangeTracker = () => {
   // localhost는 기록하지 않음
   useEffect(() => {
     if (!window.location.href.includes('localhost')) {
-      process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID &&
-        ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID);
-      setInitialized(true);
+      const trackingId = process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID;
+
+      if (trackingId) {
+        ReactGA.initialize(trackingId);
+        setInitialized(true);
+      } else {
+        console.error('Google Analytics tracking ID가 정의되어 있지 않습니다.');
+      }
     }
   }, []);
 
   // location 변경 감지시 pageview 이벤트 전송
   useEffect(() => {
-    if (initialized) {
+    if (initialized && !window.location.href.includes('localhost')) {
       ReactGA.set({ page: location.pathname });
       ReactGA.send('pageview');
     }
   }, [initialized, location]);
-
-  // 개발용
-  useEffect(() => {
-    process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID &&
-      ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID);
-    ReactGA.set({ page: location.pathname });
-    ReactGA.send('pageview');
-  }, [location]);
 };
 
 export default RouteChangeTracker;

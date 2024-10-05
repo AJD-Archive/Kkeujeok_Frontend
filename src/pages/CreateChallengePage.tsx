@@ -15,6 +15,7 @@ import { stringify } from 'querystring';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useModal from '../hooks/useModal';
 import CustomModal from '../components/CustomModal';
+import { Helmet } from 'react-helmet-async';
 
 // * 날짜 포맷 설정 함수
 const formatDate = (date: Date): string => {
@@ -232,189 +233,194 @@ const CreateChallengePage = () => {
   };
 
   return (
-    <S.MainDashBoardLayout>
-      <Navbar />
-      <S.CreateDashBoardContainer>
-        <S.CreateDashBoardModal>
-          <S.Title>챌린지 {challengeId ? '수정' : '생성'}</S.Title>
-          <S.CreateSubTitle>챌린지 팀원 모집 게시글</S.CreateSubTitle>
+    <>
+      <Helmet>
+        <title>끄적끄적 | 챌린지 생성</title>
+      </Helmet>
+      <S.MainDashBoardLayout>
+        <Navbar />
+        <S.CreateDashBoardContainer>
+          <S.CreateDashBoardModal>
+            <S.Title>챌린지 {challengeId ? '수정' : '생성'}</S.Title>
+            <S.CreateSubTitle>챌린지 팀원 모집 게시글</S.CreateSubTitle>
 
-          <S.RowWrapper>
-            <S.Label>제목</S.Label>
-            <S.InputForm
-              type="text"
-              name="title"
-              placeholder="챌린지 제목을 설정해주세요."
-              width="30rem"
-              value={formData.title}
-              onChange={handleChange}
-            />
-          </S.RowWrapper>
-
-          <S.RowWrapper>
-            <S.Label>설명</S.Label>
-            <S.Textarea
-              name="contents"
-              placeholder="챌린지 소개를 설정해주세요."
-              width="30rem"
-              maxLength={800}
-              value={formData.contents}
-              onChange={handleChange}
-            />
-          </S.RowWrapper>
-
-          <Flex>
             <S.RowWrapper>
-              <S.Label>카테고리</S.Label>
-              <S.Select
-                name="category"
-                width="17.8rem"
-                value={formData.category}
+              <S.Label>제목</S.Label>
+              <S.InputForm
+                type="text"
+                name="title"
+                placeholder="챌린지 제목을 설정해주세요."
+                width="30rem"
+                value={formData.title}
                 onChange={handleChange}
-              >
-                {Object.entries(ChallengeCategory).map(([key, value]) => (
-                  <option key={key} value={key}>
-                    {value}
-                  </option>
-                ))}
-              </S.Select>
+              />
             </S.RowWrapper>
 
             <S.RowWrapper>
-              <S.Label>대표 이미지</S.Label>
-              <S.FileLabel
-                htmlFor="file"
-                onMouseEnter={() => setIsHovering(true)} // 마우스 오버 시 상태 업데이트
-                onMouseLeave={() => setIsHovering(false)}
-              >
-                <input type="file" accept="image/*" id="file" onChange={handleFileChange} />
-              </S.FileLabel>
-              {formData.representImage && (
-                <Flex
-                  flexDirection="column"
-                  style={{
-                    position: 'absolute',
-                    right: '5rem',
-                  }}
+              <S.Label>설명</S.Label>
+              <S.Textarea
+                name="contents"
+                placeholder="챌린지 소개를 설정해주세요."
+                width="30rem"
+                maxLength={800}
+                value={formData.contents}
+                onChange={handleChange}
+              />
+            </S.RowWrapper>
+
+            <Flex>
+              <S.RowWrapper>
+                <S.Label>카테고리</S.Label>
+                <S.Select
+                  name="category"
+                  width="17.8rem"
+                  value={formData.category}
+                  onChange={handleChange}
                 >
-                  <img
-                    src={
-                      typeof formData.representImage === 'string'
-                        ? formData.representImage
-                        : URL.createObjectURL(formData.representImage)
-                    }
-                    alt="챌린지 이미지"
+                  {Object.entries(ChallengeCategory).map(([key, value]) => (
+                    <option key={key} value={key}>
+                      {value}
+                    </option>
+                  ))}
+                </S.Select>
+              </S.RowWrapper>
+
+              <S.RowWrapper>
+                <S.Label>대표 이미지</S.Label>
+                <S.FileLabel
+                  htmlFor="file"
+                  onMouseEnter={() => setIsHovering(true)} // 마우스 오버 시 상태 업데이트
+                  onMouseLeave={() => setIsHovering(false)}
+                >
+                  <input type="file" accept="image/*" id="file" onChange={handleFileChange} />
+                </S.FileLabel>
+                {formData.representImage && (
+                  <Flex
+                    flexDirection="column"
                     style={{
-                      width: '6rem',
-                      height: '6rem',
-                      borderRadius: '0.3rem',
-                      objectFit: 'cover',
+                      position: 'absolute',
+                      right: '5rem',
                     }}
-                  />
+                  >
+                    <img
+                      src={
+                        typeof formData.representImage === 'string'
+                          ? formData.representImage
+                          : URL.createObjectURL(formData.representImage)
+                      }
+                      alt="챌린지 이미지"
+                      style={{
+                        width: '6rem',
+                        height: '6rem',
+                        borderRadius: '0.3rem',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  </Flex>
+                )}
+              </S.RowWrapper>
+            </Flex>
+
+            <S.CreateSubTitle>챌린지 블록</S.CreateSubTitle>
+            <S.RowWrapper>
+              <S.Label>제목</S.Label>
+              <S.InputForm
+                type="text"
+                name="blockName"
+                placeholder="챌린지 블록 제목을 설정해주세요."
+                width="30rem"
+                value={formData.blockName}
+                onChange={handleChange}
+              />
+            </S.RowWrapper>
+
+            <S.RowWrapper>
+              <S.Label>주기</S.Label>
+              <S.SelectTerm
+                onClick={() => handleTermChange('DAILY')}
+                isSelected={formData.cycle === 'DAILY'} // 선택된 상태 확인
+              >
+                매일
+              </S.SelectTerm>
+              <S.SelectTerm
+                onClick={() => handleTermChange('WEEKLY')}
+                isSelected={formData.cycle === 'WEEKLY'} // 선택된 상태 확인
+              >
+                매주
+              </S.SelectTerm>
+              <S.SelectTerm
+                onClick={() => handleTermChange('MONTHLY')}
+                isSelected={formData.cycle === 'MONTHLY'} // 선택된 상태 확인
+              >
+                매월
+              </S.SelectTerm>
+
+              {formData.cycle === 'DAILY' && <S.TermWrapper></S.TermWrapper>}
+
+              {formData.cycle === 'WEEKLY' && (
+                <S.TermWrapper>
+                  {Object.entries(ChallengeCycleDetail_Weekly).map(([key, day], index) => (
+                    <S.Week
+                      key={key}
+                      onClick={() => handleCycleDetailClick(index + 1, 'week')}
+                      isSelected={formData.cycleDetails?.includes(key) ?? false} // 키를 사용하여 선택 상태 확인
+                    >
+                      {day}
+                    </S.Week>
+                  ))}
+                </S.TermWrapper>
+              )}
+
+              {formData.cycle === 'MONTHLY' && (
+                <Flex flexDirection="column">
+                  {chunks.map((week, index) => (
+                    <S.TermWrapper key={index}>
+                      {week.map(day => (
+                        <S.Month
+                          key={day}
+                          onClick={() => handleCycleDetailClick(day, 'day')}
+                          isSelected={isDaySelected(day)}
+                        >
+                          {day}
+                        </S.Month>
+                      ))}
+                    </S.TermWrapper>
+                  ))}
                 </Flex>
               )}
             </S.RowWrapper>
-          </Flex>
 
-          <S.CreateSubTitle>챌린지 블록</S.CreateSubTitle>
-          <S.RowWrapper>
-            <S.Label>제목</S.Label>
-            <S.InputForm
-              type="text"
-              name="blockName"
-              placeholder="챌린지 블록 제목을 설정해주세요."
-              width="30rem"
-              value={formData.blockName}
-              onChange={handleChange}
+            <S.RowWrapper>
+              <S.Label>종료 날짜</S.Label>
+              <S.EndDateWrapper>
+                <S.StyledDatePicker2>
+                  <DatePicker
+                    selected={formData.endDate ? new Date(formData.endDate) : null}
+                    onChange={handleDateChange} // 날짜 선택 시 호출될 핸들러
+                    showTimeSelect
+                    dateFormat="yyyy.MM.dd"
+                    minDate={new Date()}
+                  />
+                  <p>까지</p>
+                </S.StyledDatePicker2>
+              </S.EndDateWrapper>
+            </S.RowWrapper>
+
+            <S.SubmitBtn onClick={handleSubmit}>챌린지 {challengeId ? '수정' : '생성'}</S.SubmitBtn>
+          </S.CreateDashBoardModal>
+
+          {/* 작성되지 않은 부분이 있으면 모달창으로 알림 */}
+          {isModalOpen && (
+            <CustomModal
+              title="모든 칸을 작성해주세요."
+              subTitle="잠깐! 작성되지 않은 칸이 있습니다."
+              onYesClick={handleYesClick}
+              onNoClick={handleNoClick}
             />
-          </S.RowWrapper>
-
-          <S.RowWrapper>
-            <S.Label>주기</S.Label>
-            <S.SelectTerm
-              onClick={() => handleTermChange('DAILY')}
-              isSelected={formData.cycle === 'DAILY'} // 선택된 상태 확인
-            >
-              매일
-            </S.SelectTerm>
-            <S.SelectTerm
-              onClick={() => handleTermChange('WEEKLY')}
-              isSelected={formData.cycle === 'WEEKLY'} // 선택된 상태 확인
-            >
-              매주
-            </S.SelectTerm>
-            <S.SelectTerm
-              onClick={() => handleTermChange('MONTHLY')}
-              isSelected={formData.cycle === 'MONTHLY'} // 선택된 상태 확인
-            >
-              매월
-            </S.SelectTerm>
-
-            {formData.cycle === 'DAILY' && <S.TermWrapper></S.TermWrapper>}
-
-            {formData.cycle === 'WEEKLY' && (
-              <S.TermWrapper>
-                {Object.entries(ChallengeCycleDetail_Weekly).map(([key, day], index) => (
-                  <S.Week
-                    key={key}
-                    onClick={() => handleCycleDetailClick(index + 1, 'week')}
-                    isSelected={formData.cycleDetails?.includes(key) ?? false} // 키를 사용하여 선택 상태 확인
-                  >
-                    {day}
-                  </S.Week>
-                ))}
-              </S.TermWrapper>
-            )}
-
-            {formData.cycle === 'MONTHLY' && (
-              <Flex flexDirection="column">
-                {chunks.map((week, index) => (
-                  <S.TermWrapper key={index}>
-                    {week.map(day => (
-                      <S.Month
-                        key={day}
-                        onClick={() => handleCycleDetailClick(day, 'day')}
-                        isSelected={isDaySelected(day)}
-                      >
-                        {day}
-                      </S.Month>
-                    ))}
-                  </S.TermWrapper>
-                ))}
-              </Flex>
-            )}
-          </S.RowWrapper>
-
-          <S.RowWrapper>
-            <S.Label>종료 날짜</S.Label>
-            <S.EndDateWrapper>
-              <S.StyledDatePicker2>
-                <DatePicker
-                  selected={formData.endDate ? new Date(formData.endDate) : null}
-                  onChange={handleDateChange} // 날짜 선택 시 호출될 핸들러
-                  showTimeSelect
-                  dateFormat="yyyy.MM.dd"
-                  minDate={new Date()}
-                />
-                <p>까지</p>
-              </S.StyledDatePicker2>
-            </S.EndDateWrapper>
-          </S.RowWrapper>
-
-          <S.SubmitBtn onClick={handleSubmit}>챌린지 {challengeId ? '수정' : '생성'}</S.SubmitBtn>
-        </S.CreateDashBoardModal>
-
-        {/* 작성되지 않은 부분이 있으면 모달창으로 알림 */}
-        {isModalOpen && (
-          <CustomModal
-            title="모든 칸을 작성해주세요."
-            subTitle="잠깐! 작성되지 않은 칸이 있습니다."
-            onYesClick={handleYesClick}
-            onNoClick={handleNoClick}
-          />
-        )}
-      </S.CreateDashBoardContainer>
-    </S.MainDashBoardLayout>
+          )}
+        </S.CreateDashBoardContainer>
+      </S.MainDashBoardLayout>
+    </>
   );
 };
 

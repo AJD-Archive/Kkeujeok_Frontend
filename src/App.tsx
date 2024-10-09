@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
 import MyPage from './pages/MyPage';
@@ -37,7 +37,7 @@ const queryClient = new QueryClient();
 // 로그인 상태를 체크하는 함수
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true); // 로딩 상태 추가
+  const [loading, setLoading] = useState<boolean>(true);
 
   useSSE();
   useEffect(() => {
@@ -45,9 +45,8 @@ const useAuth = () => {
     if (refreshToken) {
       setIsLoggedIn(true);
     }
-    setLoading(false); // 로딩 상태를 false로 변경
-
-    AOS.init(); // AOS 초기화
+    setLoading(false);
+    AOS.init();
   }, []);
 
   return { isLoggedIn, loading };
@@ -55,7 +54,7 @@ const useAuth = () => {
 
 const App = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
-  const { isLoggedIn, loading } = useAuth(); // 로그인 여부와 로딩 상태 체크
+  const { isLoggedIn, loading } = useAuth();
 
   RouteChangeTracker();
 
@@ -67,7 +66,7 @@ const App = () => {
     return (
       <MobileDisplay>
         <Flex justifyContent="center" alignItems="center">
-          데스크톱만 지원 합니다
+          데스크톱만 지원합니다
         </Flex>
       </MobileDisplay>
     );
@@ -92,8 +91,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
-          <Route path="*" element={<Error404Page />} />
           <Route path="/error/403" element={<Error403Page />} />
+          <Route path="*" element={<Error404Page />} />
 
           <Route
             path="/:id"
@@ -103,7 +102,14 @@ const App = () => {
               </ProtectedRoute>
             }
           >
-            <Route path="/:id/personalBlock/:blockId" element={<SidePage />} />
+            <Route
+              path="personalBlock/:blockId"
+              element={
+                <ProtectedRoute>
+                  <SidePage />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           <Route
@@ -114,7 +120,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/createPersonalBoard"
             element={
@@ -123,7 +128,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/createPersonalBoard/:id"
             element={
@@ -132,7 +136,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/createTeamBoard"
             element={
@@ -141,7 +144,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/createTeamBoard/:id"
             element={
@@ -150,7 +152,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/mypage"
             element={
@@ -159,7 +160,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/mypage/edit"
             element={
@@ -195,7 +195,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/challenge/create"
             element={
@@ -204,7 +203,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/challenge/create/:id"
             element={
@@ -213,7 +211,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/challenge/:id"
             element={
@@ -222,7 +219,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/tutorial"
             element={

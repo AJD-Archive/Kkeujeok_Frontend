@@ -225,7 +225,8 @@ const MyPage = () => {
                   <div
                     key={idx}
                     onClick={() => {
-                      navigate(`/challenge/${challengeId}`);
+                      // navigate(`/challenge/${challengeId}`);
+                      navigate(`/challenge/${challengeId}`, { state: { title: title } });
                     }}
                   >
                     <ChallengeBlock key={idx} title={title} description={contents} />

@@ -67,16 +67,17 @@ const TeamDocument = () => {
 
   if (!editor) return <div>Loading editor...</div>;
 
-  // 라우터 변경 감지 : 라우터 변경시 데이터 저장
-  useBlocker(tx => {
-    const { currentLocation, nextLocation } = tx;
+  // ! 라우터 변경 감지 : 라우터 변경시 데이터 저장 => 구글 애널리틱스 적용 이후 오류나서 주석처리
+  // ! 페이지 나갈때 자동저장 다시 구현
+  // useBlocker(tx => {
+  //   const { currentLocation, nextLocation } = tx;
 
-    if (currentLocation.pathname !== nextLocation.pathname) {
-      // SubmitData();
-      return false;
-    }
-    return true;
-  });
+  //   if (currentLocation.pathname !== nextLocation.pathname) {
+  //     // SubmitData();
+  //     return false;
+  //   }
+  //   return true;
+  // });
 
   // * 팀 문서 삭제
   const delTeamDocument = async () => {

@@ -14,12 +14,12 @@ if (process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID) {
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <HelmetProvider>
-    <BrowserRouter>
+  <BrowserRouter>
+    <HelmetProvider>
       <GlobalStyle />
       <App />
-    </BrowserRouter>
-  </HelmetProvider>
+    </HelmetProvider>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

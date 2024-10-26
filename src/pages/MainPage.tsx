@@ -360,7 +360,7 @@ const MainPage = () => {
                 );
               })}
             </S.CardContainer>
-            <DeleteButton key="delete" id="delete" removeValue={true} list={columns.delete.list} />
+            {/* <DeleteButton key="delete" id="delete" removeValue={true} list={columns.delete.list} /> */}
           </DragDropContext>
         </S.MainDashBoardContainer>
       </S.MainDashBoardLayout>

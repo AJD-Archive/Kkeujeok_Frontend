@@ -31,6 +31,8 @@ import { useMediaQuery } from 'react-responsive';
 import Flex from './components/Flex';
 import { MobileDisplay } from './styles/ErrorPageStyled';
 import RouteChangeTracker from './components/RouteChangeTracker';
+import PersonalDashBoard from './components/PersonalDashboard';
+import TeamDashBoard from './components/TeamDashboard';
 
 const queryClient = new QueryClient();
 
@@ -93,7 +95,22 @@ const App = () => {
           <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
           <Route path="/error/403" element={<Error403Page />} />
           <Route path="*" element={<Error404Page />} />
-
+          <Route
+            path="/personal/:id"
+            element={
+              <ProtectedRoute>
+                <PersonalDashBoard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/team/:id"
+            element={
+              <ProtectedRoute>
+                <TeamDashBoard />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/:id"
             element={

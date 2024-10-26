@@ -3,11 +3,11 @@ import deleteicon from '../img/delete2.png';
 import * as S from '../styles/MainPageStyled';
 import { Droppable } from 'react-beautiful-dnd';
 import Block from './Block';
-import { BlockListResDto } from '../types/PersonalBlock';
+import { BlockListResDto, DeletedBlockList } from '../types/PersonalBlock';
 
 interface Props {
   id: string;
-  list: BlockListResDto[];
+  list: DeletedBlockList;
   removeValue: boolean;
 }
 const DeleteButton = ({ id, list, removeValue }: Props) => {
@@ -30,7 +30,7 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
             <S.DeleteDiv ref={provided.innerRef} className="container" {...provided.droppableProps}>
               <h1>휴지통</h1>
               <S.BoxContainer>
-                {list.map(
+                {list.blockListResDto.map(
                   (
                     { title, blockId, contents, dDay, dashboardId, dType, nickname, picture },
                     index

@@ -20,8 +20,14 @@ const Dashboard = ({ text, dashboard }: Props) => {
   const id = location.pathname.split('/')[1];
   const [groupedDashboard, setGroupedDashboard] = useState<GroupedDashboards>({});
 
-  const onClick = (id: number | string) => {
-    navigate(`/${id}`);
+  const onChangeLocation = (id: number | string) => {
+    if (text === '개인') {
+      navigate(`/personal/${id}`);
+      localStorage.setItem('PageSort', String('personal'));
+    } else {
+      navigate(`/team/${id}`);
+      localStorage.setItem('PageSort', String('team'));
+    }
     localStorage.setItem('LatestBoard', String(id));
   };
 
@@ -57,7 +63,7 @@ const Dashboard = ({ text, dashboard }: Props) => {
             <S.TeamDashboardItem
               key={index}
               onClick={() => {
-                onClick(value.dashboardId ?? 0);
+                onChangeLocation(value.dashboardId ?? 0);
               }}
             >
               {value.title}
@@ -73,7 +79,7 @@ const Dashboard = ({ text, dashboard }: Props) => {
               {groupedDashboard[category].map(dashboardItem => (
                 <S.PersonalDashboardItem
                   key={dashboardItem.dashboardId}
-                  onClick={() => onClick(dashboardItem.dashboardId ?? 0)}
+                  onClick={() => onChangeLocation(dashboardItem.dashboardId ?? 0)}
                 >
                   {dashboardItem.title}
                 </S.PersonalDashboardItem>

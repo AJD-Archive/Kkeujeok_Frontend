@@ -33,7 +33,8 @@ const OAuthRedirectHandler = () => {
 
       // * 마지막에 방문한 대시보드가 있다면 해당 대시보드로 이동, 없다면 튜토리얼 페이지로 이동
       const latestBoard = localStorage.getItem('LatestBoard');
-      navigate(latestBoard ? `/${latestBoard}` : '/tutorial');
+      const dashboardSort = localStorage.getItem('PageSort');
+      navigate(latestBoard ? `/${dashboardSort}/${latestBoard}` : '/tutorial');
     }
   }, [loginToken, login, navigate]);
 

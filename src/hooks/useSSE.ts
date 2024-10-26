@@ -42,7 +42,6 @@ export const useSSE = () => {
 
     // 메시지 수신 처리
     eventSource.current.onmessage = event => {
-      console.log(event.data);
       if (!event.data.includes('연결')) {
         const modifiedMessage = event.data.replace(/^[^:]+: /, '').replace(/\d+$/, '');
         customErrToast(modifiedMessage);

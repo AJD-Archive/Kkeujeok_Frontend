@@ -19,6 +19,10 @@ export interface BlockListResDto {
   picture?: string;
 }
 
+export interface DeletedBlockList {
+  blockListResDto: BlockListResDto[];
+  pageInfoResDto: PageInfoResDto;
+}
 export interface PageInfoResDto {
   currentPage: number;
   totalPages: number;

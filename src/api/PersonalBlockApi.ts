@@ -26,7 +26,6 @@ export const patchPersonalBlock = async (
 ): Promise<number | null> => {
   try {
     const response = await axiosInstance.patch(`/blocks/${blockId}`, data);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -60,7 +59,6 @@ export const updatePersonalBlock = async (blockId?: string, progress?: string) =
 export const updateOrderBlock = async (data: BlockOrder) => {
   try {
     const response = await axiosInstance.patch(`/blocks/change`, data);
-    console.log(response);
     return response.data;
   } catch (error) {
     console.log('Error fetching data:', error);
@@ -72,7 +70,6 @@ export const getDeleteBlock = async (dashboardId: string, page?: number, size?: 
     const response = await axiosInstance.get(
       `/blocks/deleted?dashboardId=${dashboardId}&page=0&size=10`
     );
-    console.log(response);
     return response.data.data;
   } catch (error) {
     console.log('Error fetching data:', error);
@@ -82,8 +79,6 @@ export const getDeleteBlock = async (dashboardId: string, page?: number, size?: 
 export const deleteBlock = async (blockId: string) => {
   try {
     const response = await axiosInstance.delete(`/blocks/${blockId}`);
-
-    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -92,7 +87,6 @@ export const deleteBlock = async (blockId: string) => {
 export const realDeleteBlock = async (blockId: string) => {
   try {
     const response = await axiosInstance.delete(`/blocks/permanent/${blockId}`);
-    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -101,7 +95,6 @@ export const realDeleteBlock = async (blockId: string) => {
 export const restoreBlockFunc = async (blockId: string) => {
   try {
     const response = await axiosInstance.delete(`/blocks/${blockId}`);
-    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }

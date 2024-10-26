@@ -23,10 +23,10 @@ const Dashboard = ({ text, dashboard }: Props) => {
   const onChangeLocation = (id: number | string) => {
     if (text === '개인') {
       navigate(`/personal/${id}`);
-      localStorage.setItem('PageSort', String('personal'));
+      localStorage.setItem('PageSort', 'personal');
     } else {
       navigate(`/team/${id}`);
-      localStorage.setItem('PageSort', String('team'));
+      localStorage.setItem('PageSort', 'team');
     }
     localStorage.setItem('LatestBoard', String(id));
   };

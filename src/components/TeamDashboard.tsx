@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 import { getPersonalBlock } from '../api/BoardApi';
 import { getDeleteBlock } from '../api/PersonalBlockApi';
 import { getTeamDashboard } from '../api/TeamDashBoardApi';
@@ -15,6 +16,7 @@ import useItems from '../hooks/useItems';
 import { TItemStatus } from '../utils/columnsConfig';
 
 const TeamDashBoard = () => {
+  const location = useLocation();
   const dashboardId = location.pathname.split('/')[2];
   const { items, setItems } = useItems(dashboardId);
   const [page, setPage] = useState<number>(0);

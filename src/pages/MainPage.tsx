@@ -99,11 +99,11 @@ const MainPage = () => {
                   : [...prevColumns.done.list, ...done.blockListResDto],
               pageInfo: done.pageInfoResDto,
             },
-            delete: {
-              ...prevColumns.delete,
-              list: page === 0 ? remove.blockListResDto : [...remove.blockListResDto],
-              pageInfo: remove.pageInfoResDto,
-            },
+            // delete: {
+            //   ...prevColumns.delete,
+            //   list: page === 0 ? remove.blockListResDto : [...remove.blockListResDto],
+            //   pageInfo: remove.pageInfoResDto,
+            // },
           }));
         }
 

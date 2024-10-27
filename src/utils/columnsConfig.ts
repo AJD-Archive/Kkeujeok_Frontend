@@ -1,9 +1,15 @@
 import NotStartedDashboard from '../components/NotStartedDashboard';
 import InProgressDashboard from '../components/InProgressDashboard';
 import CompletedDashboard from '../components/CompletedDashboard';
+import { BlockListResDto } from '../types/PersonalBlock';
 
-export type TItemStatus = 'todo' | 'doing' | 'done';
+export type TItemStatus = 'todo' | 'doing' | 'completed' | 'delete';
 
+export type TItems = {
+  [key in TItemStatus]: BlockListResDto[];
+};
+
+//폐기할 코드
 export const initialColumns = {
   todo: {
     id: 'todo',

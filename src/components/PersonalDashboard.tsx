@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
-import { getDeleteBlock } from '../api/PersonalBlockApi';
+import { getDeleteBlock, updateOrderBlock } from '../api/PersonalBlockApi';
 import DashBoardLayout from './DashBoardLayout';
 import Header from './Header';
 import { useLocation } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import * as S from '../styles/MainPageStyled';
 import DeleteButton from './DeleteButton';
-import { TItemStatus } from '../utils/columnsConfig';
+import { TItems, TItemStatus } from '../utils/columnsConfig';
 import useItems from '../hooks/useItems';
 
 const PersonalDashBoard = () => {
@@ -31,6 +31,18 @@ const PersonalDashBoard = () => {
     setPage(prevPage => prevPage + 1);
   };
 
+  // * 순서 변경 함수
+  const updateOrder = (_items: TItems) => {
+    const orderArray = {
+      dashboardId: dashboardId,
+      notStartedList: _items.todo.map(item => item.blockId),
+      inProgressList: _items.doing.map(item => item.blockId),
+      completedList: _items.completed.map(item => item.blockId),
+    };
+    updateOrderBlock(orderArray);
+  };
+
+  // * 드래그앤드롭 함수
   const onDragEnd = ({ source, destination }: DropResult) => {
     if (!destination) return;
 
@@ -46,6 +58,8 @@ const PersonalDashBoard = () => {
     const [targetItem] = _items[scourceKey].splice(source.index, 1);
     _items[destinationKey].splice(destination.index, 0, targetItem);
     setItems(_items);
+
+    updateOrder(_items);
   };
 
   return (

@@ -29,6 +29,7 @@ export interface PageInfoResDto {
 }
 
 export interface BlockOrder {
+  dashboardId: string;
   notStartedList: (string | null | undefined)[];
   inProgressList: (string | null | undefined)[];
   completedList: (string | null | undefined)[];

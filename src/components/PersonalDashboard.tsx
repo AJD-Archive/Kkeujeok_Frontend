@@ -1,6 +1,11 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
-import { getDeleteBlock, updateOrderBlock } from '../api/PersonalBlockApi';
+import {
+  deleteBlock,
+  getDeleteBlock,
+  updateOrderBlock,
+  updatePersonalBlock,
+} from '../api/PersonalBlockApi';
 import DashBoardLayout from './DashBoardLayout';
 import Header from './Header';
 import { useLocation } from 'react-router-dom';
@@ -13,6 +18,8 @@ import * as S from '../styles/MainPageStyled';
 import DeleteButton from './DeleteButton';
 import { TItems, TItemStatus } from '../utils/columnsConfig';
 import useItems from '../hooks/useItems';
+import { BlockListResDto } from '../types/PersonalBlock';
+import { useDebounce } from '../hooks/useDebounce';
 
 const PersonalDashBoard = () => {
   const location = useLocation();
@@ -31,6 +38,19 @@ const PersonalDashBoard = () => {
     setPage(prevPage => prevPage + 1);
   };
 
+  // * 상태 변경 함수
+  const updateState = (destinationKey: string, targetItem: BlockListResDto) => {
+    const blockId = targetItem.blockId;
+
+    if (blockId) {
+      if (destinationKey !== 'delete') {
+        updatePersonalBlock(blockId, status(destinationKey)); // 블록 상태 업데이트
+      } else {
+        deleteBlock(blockId); // 블록 삭제
+      }
+    }
+  };
+
   // * 순서 변경 함수
   const updateOrder = (_items: TItems) => {
     const orderArray = {
@@ -46,18 +66,22 @@ const PersonalDashBoard = () => {
   const onDragEnd = ({ source, destination }: DropResult) => {
     if (!destination) return;
 
-    const scourceKey = source.droppableId as TItemStatus;
+    const sourceKey = source.droppableId as TItemStatus;
     const destinationKey = destination.droppableId as TItemStatus;
 
     const _items = JSON.parse(JSON.stringify(items)) as typeof items;
 
-    if (!_items[scourceKey] || !_items[destinationKey]) {
-      console.error('Invalid droppableId:', scourceKey, destinationKey);
+    if (!_items[sourceKey] || !_items[destinationKey]) {
+      console.error('Invalid droppableId:', sourceKey, destinationKey);
       return;
     }
-    const [targetItem] = _items[scourceKey].splice(source.index, 1);
+    const [targetItem] = _items[sourceKey].splice(source.index, 1);
     _items[destinationKey].splice(destination.index, 0, targetItem);
     setItems(_items);
+
+    if (sourceKey !== destinationKey) {
+      updateState(destinationKey, targetItem);
+    }
 
     updateOrder(_items);
   };
@@ -99,3 +123,18 @@ const PersonalDashBoard = () => {
   );
 };
 export default PersonalDashBoard;
+
+const status = (status: string) => {
+  switch (status) {
+    case 'todo':
+      return 'NOT_STARTED';
+    case 'doing':
+      return 'IN_PROGRESS';
+    case 'done':
+      return 'COMPLETED';
+    case 'delete':
+      return 'DELETED';
+    default:
+      return 'UNKNOWN';
+  }
+};

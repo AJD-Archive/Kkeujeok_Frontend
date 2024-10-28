@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import MainPage from './pages/MainPage';
+// import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
 import MyPage from './pages/MyPage';
 import CreateBoard from './pages/CreateBoardPage';
@@ -101,15 +101,24 @@ const App = () => {
                 <PersonalDashboard />
               </ProtectedRoute>
             }
-          />
-          <Route
+          >
+            <Route
+              path=":blockId"
+              element={
+                <ProtectedRoute>
+                  <SidePage />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+          {/* <Route
             path="/personalBlock/:blockId"
             element={
               <ProtectedRoute>
                 <SidePage />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/team/:id"
             element={
@@ -117,15 +126,24 @@ const App = () => {
                 <TeamDashBoard />
               </ProtectedRoute>
             }
-          />
-          <Route
+          >
+            <Route
+              path=":blockId"
+              element={
+                <ProtectedRoute>
+                  <SidePage />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+          {/* <Route
             path="/:id"
             element={
               <ProtectedRoute>
                 <MainPage />
               </ProtectedRoute>
             }
-          />
+          /> */}
 
           <Route
             path="/createBoard"

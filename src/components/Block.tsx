@@ -49,7 +49,7 @@ const Block = ({
   const navigate = useNavigate();
 
   const clickHandler = () => {
-    navigate(`/personalBlock/${blockId}`, {
+    navigate(`${blockId}`, {
       state: { highlightColor, progress },
     });
   };

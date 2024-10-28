@@ -1,48 +1,140 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Outlet, useLocation } from 'react-router-dom';
 import { getPersonalBlock } from '../api/BoardApi';
-import { getDeleteBlock } from '../api/PersonalBlockApi';
+import {
+  deleteBlock,
+  getDeleteBlock,
+  updateOrderBlock,
+  updatePersonalBlock,
+} from '../api/PersonalBlockApi';
 import { getTeamDashboard } from '../api/TeamDashBoardApi';
 import DashBoardLayout from './DashBoardLayout';
 import Header from './Header';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import NotStartedDashboard from './NotStartedDashboard';
 import InProgressDashboard from './InProgressDashboard';
 import CompletedDashboard from './CompletedDashboard';
 import DeleteButton from './DeleteButton';
 import * as S from '../styles/MainPageStyled';
+import useItems from '../hooks/useItems';
+import { BlockListResDto } from '../types/PersonalBlock';
+import { TItems, TItemStatus } from '../utils/columnsConfig';
+
+type PageState = {
+  todo: number; // 할 일 페이지 번호
+  doing: number; // 진행 중인 일 페이지 번호
+  completed: number; // 완료된 일 페이지 번호
+};
 
 const TeamDashBoard = () => {
+  const location = useLocation();
   const dashboardId = location.pathname.split('/')[2];
-
-  const [page, setPage] = useState<number>(0);
-
-  const { data: NotStarted } = useQuery({
-    queryKey: ['NOT_STARTED'],
-    queryFn: () => getPersonalBlock(dashboardId, 0, 10, 'NOT_STARTED'),
+  // const [page, setPage] = useState<number>(0);
+  const [todoPage, setTodoPage] = useState<number>(0);
+  const [page, setPage] = useState<PageState>({
+    todo: 0,
+    doing: 0,
+    completed: 0,
   });
+  // const { items, setItems } = useItems(dashboardId, page);
+  const {
+    items,
+    setItems,
+    fetchNextNotStarted,
+    hasMoreNotStarted,
+    fetchNextInProgress,
+    hasMoreInProgress,
+    fetchNextCompleted,
+    hasMoreCompleted,
+  } = useItems(dashboardId, page, location.pathname);
 
-  const { data: InProgress } = useQuery({
-    queryKey: ['IN_PROGRESS'],
-    queryFn: () => getPersonalBlock(dashboardId, 0, 10, 'IN_PROGRESS'),
-  });
-
-  const { data: COMPLETED } = useQuery({
-    queryKey: ['COMPLETED'],
-    queryFn: () => getPersonalBlock(dashboardId, 0, 10, 'COMPLETED'),
-  });
-
-  const { data: DeletedBlock } = useQuery({
-    queryKey: ['DeletedBlock'],
-    queryFn: () => getDeleteBlock(dashboardId),
-  });
   const { data: TeamDashboardInfo } = useQuery({
-    queryKey: ['TeamDashboardInfo'],
+    queryKey: ['TeamDashboardInfo', dashboardId],
     queryFn: () => getTeamDashboard(dashboardId),
   });
-  // 세로 무한 스크롤 감지 이벤트
-  const handleLoadMore = async () => {
-    setPage(prevPage => prevPage + 1);
+
+  // * 세로 무한 스크롤 감지 이벤트
+  const handleLoadMore = async (status: 'todo' | 'doing' | 'completed') => {
+    // 다음 페이지 요청
+    if (status === 'todo') {
+      await fetchNextNotStarted(); // todo 상태에 대한 다음 페이지 요청
+    } else if (status === 'doing') {
+      // 비슷한 방식으로 진행 중인 상태에 대한 요청 추가
+      await fetchNextInProgress(); // fetchNextDoing는 해당 상태에 맞는 함수를 정의해야 합니다.
+    } else if (status === 'completed') {
+      // 완료된 상태에 대한 요청 추가
+      await fetchNextCompleted(); // fetchNextCompleted는 해당 상태에 맞는 함수를 정의해야 합니다.
+    }
+
+    // 페이지 상태 업데이트
+    if (status === 'todo' && hasMoreNotStarted) {
+      setPage(prevPage => ({
+        ...prevPage,
+        todo: prevPage.todo + 1,
+      }));
+    } else if (status === 'doing' && hasMoreInProgress) {
+      // hasMoreDoing은 해당 상태에 대한 변수입니다.
+      setPage(prevPage => ({
+        ...prevPage,
+        doing: prevPage.doing + 1,
+      }));
+    } else if (status === 'completed' && hasMoreCompleted) {
+      // hasMoreCompleted은 해당 상태에 대한 변수입니다.
+      setPage(prevPage => ({
+        ...prevPage,
+        completed: prevPage.completed + 1,
+      }));
+    }
+  };
+
+  // * 상태 변경 함수
+  const updateState = (destinationKey: string, targetItem: BlockListResDto) => {
+    const blockId = targetItem.blockId;
+
+    if (blockId) {
+      if (destinationKey !== 'delete') {
+        updatePersonalBlock(blockId, status(destinationKey)); // 블록 상태 업데이트
+      } else {
+        console.log('블록 삭제할게요');
+        deleteBlock(blockId); // 블록 삭제
+      }
+    }
+  };
+
+  // * 순서 변경 함수
+  const updateOrder = (_items: TItems) => {
+    const orderArray = {
+      dashboardId: dashboardId,
+      notStartedList: _items.todo.map(item => item.blockId),
+      inProgressList: _items.doing.map(item => item.blockId),
+      completedList: _items.completed.map(item => item.blockId),
+    };
+    updateOrderBlock(orderArray);
+  };
+
+  // * 드래그앤드롭 함수
+  const onDragEnd = ({ source, destination }: DropResult) => {
+    if (!destination) return;
+
+    const sourceKey = source.droppableId as TItemStatus;
+    const destinationKey = destination.droppableId as TItemStatus;
+
+    const _items = JSON.parse(JSON.stringify(items)) as typeof items;
+
+    if (!_items[sourceKey] || !_items[destinationKey]) {
+      console.error('Invalid droppableId:', sourceKey, destinationKey);
+      return;
+    }
+    const [targetItem] = _items[sourceKey].splice(source.index, 1);
+    _items[destinationKey].splice(destination.index, 0, targetItem);
+    setItems(_items);
+
+    if (sourceKey !== destinationKey) {
+      updateState(destinationKey, targetItem);
+    }
+
+    updateOrder(_items);
   };
   return (
     <>
@@ -52,31 +144,47 @@ const TeamDashBoard = () => {
           subTitle={TeamDashboardInfo?.description || ''}
           blockProgress={(Math.floor(TeamDashboardInfo?.blockProgress ?? 0) * 10) / 10}
         />
-        <DragDropContext onDragEnd={() => {}}>
+        <DragDropContext onDragEnd={onDragEnd}>
           <S.CardContainer>
             <NotStartedDashboard
-              list={NotStarted?.blockListResDto || []}
-              id="NOT_STARTED"
+              list={items.todo || []}
+              id="todo"
               dashboardId={dashboardId}
-              onLoadMore={handleLoadMore}
+              onLoadMore={() => handleLoadMore('todo')}
             ></NotStartedDashboard>
             <InProgressDashboard
-              list={InProgress?.blockListResDto || []}
-              id="IN_PROGRESS"
+              list={items.doing || []}
+              id="doing"
               dashboardId={dashboardId}
-              onLoadMore={handleLoadMore}
+              onLoadMore={() => handleLoadMore('doing')}
             ></InProgressDashboard>
             <CompletedDashboard
-              list={COMPLETED?.blockListResDto || []}
-              id="COMPLETED"
+              list={items.completed || []}
+              id="completed"
               dashboardId={dashboardId}
-              onLoadMore={handleLoadMore}
+              onLoadMore={() => handleLoadMore('completed')}
             ></CompletedDashboard>
           </S.CardContainer>
-          <DeleteButton key="delete" id="delete" removeValue={true} list={DeletedBlock || []} />
+          <DeleteButton key="delete" id="delete" removeValue={true} list={items.delete || []} />
         </DragDropContext>
+        <Outlet />
       </DashBoardLayout>
     </>
   );
 };
 export default TeamDashBoard;
+
+const status = (status: string) => {
+  switch (status) {
+    case 'todo':
+      return 'NOT_STARTED';
+    case 'doing':
+      return 'IN_PROGRESS';
+    case 'completed':
+      return 'COMPLETED';
+    case 'delete':
+      return 'DELETED';
+    default:
+      return 'UNKNOWN';
+  }
+};

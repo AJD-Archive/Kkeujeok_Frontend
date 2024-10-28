@@ -8,7 +8,6 @@ import main3 from '../img/main3.png';
 import { BlockListResDto } from '../types/PersonalBlock';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
-import { progress } from 'framer-motion';
 
 type Props = {
   list: BlockListResDto[];
@@ -45,7 +44,7 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
     const blockId = await createPersonalBlock(data);
 
     const { highlightColor, progress } = settings;
-    navigate(`personalBlock/${blockId}`, {
+    navigate(`${blockId}`, {
       state: { highlightColor, progress, blockId },
     });
   };
@@ -104,7 +103,6 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
           </S.BoxContainer>
         )}
       </Droppable>
-      <Outlet />
     </S.CardContainer>
   );
 };

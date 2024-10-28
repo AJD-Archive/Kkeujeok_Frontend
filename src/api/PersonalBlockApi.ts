@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BlockListResDto, BlockOrder } from '../types/PersonalBlock';
+import { BlockListResDto, BlockOrder, DeletedBlockList } from '../types/PersonalBlock';
 import { axiosInstance } from '../utils/apiConfig';
 
 // 블록 생성 post
@@ -70,7 +70,7 @@ export const getDeleteBlock = async (dashboardId: string, page?: number, size?: 
     const response = await axiosInstance.get(
       `/blocks/deleted?dashboardId=${dashboardId}&page=0&size=10`
     );
-    return response.data.data;
+    return response.data.data as DeletedBlockList;
   } catch (error) {
     console.log('Error fetching data:', error);
   }

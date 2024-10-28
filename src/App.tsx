@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import MainPage from './pages/MainPage';
+// import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
 import MyPage from './pages/MyPage';
 import CreateBoard from './pages/CreateBoardPage';
@@ -31,12 +31,11 @@ import { useMediaQuery } from 'react-responsive';
 import Flex from './components/Flex';
 import { MobileDisplay } from './styles/ErrorPageStyled';
 import RouteChangeTracker from './components/RouteChangeTracker';
-import PersonalDashBoard from './components/PersonalDashboard';
+import PersonalDashboard from './components/PersonalDashboard';
 import TeamDashBoard from './components/TeamDashboard';
 
 const queryClient = new QueryClient();
 
-// 로그인 상태를 체크하는 함수
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,8 +56,6 @@ const useAuth = () => {
 const App = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
   const { isLoggedIn, loading } = useAuth();
-
-  RouteChangeTracker();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -90,37 +87,23 @@ const App = () => {
           theme="light"
           style={{ width: '21.875rem', lineHeight: '1.5rem' }}
         />
+
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
           <Route path="/error/403" element={<Error403Page />} />
           <Route path="*" element={<Error404Page />} />
+
           <Route
             path="/personal/:id"
             element={
               <ProtectedRoute>
-                <PersonalDashBoard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/team/:id"
-            element={
-              <ProtectedRoute>
-                <TeamDashBoard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/:id"
-            element={
-              <ProtectedRoute>
-                <MainPage />
+                <PersonalDashboard />
               </ProtectedRoute>
             }
           >
             <Route
-              path="personalBlock/:blockId"
+              path=":blockId"
               element={
                 <ProtectedRoute>
                   <SidePage />
@@ -128,6 +111,39 @@ const App = () => {
               }
             />
           </Route>
+          {/* <Route
+            path="/personalBlock/:blockId"
+            element={
+              <ProtectedRoute>
+                <SidePage />
+              </ProtectedRoute>
+            }
+          /> */}
+          <Route
+            path="/team/:id"
+            element={
+              <ProtectedRoute>
+                <TeamDashBoard />
+              </ProtectedRoute>
+            }
+          >
+            <Route
+              path=":blockId"
+              element={
+                <ProtectedRoute>
+                  <SidePage />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+          {/* <Route
+            path="/:id"
+            element={
+              <ProtectedRoute>
+                <MainPage />
+              </ProtectedRoute>
+            }
+          /> */}
 
           <Route
             path="/createBoard"

@@ -14,7 +14,7 @@ type Props = {
 const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const dashboardId = location.pathname.split('/')[1];
+  const dashboardId = location.pathname.split('/')[2];
 
   // URL에 "teamdocument"가 포함되어 있는지 확인하는 함수
   // => 전역 변수로 개인 대시보드인지 팀 대시보드인지 확인할 예정이라 주석 처리

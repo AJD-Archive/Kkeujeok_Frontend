@@ -7,6 +7,7 @@ import { useAtom } from 'jotai';
 import closebutton from '../img/closebutton.png';
 import { useRef, useState } from 'react';
 import * as S from '../styles/SideScreenStyled';
+import { useNavigate } from 'react-router-dom';
 
 const SidebarScreen = () => {
   const [inputText, setInputText] = useState<string>('');

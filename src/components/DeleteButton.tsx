@@ -7,7 +7,7 @@ import { BlockListResDto, DeletedBlockList } from '../types/PersonalBlock';
 
 interface Props {
   id: string;
-  list: DeletedBlockList;
+  list: BlockListResDto[];
   removeValue: boolean;
 }
 const DeleteButton = ({ id, list, removeValue }: Props) => {
@@ -30,7 +30,7 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
             <S.DeleteDiv ref={provided.innerRef} className="container" {...provided.droppableProps}>
               <h1>휴지통</h1>
               <S.BoxContainer>
-                {list.blockListResDto.map(
+                {list.map(
                   (
                     { title, blockId, contents, dDay, dashboardId, dType, nickname, picture },
                     index

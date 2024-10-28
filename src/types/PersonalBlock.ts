@@ -13,7 +13,6 @@ export interface BlockListResDto {
   startDate?: string | null;
   deadLine?: string | null;
   nickname?: string;
-  // dDay?: number;
   dDay?: string;
   dType?: 'PersonalDashboard';
   picture?: string;
@@ -30,6 +29,7 @@ export interface PageInfoResDto {
 }
 
 export interface BlockOrder {
+  dashboardId: string;
   notStartedList: (string | null | undefined)[];
   inProgressList: (string | null | undefined)[];
   completedList: (string | null | undefined)[];

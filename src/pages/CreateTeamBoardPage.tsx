@@ -132,7 +132,7 @@ const CreateTeamBoard = () => {
         const responseDashboardId = dashboardId
           ? await patchTeamDashBoard(dashboardId, updatedFormData) // 기존 대시보드 수정
           : await createTeamDashBoard(updatedFormData); // 새 대시보드 생성
-        navigate(`/${responseDashboardId}`); // 해당 대시보드 페이지로 이동
+        navigate(`/team/${responseDashboardId}`); // 해당 대시보드 페이지로 이동
       } catch (error) {
         console.error('팀 대시보드 생성 및 수정시 오류 발생!', error);
       }

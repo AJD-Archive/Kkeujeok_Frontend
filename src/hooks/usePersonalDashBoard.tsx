@@ -84,7 +84,7 @@ const usePersonalDashBoard = (dashboardId: string | null) => {
         const responseDashboardId = dashboardId
           ? await patchDashBoard(dashboardId, formData) // 기존 대시보드 수정
           : await createDashBoard(formData); // 새 대시보드 생성
-        navigate(`/${responseDashboardId}`); // 해당 대시보드 페이지로 이동
+        navigate(`/personal/${responseDashboardId}`); // 해당 대시보드 페이지로 이동
       } catch (error) {
         console.error('개인 대시보드 생성 및 수정시 오류 발생!', error);
       }

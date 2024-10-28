@@ -150,7 +150,7 @@ const MyPage = () => {
                   <S.TeamBlockWrapper
                     key={idx}
                     onClick={() => {
-                      navigate(`/${dashboardId}`);
+                      navigate(`/personal/${dashboardId}`);
                     }}
                   >
                     <ChallengeBlock title={title} description={description} />
@@ -186,7 +186,7 @@ const MyPage = () => {
                   <S.TeamBlockWrapper
                     key={idx}
                     onClick={() => {
-                      navigate(`/${dashboardId}`);
+                      navigate(`/team/${dashboardId}`);
                     }}
                   >
                     <ChallengeBlock

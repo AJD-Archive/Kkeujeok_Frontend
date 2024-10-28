@@ -8,7 +8,7 @@ import {
 } from '../api/PersonalBlockApi';
 import DashBoardLayout from './DashBoardLayout';
 import Header from './Header';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import NotStartedDashboard from './NotStartedDashboard';
 import InProgressDashboard from './InProgressDashboard';
 import CompletedDashboard from './CompletedDashboard';
@@ -21,21 +21,72 @@ import useItems from '../hooks/useItems';
 import { BlockListResDto } from '../types/PersonalBlock';
 import { useDebounce } from '../hooks/useDebounce';
 
+type PageState = {
+  todo: number; // 할 일 페이지 번호
+  doing: number; // 진행 중인 일 페이지 번호
+  completed: number; // 완료된 일 페이지 번호
+};
+
 const PersonalDashBoard = () => {
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[2];
-  const { items, setItems } = useItems(dashboardId);
-
-  const [page, setPage] = useState<number>(0);
+  // const [page, setPage] = useState<number>(0);
+  const [todoPage, setTodoPage] = useState<number>(0);
+  const [doingPage, setDoingPage] = useState<number>(0);
+  const [page, setPage] = useState<PageState>({
+    todo: 0,
+    doing: 0,
+    completed: 0,
+  });
+  const {
+    items,
+    setItems,
+    fetchNextNotStarted,
+    hasMoreNotStarted,
+    fetchNextInProgress,
+    hasMoreInProgress,
+    fetchNextCompleted,
+    hasMoreCompleted,
+  } = useItems(dashboardId, page, location.pathname);
+  // console.log(items);
 
   const { data: PersonalDashboardInfo } = useQuery({
     queryKey: ['PersonalDashboardInfo', dashboardId],
     queryFn: () => getPersonalDashboard(dashboardId),
   });
 
-  // 세로 무한 스크롤 감지 이벤트
-  const handleLoadMore = async () => {
-    setPage(prevPage => prevPage + 1);
+  // * 세로 무한 스크롤 감지 이벤트
+  const handleLoadMore = async (status: 'todo' | 'doing' | 'completed') => {
+    // 다음 페이지 요청
+    if (status === 'todo') {
+      await fetchNextNotStarted(); // todo 상태에 대한 다음 페이지 요청
+    } else if (status === 'doing') {
+      // 비슷한 방식으로 진행 중인 상태에 대한 요청 추가
+      await fetchNextInProgress(); // fetchNextDoing는 해당 상태에 맞는 함수를 정의해야 합니다.
+    } else if (status === 'completed') {
+      // 완료된 상태에 대한 요청 추가
+      await fetchNextCompleted(); // fetchNextCompleted는 해당 상태에 맞는 함수를 정의해야 합니다.
+    }
+
+    // 페이지 상태 업데이트
+    if (status === 'todo' && hasMoreNotStarted) {
+      setPage(prevPage => ({
+        ...prevPage,
+        todo: prevPage.todo + 1,
+      }));
+    } else if (status === 'doing' && hasMoreInProgress) {
+      // hasMoreDoing은 해당 상태에 대한 변수입니다.
+      setPage(prevPage => ({
+        ...prevPage,
+        doing: prevPage.doing + 1,
+      }));
+    } else if (status === 'completed' && hasMoreCompleted) {
+      // hasMoreCompleted은 해당 상태에 대한 변수입니다.
+      setPage(prevPage => ({
+        ...prevPage,
+        completed: prevPage.completed + 1,
+      }));
+    }
   };
 
   // * 상태 변경 함수
@@ -46,6 +97,7 @@ const PersonalDashBoard = () => {
       if (destinationKey !== 'delete') {
         updatePersonalBlock(blockId, status(destinationKey)); // 블록 상태 업데이트
       } else {
+        console.log('블록 삭제할게요');
         deleteBlock(blockId); // 블록 삭제
       }
     }
@@ -101,23 +153,24 @@ const PersonalDashBoard = () => {
               list={items.todo || []}
               id="todo"
               dashboardId={dashboardId}
-              onLoadMore={handleLoadMore}
+              onLoadMore={() => handleLoadMore('todo')}
             ></NotStartedDashboard>
             <InProgressDashboard
               list={items.doing || []}
               id="doing"
               dashboardId={dashboardId}
-              onLoadMore={handleLoadMore}
+              onLoadMore={() => handleLoadMore('doing')}
             ></InProgressDashboard>
             <CompletedDashboard
               list={items.completed || []}
               id="completed"
               dashboardId={dashboardId}
-              onLoadMore={handleLoadMore}
+              onLoadMore={() => handleLoadMore('completed')}
             ></CompletedDashboard>
           </S.CardContainer>
           <DeleteButton key="delete" id="delete" removeValue={true} list={items.delete || []} />
         </DragDropContext>
+        <Outlet />
       </DashBoardLayout>
     </>
   );
@@ -130,7 +183,7 @@ const status = (status: string) => {
       return 'NOT_STARTED';
     case 'doing':
       return 'IN_PROGRESS';
-    case 'done':
+    case 'completed':
       return 'COMPLETED';
     case 'delete':
       return 'DELETED';

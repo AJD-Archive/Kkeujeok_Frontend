@@ -49,7 +49,7 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
     // console.log(blockId);
 
     const { highlightColor, progress } = settings;
-    navigate(`personalBlock/${blockId}`, {
+    navigate(`${blockId}`, {
       state: { highlightColor, progress, blockId },
     });
   };
@@ -82,20 +82,6 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
             className="container"
             {...provided.droppableProps}
           >
-            {/* {list?.map((block, index) => (
-              <Block
-                dashboardId={dashboardId}
-                key={block.blockId}
-                index={index}
-                title={block.title ?? ''}
-                dDay={block.dDay ?? 0}
-                contents={block.contents ?? ''}
-                blockId={block.blockId ?? '0'}
-                dType={block.dType ?? 'TeamDashboard'}
-                name={block.nickname ?? '이름 없음'}
-                picture={block.picture ?? ''}
-              />
-            ))} */}
             {list?.map((block, index) => {
               const isLastBlock = index === list.length - 1;
               return (
@@ -120,7 +106,6 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
           </S.BoxContainer>
         )}
       </Droppable>
-      <Outlet />
     </S.CardContainer>
   );
 };

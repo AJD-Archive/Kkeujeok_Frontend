@@ -44,8 +44,7 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
     const blockId = await createPersonalBlock(data);
 
     const { highlightColor, progress } = settings;
-    navigate(`/personalBlock/${blockId}`, {
-      replace: true,
+    navigate(`${blockId}`, {
       state: { highlightColor, progress, blockId },
     });
   };
@@ -104,7 +103,6 @@ const NotStartedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
           </S.BoxContainer>
         )}
       </Droppable>
-      <Outlet />
     </S.CardContainer>
   );
 };

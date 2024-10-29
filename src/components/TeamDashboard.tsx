@@ -96,7 +96,7 @@ const TeamDashBoard = () => {
       if (destinationKey !== 'delete') {
         updatePersonalBlock(blockId, status(destinationKey)); // 블록 상태 업데이트
       } else {
-        console.log('블록 삭제할게요');
+        // console.log('블록 삭제할게요');
         deleteBlock(blockId); // 블록 삭제
       }
     }

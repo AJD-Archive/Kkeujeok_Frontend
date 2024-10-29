@@ -33,7 +33,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
-  console.log(NotStarted);
+  // console.log(NotStarted);
 
   const {
     data: InProgress,

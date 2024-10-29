@@ -29,7 +29,7 @@ export const getPersonalBlock = async (
 export const createDashBoard = async (data: DashboardItem): Promise<string | null> => {
   try {
     const response = await axiosInstance.post('/dashboards/personal/', data);
-    console.log(response.data);
+    // console.log(response.data);
     return response.data.data.dashboardId;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -44,7 +44,7 @@ export const patchDashBoard = async (
 ): Promise<string | null> => {
   try {
     const response = await axiosInstance.patch(`/dashboards/personal/${dashboardId}`, data);
-    console.log(response);
+    // console.log(response);
     return response.data.data.dashboardId;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -100,9 +100,9 @@ export const deletePersonalDashboard = async (id: string): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/dashboards/personal/${id}`);
     // return response.data.data;
-    console.log(response);
+    // console.log(response);
   } catch (error) {
-    console.log('error');
+    // console.log('error');
     // return null;
   }
 };
@@ -112,9 +112,9 @@ export const quitTeamDashboard = async (id: string): Promise<void> => {
   try {
     const response = await axiosInstance.post(`/dashboards/team/${id}/leave`);
     // return response.data.data;
-    console.log(response);
+    // console.log(response);
   } catch (error) {
-    console.log('error');
+    // console.log('error');
     // return null;
   }
 };

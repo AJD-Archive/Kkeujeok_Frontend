@@ -24,6 +24,7 @@ export const CaptionText = styled.span`
   font-size: ${theme.font.size.main};
   font-weight: ${theme.font.weight.light};
   color: ${theme.color.gray};
+  cursor: pointer;
 `;
 
 export const GoogleImageIcon = styled.img`

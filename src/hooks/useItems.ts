@@ -33,7 +33,6 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
-
   const {
     data: InProgress,
     fetchNextPage: fetchNextInProgress,

@@ -3,6 +3,7 @@ import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
 import {
   deleteBlock,
   getDeleteBlock,
+  restoreBlockFunc,
   updateOrderBlock,
   updatePersonalBlock,
 } from '../api/PersonalBlockApi';
@@ -91,15 +92,21 @@ const PersonalDashBoard = () => {
   };
 
   // * 상태 변경 함수
-  const updateState = (destinationKey: string, targetItem: BlockListResDto) => {
+  const updateState = async (
+    destinationKey: string,
+    sourceKey: string,
+    targetItem: BlockListResDto
+  ) => {
     const blockId = targetItem.blockId;
 
     if (blockId) {
       if (destinationKey !== 'delete') {
         updatePersonalBlock(blockId, status(destinationKey)); // 블록 상태 업데이트
       } else {
-        console.log('블록 삭제할게요');
         deleteBlock(blockId); // 블록 삭제
+      }
+      if (sourceKey === 'delete') {
+        restoreBlockFunc(blockId); // 복구
       }
     }
   };
@@ -133,7 +140,7 @@ const PersonalDashBoard = () => {
     setItems(_items);
 
     if (sourceKey !== destinationKey) {
-      updateState(destinationKey, targetItem);
+      updateState(destinationKey, sourceKey, targetItem);
     }
 
     //시작점 상태에서 종착지가 시작점 상태와는 다른 상태일때 그 아이템 개수 -1

@@ -33,6 +33,9 @@ import RouteChangeTracker from './components/RouteChangeTracker';
 import PersonalDashboard from './components/PersonalDashboard';
 import TeamDashBoard from './components/TeamDashboard';
 import { useSSE } from './hooks/useSSE';
+import ConnectionsPage from './pages/ConnectionsPage/ConnectionsPage';
+import ConnectionsSearchPage from './pages/ConnectionsSearchPage/ConnectionsSearchPage';
+
 
 const queryClient = new QueryClient();
 
@@ -257,6 +260,24 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <TutorialPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/connections"
+            element={
+              <ProtectedRoute>
+                <ConnectionsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/connectionsSearch"
+            element={
+              <ProtectedRoute>
+                <ConnectionsSearchPage />
               </ProtectedRoute>
             }
           />

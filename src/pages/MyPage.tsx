@@ -270,7 +270,7 @@ const MyPage = () => {
                   justifyContent="center"
                   alignItems="flex-start"
                   height="4rem"
-                  gap="0.75rem"
+                  gap="0.45rem"
                 >
                   <Flex alignItems="center" gap="0.5625rem">
                     <S.GoogleImageIcon
@@ -285,6 +285,9 @@ const MyPage = () => {
                     ) : (
                       <span>자기 소개를 작성해주세요</span>
                     )}
+                  </S.CaptionText>
+                  <S.CaptionText onClick={() => navigate(`/connections`)}>
+                    <span>친구 10명</span>
                   </S.CaptionText>
                 </Flex>
               </Flex>

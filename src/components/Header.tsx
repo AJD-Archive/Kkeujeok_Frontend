@@ -3,15 +3,18 @@ import Flex from './Flex';
 import setting from '../img/setting.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as S from '../styles/HeaderStyled';
+import { useQuery } from '@tanstack/react-query';
+import { getPersonalDashboard } from '../api/BoardApi';
+import { TPages } from '../utils/columnsConfig';
 
 type Props = {
-  mainTitle: string;
-  subTitle: string;
-  blockProgress: number;
+  mainTitle?: string;
+  subTitle?: string;
   dashboardType?: boolean;
+  blockTotal?: TPages;
 };
 
-const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) => {
+const Header = ({ mainTitle, subTitle, dashboardType, blockTotal }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[2];
@@ -49,8 +52,7 @@ const Header = ({ mainTitle, subTitle, blockProgress, dashboardType }: Props) =>
           </Flex>
         </S.HeaderContentContainer>
         <Flex>
-          <Graph blockProgress={blockProgress} />
-
+          {blockTotal && <Graph blockTotal={blockTotal} />}
           {!dashboardType && (
             <Link to={`/${dashboardId}/teamdocument`}>
               <S.TeamDocButton>팀문서</S.TeamDocButton>

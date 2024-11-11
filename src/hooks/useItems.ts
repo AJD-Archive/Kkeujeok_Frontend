@@ -1,4 +1,4 @@
-import { TItems } from '../utils/columnsConfig';
+import { TItems, TPages } from '../utils/columnsConfig';
 import { useState, useEffect } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { getPersonalBlock } from '../api/BoardApi';
@@ -33,7 +33,6 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
-  console.log(NotStarted);
 
   const {
     data: InProgress,
@@ -85,6 +84,13 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
     delete: DeletedBlock?.blockListResDto || [],
   });
 
+  const [blockTotal, setBlockTotal] = useState<TPages>({
+    todo: NotStarted?.pages[0]?.pageInfoResDto.totalItems || 0,
+    doing: InProgress?.pages[0]?.pageInfoResDto.totalItems || 0,
+    completed: Completed?.pages[0]?.pageInfoResDto.totalItems || 0,
+    delete: DeletedBlock?.pageInfoResDto.totalItems || 0,
+  });
+
   useEffect(() => {
     if (NotStarted) {
       const allNotStartedItems = NotStarted.pages.flatMap(page => page?.blockListResDto || []);
@@ -122,6 +128,43 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
     }));
   }, [DeletedBlock]);
 
+  //블록 갯수 새로고침시 자꾸 기본값 0으로 불러와져서 비동기 데이터 제대로 불러오기 위한 useEffect 코드
+  useEffect(() => {
+    if (NotStarted) {
+      setBlockTotal(prevTotal => ({
+        ...prevTotal,
+        todo: NotStarted.pages[0]?.pageInfoResDto.totalItems || 0,
+      }));
+    }
+  }, [NotStarted]);
+
+  useEffect(() => {
+    if (InProgress) {
+      setBlockTotal(prevTotal => ({
+        ...prevTotal,
+        doing: InProgress.pages[0]?.pageInfoResDto.totalItems || 0,
+      }));
+    }
+  }, [InProgress]);
+
+  useEffect(() => {
+    if (Completed) {
+      setBlockTotal(prevTotal => ({
+        ...prevTotal,
+        completed: Completed.pages[0]?.pageInfoResDto.totalItems || 0,
+      }));
+    }
+  }, [Completed]);
+
+  useEffect(() => {
+    if (DeletedBlock) {
+      setBlockTotal(prevTotal => ({
+        ...prevTotal,
+        delete: DeletedBlock?.pageInfoResDto.totalItems || 0,
+      }));
+    }
+  }, [DeletedBlock]);
+
   return {
     items,
     setItems,
@@ -131,5 +174,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
     hasMoreInProgress,
     fetchNextCompleted,
     hasMoreCompleted,
+    blockTotal,
+    setBlockTotal,
   };
 }

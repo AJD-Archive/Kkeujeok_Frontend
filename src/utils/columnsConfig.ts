@@ -8,7 +8,12 @@ export type TItemStatus = 'todo' | 'doing' | 'completed' | 'delete';
 export type TItems = {
   [key in TItemStatus]: BlockListResDto[];
 };
-
+export type TPages = {
+  todo: number;
+  doing: number;
+  completed: number;
+  delete: number;
+};
 //폐기할 코드
 // export const initialColumns = {
 //   todo: {

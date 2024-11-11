@@ -15,7 +15,7 @@ const TeamFileBoard = () => {
     <S.MainDashBoardLayout>
       <Navbar />
       <S.MainDashBoardContainer>
-        <Header mainTitle="기획" subTitle="기획을 설명해주세요" blockProgress={50} />
+        <Header mainTitle="기획" subTitle="기획을 설명해주세요" />
         <FolderContainer>
           <Flex gap="4.5625rem">
             <File caption="기능명세서" />

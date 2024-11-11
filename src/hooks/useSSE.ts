@@ -1,38 +1,42 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { atom, useAtom } from 'jotai';
 import { EventSourcePolyfill } from 'event-source-polyfill';
-import { notifications, unreadCount } from '../contexts/sseAtom';
+import { unreadCount } from '../contexts/sseAtom';
 import { customErrToast } from '../utils/customErrorToast';
-import { NotificationResponse } from '../types/MyPage';
-import { apiBaseUrl } from '../utils/apiConfig';
-import { getAlarmList } from '../api/MyPageApi';
-import { useQuery } from '@tanstack/react-query';
 
 const sseConnectedAtom = atom(false); // SSE 연결 상태
 const sseMessagesAtom = atom<string[]>([]); // SSE 메시지 상태
 
 export const useSSE = () => {
   const [, setConnected] = useAtom(sseConnectedAtom);
-  const [, setMessages] = useAtom(sseMessagesAtom);
   const [, setUnReadCount] = useAtom(unreadCount);
 
-  const eventSource = useRef<EventSourcePolyfill | null>(null);
-  // 재연결 타임아웃 관리
-  const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
+  const eventSourceRef = useRef<EventSourcePolyfill | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // SSE 연결 설정 함수
+  const clearReconnectTimeout = useCallback(() => {
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
+  }, []);
+
   const connectToSSE = useCallback(() => {
-    if (reconnectTimeout.current) {
-      clearTimeout(reconnectTimeout.current);
+    // 로컬 스토리지에서 연결 상태 확인
+    const isConnected = localStorage.getItem('sseConnected') === 'true';
+    if (isConnected || eventSourceRef.current) {
+      console.log('이미 SSE에 연결되어 있습니다.');
+      return; // 연결이 이미 되어 있다면 재연결하지 않음
     }
 
+    clearReconnectTimeout();
+
     // SSE 연결 설정
-    eventSource.current = new EventSourcePolyfill(
+    eventSourceRef.current = new EventSourcePolyfill(
       `${process.env.REACT_APP_API_BASE_URL}/notifications/stream`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          Connection: '',
           Accept: 'text/event-stream',
         },
         heartbeatTimeout: 86400000,
@@ -40,8 +44,7 @@ export const useSSE = () => {
       }
     );
 
-    // 메시지 수신 처리
-    eventSource.current.onmessage = event => {
+    eventSourceRef.current.onmessage = event => {
       if (!event.data.includes('연결')) {
         const modifiedMessage = event.data.replace(/^[^:]+: /, '').replace(/\d+$/, '');
         customErrToast(modifiedMessage);
@@ -49,36 +52,28 @@ export const useSSE = () => {
       }
     };
 
-    // SSE 연결 성공
-    eventSource.current.onopen = () => {
+    eventSourceRef.current.onopen = () => {
       console.log('SSE 스트림 연결 성공');
-      setConnected(true); // 연결 상태 true로 업데이트
+      setConnected(true);
+      localStorage.setItem('sseConnected', 'true'); // 연결 상태 저장
     };
 
-    // SSE 에러 처리 및 재연결
-    eventSource.current.onerror = error => {
-      console.error('SSE 에러 발생:', error);
-      eventSource.current?.close(); // 연결 종료
-      setConnected(false); // 연결 상태 false로 업데이트
-
-      // 재연결 로직: 3초 후에 다시 연결 시도
-      reconnectTimeout.current = setTimeout(() => {
-        console.log('SSE 재연결 시도 중...');
-        connectToSSE();
-      }, 3000); // 3초 후 재연결
+    eventSourceRef.current.onerror = () => {
+      console.error('SSE 에러 발생');
+      eventSourceRef.current?.close();
+      setConnected(false);
+      localStorage.setItem('sseConnected', 'false'); // 연결 상태 저장
+      reconnectTimeoutRef.current = setTimeout(connectToSSE, 1000); // 1초 후 재연결 시도
     };
-  }, [setConnected, setMessages]);
+  }, [setConnected, clearReconnectTimeout]);
 
   useEffect(() => {
-    // 첫 연결 시도
     connectToSSE();
 
-    // 컴포넌트 언마운트 시 SSE 연결 종료
     return () => {
-      eventSource.current?.close();
-      if (reconnectTimeout.current) {
-        clearTimeout(reconnectTimeout.current);
-      }
+      eventSourceRef.current?.close();
+      localStorage.setItem('sseConnected', 'false'); // 컴포넌트 언마운트 시 연결 해제 상태 저장
+      clearReconnectTimeout();
     };
-  }, [connectToSSE]);
+  }, [connectToSSE, clearReconnectTimeout]);
 };

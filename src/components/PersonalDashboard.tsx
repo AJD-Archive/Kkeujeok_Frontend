@@ -19,7 +19,7 @@ import DeleteButton from './DeleteButton';
 import { TItems, TItemStatus } from '../utils/columnsConfig';
 import useItems from '../hooks/useItems';
 import { BlockListResDto } from '../types/PersonalBlock';
-import { useDebounce } from '../hooks/useDebounce';
+import { useSSE } from '../hooks/useSSE';
 
 type PageState = {
   todo: number; // 할 일 페이지 번호
@@ -47,8 +47,9 @@ const PersonalDashBoard = () => {
     hasMoreInProgress,
     fetchNextCompleted,
     hasMoreCompleted,
+    blockTotal,
+    setBlockTotal,
   } = useItems(dashboardId, page, location.pathname);
-  // console.log(items);
 
   const { data: PersonalDashboardInfo } = useQuery({
     queryKey: ['PersonalDashboardInfo', dashboardId],
@@ -135,6 +136,35 @@ const PersonalDashBoard = () => {
       updateState(destinationKey, targetItem);
     }
 
+    //시작점 상태에서 종착지가 시작점 상태와는 다른 상태일때 그 아이템 개수 -1
+    if (source.droppableId === 'todo' && destination.droppableId !== 'todo')
+      setBlockTotal(prev => ({
+        ...prev,
+        todo: blockTotal.todo - 1,
+        [destination.droppableId]:
+          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+      }));
+    else if (source.droppableId === 'doing' && destination.droppableId !== 'doing')
+      setBlockTotal(prev => ({
+        ...prev,
+        doing: blockTotal.doing - 1,
+        [destination.droppableId]:
+          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+      }));
+    else if (source.droppableId === 'completed' && destination.droppableId !== 'completed')
+      setBlockTotal(prev => ({
+        ...prev,
+        completed: blockTotal.completed - 1,
+        [destination.droppableId]:
+          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+      }));
+    else if (source.droppableId === 'delete' && destination.droppableId !== 'delete')
+      setBlockTotal(prev => ({
+        ...prev,
+        delete: blockTotal.completed - 1,
+        [destination.droppableId]:
+          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+      }));
     updateOrder(_items);
   };
 
@@ -144,8 +174,8 @@ const PersonalDashBoard = () => {
         <Header
           mainTitle={PersonalDashboardInfo?.title || ''}
           subTitle={PersonalDashboardInfo?.description || ''}
-          blockProgress={(Math.floor(PersonalDashboardInfo?.blockProgress ?? 0) * 10) / 10}
           dashboardType={true}
+          blockTotal={blockTotal}
         />
         <DragDropContext onDragEnd={onDragEnd}>
           <S.CardContainer>

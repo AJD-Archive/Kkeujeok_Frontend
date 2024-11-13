@@ -20,6 +20,7 @@ import * as S from '../styles/MainPageStyled';
 import useItems from '../hooks/useItems';
 import { BlockListResDto } from '../types/PersonalBlock';
 import { TItems, TItemStatus } from '../utils/columnsConfig';
+import { useSSE } from '../hooks/useSSE';
 
 type PageState = {
   todo: number; // 할 일 페이지 번호
@@ -47,6 +48,8 @@ const TeamDashBoard = () => {
     hasMoreInProgress,
     fetchNextCompleted,
     hasMoreCompleted,
+    blockTotal,
+    setBlockTotal,
   } = useItems(dashboardId, page, location.pathname);
 
   const { data: TeamDashboardInfo } = useQuery({
@@ -134,6 +137,36 @@ const TeamDashBoard = () => {
       updateState(destinationKey, targetItem);
     }
 
+    //시작점 상태에서 종착지가 시작점 상태와는 다른 상태일때 그 아이템 개수 -1
+    if (source.droppableId === 'todo' && destination.droppableId !== 'todo')
+      setBlockTotal(prev => ({
+        ...prev,
+        todo: blockTotal.todo - 1,
+        [destination.droppableId]:
+          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+      }));
+    else if (source.droppableId === 'doing' && destination.droppableId !== 'doing')
+      setBlockTotal(prev => ({
+        ...prev,
+        doing: blockTotal.doing - 1,
+        [destination.droppableId]:
+          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+      }));
+    else if (source.droppableId === 'completed' && destination.droppableId !== 'completed')
+      setBlockTotal(prev => ({
+        ...prev,
+        completed: blockTotal.completed - 1,
+        [destination.droppableId]:
+          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+      }));
+    else if (source.droppableId === 'delete' && destination.droppableId !== 'delete')
+      setBlockTotal(prev => ({
+        ...prev,
+        delete: blockTotal.completed - 1,
+        [destination.droppableId]:
+          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+      }));
+
     updateOrder(_items);
   };
   return (
@@ -142,7 +175,8 @@ const TeamDashBoard = () => {
         <Header
           mainTitle={TeamDashboardInfo?.title || ''}
           subTitle={TeamDashboardInfo?.description || ''}
-          blockProgress={(Math.floor(TeamDashboardInfo?.blockProgress ?? 0) * 10) / 10}
+          dashboardType={false}
+          blockTotal={blockTotal}
         />
         <DragDropContext onDragEnd={onDragEnd}>
           <S.CardContainer>

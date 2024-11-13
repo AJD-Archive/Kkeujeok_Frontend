@@ -58,3 +58,13 @@ export const updateAlarmIsRead = async () => {
     console.error('Error fetching data :', error);
   }
 };
+
+// * 친구 요청 알람 수락
+export const acceptFriendAlarm = async (followId: string) => {
+  try {
+    const response = await axiosInstance.post(`/member/follow/accept/${followId}`);
+    console.log(response);
+  } catch (error) {
+    console.error('Error fetching data :', error);
+  }
+};

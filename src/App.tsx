@@ -23,7 +23,6 @@ import ProfileEdit from './components/ProfileEdit';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
-import { useSSE } from './hooks/useSSE';
 import ProtectedRoute from './components/ProtectedRoute';
 import Error404Page from './pages/Error404Page';
 import Error403Page from './pages/Error403Page';
@@ -33,8 +32,10 @@ import { MobileDisplay } from './styles/ErrorPageStyled';
 import RouteChangeTracker from './components/RouteChangeTracker';
 import PersonalDashboard from './components/PersonalDashboard';
 import TeamDashBoard from './components/TeamDashboard';
+import { useSSE } from './hooks/useSSE';
 import ConnectionsPage from './pages/ConnectionsPage/ConnectionsPage';
 import ConnectionsSearchPage from './pages/ConnectionsSearchPage/ConnectionsSearchPage';
+
 
 const queryClient = new QueryClient();
 
@@ -42,7 +43,6 @@ const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useSSE();
   useEffect(() => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
@@ -56,6 +56,7 @@ const useAuth = () => {
 };
 
 const App = () => {
+  useSSE();
   const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
   const { isLoggedIn, loading } = useAuth();
 

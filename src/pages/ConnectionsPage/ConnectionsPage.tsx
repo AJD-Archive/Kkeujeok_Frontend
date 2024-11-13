@@ -14,7 +14,7 @@ const ConnectionsPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   const { data: followersList } = useFollowersList(currentPage, 8);
-  const { data: recommendList } = useRecommendFriendsList(currentPage, 10);
+  const { data: recommendList } = useRecommendFriendsList(currentPage, 8);
 
   // * 페이지네이션 페이지 변경 감지 함수
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {

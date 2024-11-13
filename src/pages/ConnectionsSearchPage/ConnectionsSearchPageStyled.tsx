@@ -73,6 +73,18 @@ export const ConnectionsWrapper = styled.div`
   }
 `;
 
+export const NoResultWrapper = styled.div`
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  p {
+    width: fit-content;
+    color: ${theme.color.gray};
+    font-size: ${theme.font.size.caption};
+  }
+`;
+
 export const SearchLayout = styled.div`
   width: 100%;
   margin-top: 3rem;
@@ -117,4 +129,11 @@ export const Button = styled.button`
   &:hover {
     background-color: ${theme.color.gray};
   }
+`;
+
+export const PaginationWrapper = styled.div`
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
 `;

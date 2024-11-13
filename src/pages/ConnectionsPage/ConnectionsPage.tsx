@@ -6,9 +6,20 @@ import leftarrow from '../../img/leftarrow.png';
 import Connection from '../../components/Connection/Connection';
 import Pagination from '../../components/CustomPagination';
 import { useNavigate } from 'react-router-dom';
+import { useFollowersList } from '../../hooks/useFollowersList';
+import { useState } from 'react';
 
 const ConnectionsPage = () => {
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  const { data: followersList } = useFollowersList(currentPage, 8);
+  console.log(followersList);
+
+  // * 페이지네이션 페이지 변경 감지 함수
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value - 1);
+  };
 
   return (
     <>
@@ -31,17 +42,27 @@ const ConnectionsPage = () => {
           </S.HeaderLayout>
 
           <S.ConnectionsWrapper>
-            <Connection />
-            <Connection />
-            <Connection />
-            <Connection />
+            {followersList?.followInfoResDto.map((follower, index) => (
+              <Connection key={index} follower={follower} />
+            ))}
           </S.ConnectionsWrapper>
-        </S.MainDashBoardContainer>
 
-        {/* 페이지네이션 */}
-        {/* <S.PaginationWrapper>
-          <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
-        </S.PaginationWrapper> */}
+          {followersList?.followInfoResDto.length == 0 && (
+            <S.NoResultWrapper>
+              <p>친구가 없습니다.</p>
+            </S.NoResultWrapper>
+          )}
+
+          {followersList?.followInfoResDto.length !== 0 && (
+            <S.PaginationWrapper>
+              <Pagination
+                count={followersList?.pageInfoResDto.totalPages ?? 1}
+                page={currentPage + 1}
+                onChange={handleChangePage}
+              />
+            </S.PaginationWrapper>
+          )}
+        </S.MainDashBoardContainer>
       </S.MainDashBoardLayout>
     </>
   );

@@ -20,9 +20,10 @@ export const ConnectionLayout = styled.div`
   }
 `;
 
-export const ProfileImageWrapper = styled.div`
+export const ProfileImageWrapper = styled.img`
   width: 4rem;
   height: 4rem;
+  min-width: 4rem;
   border-radius: 50%;
   border: 1px solid ${theme.color.stroke2};
   color: ${theme.color.text};
@@ -47,6 +48,7 @@ export const FriendRequestButtonWrapper = styled.div`
   font-size: ${theme.font.size.caption};
   border: 1px solid ${theme.color.stroke2};
   color: ${theme.color.gray};
+  white-space: nowrap;
 
   &:hover {
     background-color: ${theme.color.stroke2};

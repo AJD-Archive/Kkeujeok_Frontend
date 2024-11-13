@@ -1,12 +1,17 @@
+import { FollowInfo } from '../../types/ConnectionType';
 import * as S from './ConnectionStyled';
 
-const Connection = () => {
+interface ConnectionProps {
+  follower: FollowInfo;
+}
+
+const Connection = ({ follower }: ConnectionProps) => {
   return (
     <S.ConnectionLayout>
-      <S.ProfileImageWrapper></S.ProfileImageWrapper>
+      <S.ProfileImageWrapper src={follower.profileImage} />
       <S.ConnectionUserWrapper>
-        <p className="name">본명</p>
-        <p className="nickName">닉네임#고유번호 | 이메일</p>
+        <p className="name">{follower.name}</p>
+        <p className="nickName">{follower.nickname}</p>
       </S.ConnectionUserWrapper>
       <S.FriendRequestButtonWrapper>
         <p>친구 신청</p>

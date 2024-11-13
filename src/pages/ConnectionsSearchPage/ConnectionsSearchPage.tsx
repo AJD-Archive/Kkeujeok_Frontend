@@ -8,13 +8,25 @@ import Pagination from '../../components/CustomPagination';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import SearchIcon from './SearchIcon';
+import { useSearchFriendsList } from '../../hooks/useFollowersList';
+import { useDebounce } from '../../hooks/useDebounce';
 
 const ConnectionsPage = () => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const debouncedKeyword = useDebounce(keyword, 300); // debounce된 키워드로 검색
+
+  const { data: followersList } = useSearchFriendsList(debouncedKeyword, currentPage, 8);
+
+  // * 페이지네이션 페이지 변경 감지 함수
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value - 1);
+  };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
+    setCurrentPage(0);
   };
 
   return (
@@ -42,7 +54,7 @@ const ConnectionsPage = () => {
               <SearchIcon />
 
               <S.InputWrapper
-                placeholder="이메일 / 닉네임#고유번호로 검색하기"
+                placeholder="이메일로 검색하기"
                 type="text"
                 value={keyword}
                 name="keyword"
@@ -55,17 +67,27 @@ const ConnectionsPage = () => {
             <p>검색 결과</p>
           </S.SectionTitleWrapper>
           <S.ConnectionsWrapper>
-            <Connection />
-            <Connection />
-            <Connection />
-            <Connection />
+            {followersList?.followInfoResDto.map((follower, index) => (
+              <Connection key={index} follower={follower} />
+            ))}
           </S.ConnectionsWrapper>
-        </S.MainDashBoardContainer>
 
-        {/* 페이지네이션 */}
-        {/* <S.PaginationWrapper>
-          <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
-        </S.PaginationWrapper> */}
+          {followersList?.followInfoResDto.length == 0 && (
+            <S.NoResultWrapper>
+              <p>검색 결과가 없습니다.</p>
+            </S.NoResultWrapper>
+          )}
+
+          {followersList?.followInfoResDto.length !== 0 && (
+            <S.PaginationWrapper>
+              <Pagination
+                count={followersList?.pageInfoResDto.totalPages ?? 1}
+                page={currentPage + 1}
+                onChange={handleChangePage}
+              />
+            </S.PaginationWrapper>
+          )}
+        </S.MainDashBoardContainer>
       </S.MainDashBoardLayout>
     </>
   );

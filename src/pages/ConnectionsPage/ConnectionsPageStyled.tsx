@@ -62,3 +62,22 @@ export const ConnectionsWrapper = styled.div`
     flex-basis: calc(100% / 2 - 5rem); /* 빈 공간을 채워서 왼쪽 정렬처럼 보이게 함 */
   }
 `;
+
+export const NoResultWrapper = styled.div`
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  p {
+    width: fit-content;
+    color: ${theme.color.gray};
+    font-size: ${theme.font.size.caption};
+  }
+`;
+
+export const PaginationWrapper = styled.div`
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+`;

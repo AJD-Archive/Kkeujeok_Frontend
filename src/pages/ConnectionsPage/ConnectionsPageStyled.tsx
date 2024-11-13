@@ -46,10 +46,20 @@ export const SecondaryTitleWrapper = styled(TitleWrapper)`
   }
 `;
 
+export const SectionTitleWrapper = styled.div`
+  p {
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 2rem;
+    font-size: 1rem;
+    color: ${theme.color.gray};
+  }
+`;
+
 export const ConnectionsWrapper = styled.div`
   width: 100%;
   height: fit-content;
-  margin-top: 2rem;
+  margin-top: 1rem;
 
   display: flex;
   flex-wrap: wrap;

@@ -1,5 +1,5 @@
 export type FollowInfo = {
-  memberId?: number;
+  memberId?: string;
   nickname?: string;
   name?: string;
   profileImage?: string;

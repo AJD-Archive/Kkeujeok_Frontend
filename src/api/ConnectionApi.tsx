@@ -55,3 +55,16 @@ export const getRecommendedFriendsList = async (
     return null;
   }
 };
+
+// * 친구 신청 post
+export const postFollow = async (memberId: string): Promise<FollowersListData | null> => {
+  try {
+    const response = await axiosInstance.post(`/member/follow`, {
+      memberId: memberId,
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
+  }
+};

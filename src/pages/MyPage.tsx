@@ -20,6 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 import Pagination from '@mui/material/Pagination';
 import { notifications, unreadCount } from '../contexts/sseAtom';
 import { Helmet } from 'react-helmet-async';
+import { useFollowersList } from '../hooks/useFollowersList';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const MyPage = () => {
     queryKey: ['alarmNoti'],
     queryFn: getAlarmList,
   });
+  const { data: followersList } = useFollowersList(0, 8);
 
   console.log(alarmNoti);
   const [teamBool, setTeamBool] = useState<string>('personal'); // 기본값으로 팀 탭을 보여줌
@@ -287,7 +289,7 @@ const MyPage = () => {
                     )}
                   </S.CaptionText>
                   <S.CaptionText onClick={() => navigate(`/connections`)}>
-                    <span>친구 10명</span>
+                    <span>친구 {followersList?.pageInfoResDto.totalItems}명</span>
                   </S.CaptionText>
                 </Flex>
               </Flex>

@@ -46,10 +46,20 @@ export const SecondaryTitleWrapper = styled(TitleWrapper)`
   }
 `;
 
+export const SectionTitleWrapper = styled.div`
+  p {
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 2rem;
+    font-size: 1rem;
+    color: ${theme.color.gray};
+  }
+`;
+
 export const ConnectionsWrapper = styled.div`
   width: 100%;
   height: fit-content;
-  margin-top: 2rem;
+  margin-top: 1rem;
 
   display: flex;
   flex-wrap: wrap;
@@ -61,4 +71,23 @@ export const ConnectionsWrapper = styled.div`
     content: '';
     flex-basis: calc(100% / 2 - 5rem); /* 빈 공간을 채워서 왼쪽 정렬처럼 보이게 함 */
   }
+`;
+
+export const NoResultWrapper = styled.div`
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  p {
+    width: fit-content;
+    color: ${theme.color.gray};
+    font-size: ${theme.font.size.caption};
+  }
+`;
+
+export const PaginationWrapper = styled.div`
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
 `;

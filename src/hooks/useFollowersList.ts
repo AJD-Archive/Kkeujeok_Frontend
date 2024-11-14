@@ -24,7 +24,7 @@ export const useSearchFriendsList = (keyword: string, page: number, size: number
 
 export const useRecommendFriendsList = (page: number, size: number) => {
   return useQuery<FollowersListData | null>({
-    queryKey: ['followersList', page, size],
+    queryKey: ['recommendedFriendsList', page, size],
     queryFn: () => getRecommendedFriendsList(page, size),
     staleTime: 1000 * 60 * 5,
   });

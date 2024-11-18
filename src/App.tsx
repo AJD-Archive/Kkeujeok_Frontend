@@ -35,7 +35,7 @@ import TeamDashBoard from './components/TeamDashboard';
 import { useSSE } from './hooks/useSSE';
 import ConnectionsPage from './pages/ConnectionsPage/ConnectionsPage';
 import ConnectionsSearchPage from './pages/ConnectionsSearchPage/ConnectionsSearchPage';
-
+import RecommendedFriendsPage from './pages/RecommendedFriendsPage/RecommendedFriendsPage';
 
 const queryClient = new QueryClient();
 
@@ -278,6 +278,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ConnectionsSearchPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/friends/recommend"
+            element={
+              <ProtectedRoute>
+                <RecommendedFriendsPage />
               </ProtectedRoute>
             }
           />

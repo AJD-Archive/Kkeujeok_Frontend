@@ -43,6 +43,9 @@ const ConnectionsPage = () => {
               <S.TitleWrapper>
                 <p>친구 찾기</p>
               </S.TitleWrapper>
+              <S.SecondaryTitleWrapper onClick={() => navigate(`/friends/recommend`)}>
+                <p>추천 친구</p>
+              </S.SecondaryTitleWrapper>
               <S.SecondaryTitleWrapper onClick={() => navigate(`/connections`)}>
                 <p>친구 목록</p>
               </S.SecondaryTitleWrapper>

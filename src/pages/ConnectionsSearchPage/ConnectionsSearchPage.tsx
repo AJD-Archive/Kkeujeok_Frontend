@@ -57,7 +57,7 @@ const ConnectionsPage = () => {
               <SearchIcon />
 
               <S.InputWrapper
-                placeholder="이메일로 검색하기"
+                placeholder="이름이나 이메일로 검색하기"
                 type="text"
                 value={keyword}
                 name="keyword"

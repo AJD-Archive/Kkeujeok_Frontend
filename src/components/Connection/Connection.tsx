@@ -5,7 +5,7 @@ import { customErrToast } from '../../utils/customErrorToast';
 import CustomModal from '../CustomModal';
 import useModal from '../../hooks/useModal';
 import { useState } from 'react';
-import { usePostFollow } from '../../hooks/useFollowersList';
+import { useDeleteFollow, usePostFollow } from '../../hooks/useFollowersList';
 
 interface ConnectionProps {
   follower: FollowInfo;
@@ -16,16 +16,14 @@ const Connection = ({ follower }: ConnectionProps) => {
   const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
 
   const { mutate: followMutate } = usePostFollow(follower.memberId!, follower.name!);
+  const { mutate: unFollowMutate } = useDeleteFollow(follower.memberId!, follower.name!);
 
   const follow = async () => {
     followMutate();
   };
 
   const unFollow = async () => {
-    const success = await deleteFollow(follower.memberId!); // memberId는 항상 존재하기 때문에 !로 검사 생략
-    if (success) {
-      customErrToast(`${follower.name}님을 친구 목록에서 제거했습니다.`);
-    }
+    unFollowMutate();
   };
 
   // 친구 삭제를 모달창으로 확인

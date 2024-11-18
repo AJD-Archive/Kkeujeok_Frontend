@@ -53,3 +53,23 @@ export const usePostFollow = (id: string, name: string) => {
     },
   });
 };
+
+export const useDeleteFollow = (id: string, name: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => deleteFollow(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['followersList'] });
+      queryClient.invalidateQueries({ queryKey: ['recommendedFriendsList'] });
+      customErrToast(`${name}님을 친구 목록에서 제거했습니다.`);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      if (error.response && error.response.status === 403) {
+        customErrToast(error.response.data.message);
+      } else {
+        customErrToast('친구 삭제 중 오류가 발생했습니다.');
+      }
+    },
+  });
+};

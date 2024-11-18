@@ -1,14 +1,18 @@
 import { postFollow } from '../../api/ConnectionApi';
 import { FollowInfo } from '../../types/ConnectionType';
 import * as S from './ConnectionStyled';
+import { customErrToast } from '../../utils/customErrorToast';
 
 interface ConnectionProps {
   follower: FollowInfo;
 }
 
 const Connection = ({ follower }: ConnectionProps) => {
-  const follow = () => {
-    postFollow(follower.memberId!); // memberId는 항상 존재하기 때문에 !로 검사 생략
+  const follow = async () => {
+    const success = await postFollow(follower.memberId!); // memberId는 항상 존재하기 때문에 !로 검사 생략
+    if (success) {
+      customErrToast(`${follower.name}님에게 친구 신청을 보냈습니다.`);
+    }
   };
 
   return (

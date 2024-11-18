@@ -1,5 +1,6 @@
 import { axiosInstance } from '../utils/apiConfig';
 import { FollowersListData } from '../types/ConnectionType';
+import { customErrToast } from '../utils/customErrorToast';
 
 // * 내 친구 목록 get
 export const getFollowersList = async (
@@ -57,14 +58,17 @@ export const getRecommendedFriendsList = async (
 };
 
 // * 친구 신청 post
-export const postFollow = async (memberId: string): Promise<FollowersListData | null> => {
+export const postFollow = async (memberId: string): Promise<boolean | null> => {
   try {
-    const response = await axiosInstance.post(`/member/follow`, {
+    await axiosInstance.post(`/member/follow`, {
       memberId: memberId,
     });
-    return response.data.data;
-  } catch (error) {
-    console.error('Error fetching data:', error);
+
+    return true;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.status == 403) customErrToast(error.response.data.message);
     return null;
   }
 };

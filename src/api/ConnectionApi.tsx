@@ -1,6 +1,7 @@
 import { axiosInstance } from '../utils/apiConfig';
 import { FollowersListData } from '../types/ConnectionType';
 import { customErrToast } from '../utils/customErrorToast';
+import { AxiosResponse } from 'axios';
 
 // * 내 친구 목록 get
 export const getFollowersList = async (
@@ -58,31 +59,29 @@ export const getRecommendedFriendsList = async (
 };
 
 // * 친구 신청 post
-export const postFollow = async (memberId: string): Promise<boolean | null> => {
+export const postFollow = async (memberId: string): Promise<AxiosResponse | null> => {
   try {
-    await axiosInstance.post(`/member/follow`, {
+    const response = await axiosInstance.post(`/member/follow`, {
       memberId: memberId,
     });
 
-    return true;
+    return response;
+  } catch (error) {
+    console.log(error);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    if (error.status == 403) customErrToast(error.response.data.message);
     return null;
   }
 };
 
 // * 친구 삭제 delete
-export const deleteFollow = async (memberId: string): Promise<boolean | null> => {
+export const deleteFollow = async (memberId: string): Promise<AxiosResponse | null> => {
   try {
-    await axiosInstance.delete(`/member/follow/${memberId}`);
+    const response = await axiosInstance.delete(`/member/follow/${memberId}`);
 
-    return true;
+    return response;
+  } catch (error) {
+    console.log(error);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    if (error.status == 403) customErrToast(error.response.data.message);
     return null;
   }
 };

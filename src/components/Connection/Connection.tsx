@@ -5,6 +5,7 @@ import { customErrToast } from '../../utils/customErrorToast';
 import CustomModal from '../CustomModal';
 import useModal from '../../hooks/useModal';
 import { useState } from 'react';
+import { usePostFollow } from '../../hooks/useFollowersList';
 
 interface ConnectionProps {
   follower: FollowInfo;
@@ -14,11 +15,10 @@ const Connection = ({ follower }: ConnectionProps) => {
   const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
   const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
 
+  const { mutate: followMutate } = usePostFollow(follower.memberId!, follower.name!);
+
   const follow = async () => {
-    const success = await postFollow(follower.memberId!); // memberId는 항상 존재하기 때문에 !로 검사 생략
-    if (success) {
-      customErrToast(`${follower.name}님에게 친구 신청을 보냈습니다.`);
-    }
+    followMutate();
   };
 
   const unFollow = async () => {

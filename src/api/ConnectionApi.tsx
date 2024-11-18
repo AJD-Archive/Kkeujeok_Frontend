@@ -72,3 +72,17 @@ export const postFollow = async (memberId: string): Promise<boolean | null> => {
     return null;
   }
 };
+
+// * 친구 삭제 delete
+export const deleteFollow = async (memberId: string): Promise<boolean | null> => {
+  try {
+    await axiosInstance.delete(`/member/follow/${memberId}`);
+
+    return true;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.status == 403) customErrToast(error.response.data.message);
+    return null;
+  }
+};

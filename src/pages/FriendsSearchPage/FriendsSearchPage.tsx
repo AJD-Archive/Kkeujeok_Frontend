@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 import Flex from '../../components/Flex';
 import Navbar from '../../components/Navbar';
-import * as S from './ConnectionsSearchPageStyled';
+import * as S from './FriendsSearchPageStyled';
 import leftarrow from '../../img/leftarrow.png';
-import Connection from '../../components/Connection/Connection';
+import Friend from '../../components/Friend/Friend';
 import Pagination from '../../components/CustomPagination';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -11,7 +11,7 @@ import SearchIcon from './SearchIcon';
 import { useSearchFriendsList } from '../../hooks/useFollowersList';
 import { useDebounce } from '../../hooks/useDebounce';
 
-const ConnectionsPage = () => {
+const FriendsPage = () => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -46,7 +46,7 @@ const ConnectionsPage = () => {
               <S.SecondaryTitleWrapper onClick={() => navigate(`/friends/recommend`)}>
                 <p>추천 친구</p>
               </S.SecondaryTitleWrapper>
-              <S.SecondaryTitleWrapper onClick={() => navigate(`/connections`)}>
+              <S.SecondaryTitleWrapper onClick={() => navigate(`/friends`)}>
                 <p>친구 목록</p>
               </S.SecondaryTitleWrapper>
             </Flex>
@@ -69,11 +69,11 @@ const ConnectionsPage = () => {
           <S.SectionTitleWrapper>
             <p>검색 결과</p>
           </S.SectionTitleWrapper>
-          <S.ConnectionsWrapper>
+          <S.FriendsWrapper>
             {followersList?.followInfoResDto.map((follower, index) => (
-              <Connection key={index} follower={follower} />
+              <Friend key={index} follower={follower} />
             ))}
-          </S.ConnectionsWrapper>
+          </S.FriendsWrapper>
 
           {followersList?.followInfoResDto.length == 0 && (
             <S.NoResultWrapper>
@@ -96,4 +96,4 @@ const ConnectionsPage = () => {
   );
 };
 
-export default ConnectionsPage;
+export default FriendsPage;

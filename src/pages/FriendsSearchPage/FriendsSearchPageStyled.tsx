@@ -56,7 +56,7 @@ export const SectionTitleWrapper = styled.div`
   }
 `;
 
-export const ConnectionsWrapper = styled.div`
+export const FriendsWrapper = styled.div`
   width: 100%;
   height: fit-content;
   margin-top: 1rem;
@@ -82,6 +82,52 @@ export const NoResultWrapper = styled.div`
     width: fit-content;
     color: ${theme.color.gray};
     font-size: ${theme.font.size.caption};
+  }
+`;
+
+export const SearchLayout = styled.div`
+  width: 100%;
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const SearchBarContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 30rem;
+  padding: 0.8rem 2rem;
+  font-size: 0.8rem;
+  border-radius: 5rem;
+  border: 1px solid ${theme.color.stroke2};
+  &:focus {
+    outline: none;
+  }
+
+  svg {
+    margin-right: 1rem;
+  }
+`;
+
+export const InputWrapper = styled.input`
+  width: 100%;
+  border: none;
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const Button = styled.button`
+  margin-left: 0.5rem;
+  padding: 0.8rem 1rem;
+  border-radius: 5rem;
+  background-color: ${theme.color.lightGray};
+  color: ${theme.color.white};
+  &:hover {
+    background-color: ${theme.color.gray};
   }
 `;
 

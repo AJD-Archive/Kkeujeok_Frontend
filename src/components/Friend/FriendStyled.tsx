@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 import theme from '../../styles/Theme/Theme';
 
-export const ConnectionLayout = styled.div`
+export const FriendLayout = styled.div`
   width: calc(100% / 2 - 5rem);
   padding: 1rem;
   margin-bottom: 1rem;
@@ -29,7 +29,7 @@ export const ProfileImageWrapper = styled.img`
   color: ${theme.color.text};
 `;
 
-export const ConnectionUserWrapper = styled.div`
+export const FriendUserWrapper = styled.div`
   width: 60%;
 
   .name {

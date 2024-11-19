@@ -1,17 +1,15 @@
-import { deleteFollow, postFollow } from '../../api/ConnectionApi';
-import { FollowInfo } from '../../types/ConnectionType';
-import * as S from './ConnectionStyled';
-import { customErrToast } from '../../utils/customErrorToast';
+import { FollowInfo } from '../../types/FriendType';
+import * as S from './FriendStyled';
 import CustomModal from '../CustomModal';
 import useModal from '../../hooks/useModal';
 import { useState } from 'react';
 import { useDeleteFollow, usePostFollow } from '../../hooks/useFollowersList';
 
-interface ConnectionProps {
+interface FriendProps {
   follower: FollowInfo;
 }
 
-const Connection = ({ follower }: ConnectionProps) => {
+const Friend = ({ follower }: FriendProps) => {
   const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal(); // 모달창 관련 훅 호출
   const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
 
@@ -35,12 +33,12 @@ const Connection = ({ follower }: ConnectionProps) => {
 
   return (
     <>
-      <S.ConnectionLayout>
+      <S.FriendLayout>
         <S.ProfileImageWrapper src={follower.profileImage} />
-        <S.ConnectionUserWrapper>
+        <S.FriendUserWrapper>
           <p className="name">{follower.name}</p>
           <p className="nickName">{follower.nickname}</p>
-        </S.ConnectionUserWrapper>
+        </S.FriendUserWrapper>
         {follower.isFollow ? (
           <S.FriendRequestButtonWrapper onClick={submitUnFollow}>
             <p>친구 삭제</p>
@@ -50,7 +48,7 @@ const Connection = ({ follower }: ConnectionProps) => {
             <p>친구 신청</p>
           </S.FriendRequestButtonWrapper>
         )}
-      </S.ConnectionLayout>
+      </S.FriendLayout>
 
       {isModalOpen && isDelModalOpen && (
         <CustomModal
@@ -64,4 +62,4 @@ const Connection = ({ follower }: ConnectionProps) => {
   );
 };
 
-export default Connection;
+export default Friend;

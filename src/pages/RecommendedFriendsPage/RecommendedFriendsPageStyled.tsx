@@ -56,7 +56,7 @@ export const SectionTitleWrapper = styled.div`
   }
 `;
 
-export const ConnectionsWrapper = styled.div`
+export const FriendsWrapper = styled.div`
   width: 100%;
   height: fit-content;
   margin-top: 1rem;

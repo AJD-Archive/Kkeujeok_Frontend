@@ -3,7 +3,7 @@ import Flex from '../../components/Flex';
 import Navbar from '../../components/Navbar';
 import * as S from './RecommendedFriendsPageStyled';
 import leftarrow from '../../img/leftarrow.png';
-import Connection from '../../components/Connection/Connection';
+import Friend from '../../components/Friend/Friend';
 import Pagination from '../../components/CustomPagination';
 import { useNavigate } from 'react-router-dom';
 import { useFollowersList, useRecommendFriendsList } from '../../hooks/useFollowersList';
@@ -28,10 +28,10 @@ const RecommendedFriendsPage = () => {
               <S.TitleWrapper>
                 <p>추천 친구</p>
               </S.TitleWrapper>
-              <S.SecondaryTitleWrapper onClick={() => navigate(`/connections`)}>
+              <S.SecondaryTitleWrapper onClick={() => navigate(`/friends`)}>
                 <p>친구 목록</p>
               </S.SecondaryTitleWrapper>
-              <S.SecondaryTitleWrapper onClick={() => navigate(`/connectionsSearch`)}>
+              <S.SecondaryTitleWrapper onClick={() => navigate(`/friends/search`)}>
                 <p>친구 찾기</p>
               </S.SecondaryTitleWrapper>
             </Flex>
@@ -41,11 +41,11 @@ const RecommendedFriendsPage = () => {
             <p>추천 친구</p>
           </S.SectionTitleWrapper>
 
-          <S.ConnectionsWrapper>
+          <S.FriendsWrapper>
             {recommendList?.followInfoResDto.map((follower, index) => (
-              <Connection key={index} follower={follower} />
+              <Friend key={index} follower={follower} />
             ))}
-          </S.ConnectionsWrapper>
+          </S.FriendsWrapper>
 
           {recommendList?.followInfoResDto.length == 0 && (
             <S.NoResultWrapper>

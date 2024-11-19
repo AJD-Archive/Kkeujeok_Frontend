@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { FollowersListData } from '../types/ConnectionType';
+import { FollowersListData } from '../types/FriendType';
 import {
   deleteFollow,
   getFollowersList,
   getRecommendedFriendsList,
   getSearchFriendsList,
   postFollow,
-} from '../api/ConnectionApi';
+} from '../api/FriendApi';
 import { customErrToast } from '../utils/customErrorToast';
 import { axiosInstance } from '../utils/apiConfig';
 

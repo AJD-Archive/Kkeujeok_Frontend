@@ -1,6 +1,5 @@
 import { axiosInstance } from '../utils/apiConfig';
-import { FollowersListData } from '../types/ConnectionType';
-import { customErrToast } from '../utils/customErrorToast';
+import { FollowersListData } from '../types/FriendType';
 import { AxiosResponse } from 'axios';
 
 // * 내 친구 목록 get

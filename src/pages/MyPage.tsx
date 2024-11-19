@@ -288,7 +288,7 @@ const MyPage = () => {
                       <span>자기 소개를 작성해주세요</span>
                     )}
                   </S.CaptionText>
-                  <S.CaptionText onClick={() => navigate(`/connections`)}>
+                  <S.CaptionText onClick={() => navigate(`/friends`)}>
                     <span>친구 {followersList?.pageInfoResDto.totalItems}명</span>
                   </S.CaptionText>
                 </Flex>

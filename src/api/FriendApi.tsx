@@ -1,5 +1,6 @@
 import { axiosInstance } from '../utils/apiConfig';
-import { FollowersListData } from '../types/ConnectionType';
+import { FollowersListData } from '../types/FriendType';
+import { AxiosResponse } from 'axios';
 
 // * 내 친구 목록 get
 export const getFollowersList = async (
@@ -57,14 +58,29 @@ export const getRecommendedFriendsList = async (
 };
 
 // * 친구 신청 post
-export const postFollow = async (memberId: string): Promise<FollowersListData | null> => {
+export const postFollow = async (memberId: string): Promise<AxiosResponse | null> => {
   try {
     const response = await axiosInstance.post(`/member/follow`, {
       memberId: memberId,
     });
-    return response.data.data;
+
+    return response;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.log(error);
+
+    return null;
+  }
+};
+
+// * 친구 삭제 delete
+export const deleteFollow = async (memberId: string): Promise<AxiosResponse | null> => {
+  try {
+    const response = await axiosInstance.delete(`/member/follow/${memberId}`);
+
+    return response;
+  } catch (error) {
+    console.log(error);
+
     return null;
   }
 };

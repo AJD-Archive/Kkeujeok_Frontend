@@ -32,7 +32,7 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
               <S.BoxContainer>
                 {list.map(
                   (
-                    { title, blockId, contents, dDay, dashboardId, dType, nickname, picture },
+                    { title, blockId, contents, dDay, dashboardId, dType, nickname, picture, type },
                     index
                   ) => (
                     <S.BlockEntireContainer key={index}>
@@ -50,6 +50,7 @@ const DeleteButton = ({ id, list, removeValue }: Props) => {
                         dType={dType}
                         name={nickname}
                         picture={picture}
+                        type={type ?? ''}
                       />
                     </S.BlockEntireContainer>
                   )

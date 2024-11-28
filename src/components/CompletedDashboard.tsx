@@ -95,6 +95,7 @@ const CompletedDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
                     picture={block.picture ?? ''}
                     progress={settings.progress ?? ''}
                     highlightColor={settings.highlightColor ?? ''}
+                    type={block.type ?? ''}
                   />
                 </div>
               );

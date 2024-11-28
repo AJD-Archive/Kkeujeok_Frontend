@@ -25,6 +25,7 @@ type Props = {
   picture?: string;
   progress?: string;
   highlightColor?: string;
+  type?: string;
 };
 
 const Block = ({
@@ -41,6 +42,7 @@ const Block = ({
   picture,
   progress,
   highlightColor,
+  type,
 }: Props) => {
   const [isRemove, setIsRemove] = useState(true);
   const { isModalOpen, openModal, handleYesClick, handleNoClick } = useModal();
@@ -104,6 +106,12 @@ const Block = ({
                 }
               }}
             >
+              {type === 'CHALLENGE' && (
+                <S.ChallengeTypeWrapper>
+                  <p>도전! 챌린지</p>
+                </S.ChallengeTypeWrapper>
+              )}
+
               <Flex justifyContent="space-between">
                 <h3>{title}</h3>
                 <span>{dDay}</span>

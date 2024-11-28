@@ -253,6 +253,24 @@ export const BlockContainer = styled.div<{
   }
 `;
 
+export const ChallengeTypeWrapper = styled.p`
+  p {
+    background: linear-gradient(
+      90deg,
+      ${theme.color.main},
+      ${theme.color.main2},
+      ${theme.color.main3}
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* p {
+    color: ${theme.color.gray};
+  } */
+`;
+
 export const UserName = styled.p`
   font-size: ${theme.font.size.caption};
   color: ${theme.color.gray};

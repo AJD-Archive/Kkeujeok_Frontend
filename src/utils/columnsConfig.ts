@@ -3,7 +3,7 @@ import InProgressDashboard from '../components/InProgressDashboard';
 import CompletedDashboard from '../components/CompletedDashboard';
 import { BlockListResDto } from '../types/PersonalBlock';
 
-export type TItemStatus = 'todo' | 'doing' | 'completed' | 'delete';
+export type TItemStatus = 'todo' | 'doing' | 'completed' | 'delete' | 'icon';
 
 export type TItems = {
   [key in TItemStatus]: BlockListResDto[];

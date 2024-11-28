@@ -4,6 +4,7 @@ import CustomModal from '../CustomModal';
 import useModal from '../../hooks/useModal';
 import { useState } from 'react';
 import { useDeleteFollow, usePostFollow } from '../../hooks/useFollowersList';
+import { useNavigate } from 'react-router-dom';
 
 interface FriendProps {
   follower: FollowInfo;
@@ -15,9 +16,11 @@ const Friend = ({ follower }: FriendProps) => {
 
   const { mutate: followMutate } = usePostFollow(follower.memberId!, follower.name!);
   const { mutate: unFollowMutate } = useDeleteFollow(follower.memberId!, follower.name!);
+  const navigate = useNavigate();
 
-  const follow = async () => {
+  const follow = async (e: React.MouseEvent) => {
     followMutate();
+    e.stopPropagation();
   };
 
   const unFollow = async () => {
@@ -25,15 +28,16 @@ const Friend = ({ follower }: FriendProps) => {
   };
 
   // 친구 삭제를 모달창으로 확인
-  const submitUnFollow = () => {
+  const submitUnFollow = (e: React.MouseEvent) => {
     setIsDelModalOpen(true);
     const handleModalClose = () => setIsDelModalOpen(false);
     openModal('yes', unFollow, handleModalClose);
+    e.stopPropagation();
   };
 
   return (
     <>
-      <S.FriendLayout>
+      <S.FriendLayout onClick={() => navigate(`/friendpage/${follower.memberId}`)}>
         <S.ProfileImageWrapper src={follower.profileImage} />
         <S.FriendUserWrapper>
           <p className="name">{follower.name}</p>

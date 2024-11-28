@@ -269,6 +269,14 @@ export const MemberEmail = styled.p`
   color: ${theme.color.black};
 `;
 
+export const MemberInfo = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: space-evenly;
+  width: 100%;
+`;
+
 export const MemberState = styled.p`
   font-size: 0.75rem;
   color: ${theme.color.gray};

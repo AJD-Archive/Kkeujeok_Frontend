@@ -659,6 +659,7 @@ export const ChallengeCreatorContainer = styled.div`
     font-size: ${theme.font.size.caption};
     color: ${theme.color.gray};
     font-weight: ${theme.font.weight.light};
+    cursor: pointer;
   }
 `;
 
@@ -691,6 +692,7 @@ export const RealTimeComponent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const RealTimeUserImg = styled.img`

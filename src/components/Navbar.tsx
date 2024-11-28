@@ -27,6 +27,7 @@ const Navbar = () => {
     queryKey: ['userinfo'],
     queryFn: userInfoApi,
   });
+
   const [nickname, setNickname] = useAtom(nicknameAtom);
   const [update] = useAtom(navbarUpdateTriggerAtom);
 

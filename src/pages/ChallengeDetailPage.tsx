@@ -19,6 +19,8 @@ import CustomModal from '../components/CustomModal';
 import useModal from '../hooks/useModal';
 import JoinChallengeModal from '../components/JoinChallengeModal';
 import { Helmet } from 'react-helmet-async';
+import { userInfoApi } from '../api/UserApi';
+import { useQuery } from '@tanstack/react-query';
 
 const ChallengeDetailPage = () => {
   const navigate = useNavigate();
@@ -33,6 +35,11 @@ const ChallengeDetailPage = () => {
   const [join, setJoin] = useState<boolean>(false);
   const [isDelModalOpen, setIsDelModalOpen] = useState<boolean>(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState<boolean>(false);
+
+  const { data: UserInfo, refetch: refetchTeamDashboard } = useQuery({
+    queryKey: ['userinfo'],
+    queryFn: userInfoApi,
+  });
 
   // * 챌린지 상세보기 데이터 받아오기
   const fetchedData = async () => {
@@ -111,6 +118,15 @@ const ChallengeDetailPage = () => {
     setIsWithdrawModalOpen(true);
     const isWithdrawModalOpen = () => setIsWithdrawModalOpen(false);
     openModal('yes', cancelChallenge, isWithdrawModalOpen);
+  };
+  const onMypage = () => {
+    navigate(`/mypage`);
+  };
+
+  const onFriendPage = (id: string) => {
+    navigate(`/friendpage/${id}`, {
+      state: { wrapper: true },
+    });
   };
 
   return (
@@ -249,8 +265,18 @@ const ChallengeDetailPage = () => {
 
                   <S.ChallengeCreatorContainer>
                     <S.DetaileSubTitle>챌린지 장</S.DetaileSubTitle>
-                    <S.ProfileImage src={challengeData.authorProfileImage} />
-                    <span>{challengeData.authorName}</span>
+                    <Flex
+                      alignItems="center"
+                      onClick={() => {
+                        if (challengeData.authorId)
+                          String(UserInfo?.data.memberId) === String(challengeData.authorId)
+                            ? onMypage()
+                            : onFriendPage(challengeData.authorId);
+                      }}
+                    >
+                      <S.ProfileImage src={challengeData.authorProfileImage} />
+                      <span>{challengeData.authorName}</span>
+                    </Flex>
                   </S.ChallengeCreatorContainer>
                 </Flex>
               </S.DetailContainer>
@@ -263,7 +289,16 @@ const ChallengeDetailPage = () => {
           <S.RealTimeContainer>
             {challengeData?.completedMembers && challengeData.completedMembers.length > 0 ? (
               challengeData.completedMembers.map((member, index) => (
-                <S.RealTimeComponent key={index}>
+                <S.RealTimeComponent
+                  key={index}
+                  onClick={() => {
+                    if (member.memberId) {
+                      String(UserInfo?.data.memberId) === String(member.memberId)
+                        ? onMypage()
+                        : onFriendPage(member.memberId);
+                    }
+                  }}
+                >
                   <S.RealTimeUserImg src={member.picture} />
                   <S.RealTimeUserName>{member.nickname}</S.RealTimeUserName>
                 </S.RealTimeComponent>

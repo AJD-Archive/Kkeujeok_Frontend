@@ -6,12 +6,14 @@ import { customErrToast } from '../utils/customErrorToast';
 import { useAtom } from 'jotai';
 import { navbarUpdateTriggerAtom } from '../contexts/atoms';
 import { acceptFriendAlarm } from '../api/MyPageApi';
+import axios from 'axios';
 
 type Props = {
   message: string;
   isRead: boolean;
 };
 const AlarmBlock = ({ message, isRead }: Props) => {
+  console.log(message);
   let modifiedMessage = '';
   let followerIdMatch: string = '';
 
@@ -44,19 +46,22 @@ const AlarmBlock = ({ message, isRead }: Props) => {
     const index = message.indexOf('챌린지 블록이 생성되었습니다');
     nameMatch = message.slice(0, index).trim();
     description = '챌린지 블록이 생성됐어요';
-  } else if (message.includes('친구 신청을 보냈습니다.')) {
-    nameMatch = `${message.split('님')[0]}님이`;
+  } else if (message.includes('친구 추가 요청')) {
+    nameMatch = `${message.split(':')[1].split('님')[0].trim()}님이`;
     description = `친구 요청을 보냈어요!`;
+  } else if (message.includes('친구 추가 수락')) {
+    nameMatch = `${message.split(':')[1].split('님')[0].trim()}님이`;
+    description = `친구 요청을 수락했어요!`;
   } else {
     const index = message.indexOf('님');
     nameMatch = `반가워요! ${message.slice(message.indexOf(' ') + 5, index)}님이`;
     description = `챌린지에 참여했어요`;
   }
   const numberMatch = modifiedMessage.match(/\d+$/);
-
   const name = nameMatch ? nameMatch : null;
   const dashboard = dashboardMatch ? dashboardMatch[0] : null;
   const number = numberMatch ? numberMatch[0] : '';
+
   const [, setUpdate] = useAtom(navbarUpdateTriggerAtom);
 
   const onAcceptHandler = async () => {
@@ -68,8 +73,16 @@ const AlarmBlock = ({ message, isRead }: Props) => {
   };
 
   const onAcceptFriend = async () => {
-    await acceptFriendAlarm(followerIdMatch);
-    customErrToast(`${message.split('님')[0]}님의 친구요청을 수락했어요!`);
+    try {
+      const response = await acceptFriendAlarm(followerIdMatch);
+      customErrToast(`${message.split('님')[0]}님의 친구요청을 수락했어요!`);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 403) {
+          customErrToast(`친구요청을 이미 수락했어요!`);
+        }
+      }
+    }
   };
 
   return (
@@ -80,11 +93,7 @@ const AlarmBlock = ({ message, isRead }: Props) => {
           <p>{description}</p>
         </UserInfoContainer>
         {number !== '' ? <button onClick={onAcceptHandler}>수락</button> : ''}
-        {message.includes('친구 신청을 보냈습니다.') === true ? (
-          <button onClick={onAcceptFriend}>수락</button>
-        ) : (
-          ''
-        )}
+        {followerIdMatch !== '' ? <button onClick={onAcceptFriend}>수락</button> : ''}
       </Flex>
     </AlarmContainer>
   );

@@ -24,6 +24,7 @@ import {
   LastLabel,
   MemberWrapperMemberView,
   ImgWrapper,
+  MemberInfo,
 } from '../styles/CreateBoardPageStyled';
 import Flex from '../components/Flex';
 import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
@@ -39,6 +40,8 @@ import { quitTeamDashboard } from '../api/BoardApi';
 import { ProfileData } from '../types/UserInfo';
 import userDefault from '../img/userDefault.png';
 import { Helmet } from 'react-helmet-async';
+import { useQuery } from '@tanstack/react-query';
+import { userInfoApi } from '../api/UserApi';
 
 const CreateTeamBoard = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
@@ -180,7 +183,15 @@ const CreateTeamBoard = () => {
     } else navigate(-1);
   };
 
-  console.log(formData, '저장된 팀 대시보드 정보');
+  const onMypage = () => {
+    navigate(`/mypage`);
+  };
+
+  const onFriendPage = (id: number) => {
+    navigate(`/friendpage/${id}`, {
+      state: { wrapper: true },
+    });
+  };
   return (
     <>
       <Helmet>
@@ -251,10 +262,18 @@ const CreateTeamBoard = () => {
                           ))}
                           {joinMembers?.map((member, index) => (
                             <Member key={index}>
-                              <MemberImage src={member.picture} alt="프로필 사진"></MemberImage>
-                              <MemberEmail>{member.name}</MemberEmail>
+                              <MemberInfo
+                                onClick={() => {
+                                  String(isCreator.myId) === String(member.id)
+                                    ? onMypage()
+                                    : onFriendPage(member.id);
+                                }}
+                              >
+                                <MemberImage src={member.picture} alt="프로필 사진"></MemberImage>
+                                <MemberEmail>{member.name}</MemberEmail>
+                              </MemberInfo>
                               <MemberState>
-                                {member.id !== isCreator.creatorId ? '멤버' : '방장'}
+                                {String(member.id) !== isCreator.creatorId ? '멤버' : '방장'}
                               </MemberState>
                             </Member>
                           ))}
@@ -288,10 +307,18 @@ const CreateTeamBoard = () => {
                       ))}
                       {joinMembers?.map((member, index) => (
                         <Member key={index}>
-                          <MemberImage src={member.picture} alt="프로필 사진"></MemberImage>
-                          <MemberEmail>{member.name}</MemberEmail>
+                          <MemberInfo
+                            onClick={() => {
+                              String(isCreator.myId) === String(member.id)
+                                ? onMypage()
+                                : onFriendPage(member.id);
+                            }}
+                          >
+                            <MemberImage src={member.picture} alt="프로필 사진"></MemberImage>
+                            <MemberEmail>{member.name}</MemberEmail>
+                          </MemberInfo>
                           <MemberState>
-                            {member.id !== isCreator.creatorId ? '멤버' : '방장'}
+                            {String(member.id) !== isCreator.creatorId ? '멤버' : '방장'}
                           </MemberState>
                         </Member>
                       ))}

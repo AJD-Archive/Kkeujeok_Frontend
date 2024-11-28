@@ -99,3 +99,11 @@ export const restoreBlockFunc = async (blockId: string) => {
     console.error('Error fetching data:', error);
   }
 };
+
+export const entireDeleteBlock = async (dashboardId: string) => {
+  try {
+    await axiosInstance.delete(`/blocks/permanent?dashboardId=${dashboardId}`);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};

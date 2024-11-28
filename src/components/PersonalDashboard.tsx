@@ -1,15 +1,14 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getPersonalBlock, getPersonalDashboard } from '../api/BoardApi';
+import { useQuery } from '@tanstack/react-query';
+import { getPersonalDashboard } from '../api/BoardApi';
 import {
   deleteBlock,
-  getDeleteBlock,
   restoreBlockFunc,
   updateOrderBlock,
   updatePersonalBlock,
 } from '../api/PersonalBlockApi';
 import DashBoardLayout from './DashBoardLayout';
 import Header from './Header';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
 import NotStartedDashboard from './NotStartedDashboard';
 import InProgressDashboard from './InProgressDashboard';
 import CompletedDashboard from './CompletedDashboard';
@@ -20,7 +19,7 @@ import DeleteButton from './DeleteButton';
 import { TItems, TItemStatus } from '../utils/columnsConfig';
 import useItems from '../hooks/useItems';
 import { BlockListResDto } from '../types/PersonalBlock';
-import { useSSE } from '../hooks/useSSE';
+import Wrapper from './Wrapper';
 
 type PageState = {
   todo: number; // 할 일 페이지 번호
@@ -30,8 +29,8 @@ type PageState = {
 
 const PersonalDashBoard = () => {
   const location = useLocation();
+  const isWrapperTrue = location.state?.wrapper;
   const dashboardId = location.pathname.split('/')[2];
-  // const [page, setPage] = useState<number>(0);
   const [todoPage, setTodoPage] = useState<number>(0);
   const [doingPage, setDoingPage] = useState<number>(0);
   const [page, setPage] = useState<PageState>({
@@ -100,6 +99,7 @@ const PersonalDashBoard = () => {
     const blockId = targetItem.blockId;
 
     if (blockId) {
+      if (destinationKey === 'icon') return;
       if (destinationKey !== 'delete') {
         updatePersonalBlock(blockId, status(destinationKey)); // 블록 상태 업데이트
       } else {
@@ -136,13 +136,19 @@ const PersonalDashBoard = () => {
       return;
     }
     const [targetItem] = _items[sourceKey].splice(source.index, 1);
-    _items[destinationKey].splice(destination.index, 0, targetItem);
+    if (destinationKey === 'icon') {
+      _items['delete'].splice(destination.index, 0, targetItem);
+    } else {
+      _items[destinationKey].splice(destination.index, 0, targetItem);
+    }
     setItems(_items);
 
     if (sourceKey !== destinationKey) {
       updateState(destinationKey, sourceKey, targetItem);
     }
-
+    if (destination.droppableId === 'icon') {
+      console.log('icon');
+    }
     //시작점 상태에서 종착지가 시작점 상태와는 다른 상태일때 그 아이템 개수 -1
     if (source.droppableId === 'todo' && destination.droppableId !== 'todo')
       setBlockTotal(prev => ({
@@ -176,8 +182,8 @@ const PersonalDashBoard = () => {
   };
 
   return (
-    <>
-      <DashBoardLayout>
+    <DashBoardLayout>
+      <Wrapper isWrapperTrue={isWrapperTrue}>
         <Header
           mainTitle={PersonalDashboardInfo?.title || ''}
           subTitle={PersonalDashboardInfo?.description || ''}
@@ -208,8 +214,8 @@ const PersonalDashBoard = () => {
           <DeleteButton key="delete" id="delete" removeValue={true} list={items.delete || []} />
         </DragDropContext>
         <Outlet />
-      </DashBoardLayout>
-    </>
+      </Wrapper>
+    </DashBoardLayout>
   );
 };
 export default PersonalDashBoard;

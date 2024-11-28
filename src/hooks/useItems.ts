@@ -81,6 +81,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
     doing: InProgress?.pages[0]?.blockListResDto || [],
     completed: Completed?.pages[0]?.blockListResDto || [],
     delete: DeletedBlock?.blockListResDto || [],
+    icon: DeletedBlock?.blockListResDto || [],
   });
 
   const [blockTotal, setBlockTotal] = useState<TPages>({

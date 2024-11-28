@@ -30,6 +30,7 @@ export default function useItems(dashboardId: string) {
     doing: InProgress?.blockListResDto || [],
     completed: COMPLETED?.blockListResDto || [],
     delete: DeletedBlock?.blockListResDto || [],
+    icon: DeletedBlock?.blockListResDto || [],
   });
 
   // Update items whenever the fetched data changes
@@ -39,6 +40,7 @@ export default function useItems(dashboardId: string) {
       doing: InProgress?.blockListResDto || [],
       completed: COMPLETED?.blockListResDto || [],
       delete: DeletedBlock?.blockListResDto || [],
+      icon: DeletedBlock?.blockListResDto || [],
     });
   }, [NotStarted, InProgress, COMPLETED, DeletedBlock]);
 

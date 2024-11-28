@@ -45,8 +45,8 @@ export const useSSE = () => {
     );
 
     eventSourceRef.current.onmessage = event => {
-      if (!event.data.includes('연결')) {
-        const modifiedMessage = event.data.replace(/^[^:]+: /, '').replace(/\d+$/, '');
+      if (!event.data.includes('연결') || window.location.href === 'http://localhost:3000/') {
+        const modifiedMessage = event.data.split('.')[0];
         customErrToast(modifiedMessage);
         setUnReadCount(prev => prev + 1);
       }

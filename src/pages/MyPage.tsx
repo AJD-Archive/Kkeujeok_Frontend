@@ -6,13 +6,10 @@ import AlarmBlock from '../components/AlarmBlock';
 import ProfileUpdateModal from '../components/ProfileUpdateModal';
 import ChallengeBlock from '../components/ChallengeBlock';
 import Profile from '../components/Profile';
-
 import googleicon from '../img/googleicon.png';
 import kakaologo from '../img/kakaologo.png';
 import bell from '../img/bell.png';
-
 import * as S from '../styles/MyPageStyled';
-
 import { ChallengeList, PersonalDashboardList, TeamDashboardList } from '../types/MyPage';
 import { fetchBlockData, fetchData, getAlarmList, updateAlarmIsRead } from '../api/MyPageApi';
 import { useAtom } from 'jotai';
@@ -29,9 +26,9 @@ const MyPage = () => {
     queryKey: ['alarmNoti'],
     queryFn: getAlarmList,
   });
+  console.log(alarmNoti);
   const { data: followersList } = useFollowersList(0, 8);
 
-  console.log(alarmNoti);
   const [teamBool, setTeamBool] = useState<string>('personal'); // 기본값으로 팀 탭을 보여줌
   const [pageNumber, setPageNumber] = useState(1); // 페이지네이션 변수
 
@@ -183,7 +180,6 @@ const MyPage = () => {
             <S.GridContainer>
               {teamBlockData?.teamDashboardInfoResDto.map((item, idx) => {
                 const { dashboardId, title, joinMembers, description } = item;
-                console.log(dashboardId, title);
                 return (
                   <S.TeamBlockWrapper
                     key={idx}
@@ -350,7 +346,7 @@ export default MyPage;
 const NoContentComponent = (
   <S.NoContentComponent>
     <Flex height={500} alignItems="center" justifyContent="center">
-      챌린지 참여 내역이 없습니다.
+      참여 내역이 없습니다.
     </Flex>
   </S.NoContentComponent>
 );

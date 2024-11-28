@@ -1,4 +1,10 @@
-import { NotificationResponse, ProfileInfo, ReturnData } from '../types/MyPage';
+import {
+  FriendBlock,
+  FrinedProfile,
+  NotificationResponse,
+  ProfileInfo,
+  ReturnData,
+} from '../types/MyPage';
 import { axiosInstance } from '../utils/apiConfig';
 
 // * 마이페이지 프로필 조회
@@ -20,8 +26,23 @@ export const fetchBlockData = async (
     const res = await axiosInstance.get(
       `/members/mypage/dashboard-challenges?requestEmail=${email}&page=${pageNum}&size=6`
     );
-    console.log(res);
     return res.data as ReturnData;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+// * 친구 마이페이지에서 개인,팀,챌린지 블록 데이터 받아오기
+export const fetchFriendBlockData = async (
+  pageNum: number,
+  friendId: string
+): Promise<FriendBlock | undefined> => {
+  try {
+    const res = await axiosInstance.get(
+      `/members/mypage/${friendId}/dashboard-challenges?page=${pageNum}&size=6`
+    );
+    console.log(res.data.data);
+    return res.data.data as FriendBlock;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -63,8 +84,18 @@ export const updateAlarmIsRead = async () => {
 export const acceptFriendAlarm = async (followId: string) => {
   try {
     const response = await axiosInstance.post(`/member/follow/accept/${followId}`);
-    console.log(response);
   } catch (error) {
     console.error('Error fetching data :', error);
+    throw error;
+  }
+};
+
+// * 친구 마이페이지 프로필 조회
+export const friendProfile = async (friendId: string) => {
+  try {
+    const res = await axiosInstance.get(`/members/mypage/${friendId}`);
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
   }
 };

@@ -58,8 +58,6 @@ export const getSearchChallenge = async (
 export const getChallengeDetail = async (challengeId: string): Promise<Challenge | null> => {
   try {
     const response = await axiosInstance.get(`/challenges/${challengeId}`);
-    // console.log(response.data.data);
-
     return response.data.data;
   } catch (error) {
     console.error('Error fetching data:', error);

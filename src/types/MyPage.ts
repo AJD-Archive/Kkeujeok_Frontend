@@ -30,6 +30,12 @@ export interface ReturnData {
   };
 }
 
+//* 친구 마이페이지 개인,팀,챌린지 대시보드 타입
+export interface FriendBlock {
+  personalDashboardList: PersonalDashboardList;
+  challengeList: ChallengeList;
+}
+
 //* 팀 대시보드 정보 타입
 interface TeamDashboardInfoResDto {
   blockProgress: number;
@@ -91,4 +97,14 @@ export type NotificationResponse = {
   data: {
     notificationInfoResDto: NotificationInfoResDto[];
   };
+};
+
+// * 친구 프로필 조회
+export type FrinedProfile = {
+  picture: string;
+  email: string;
+  name: string;
+  nickName: string;
+  socialType: string;
+  introduction: string;
 };

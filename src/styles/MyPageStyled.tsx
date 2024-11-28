@@ -78,6 +78,7 @@ export const ChallengeLayout = styled.div`
   border: 1px solid ${theme.color.stroke2};
   padding: 1.1875rem 1.625rem 2.625rem 1.625rem;
   border-radius: 0.625rem;
+  cursor: pointer;
 `;
 
 export const ChallengeBoxTitle = styled.span`

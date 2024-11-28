@@ -102,8 +102,8 @@ export const TeamDashboardItem = styled.article`
 `;
 
 export const CardContainer = styled.div<Props>`
-  width: 19.875rem;
-  height: 39.0625rem;
+  width: 17.875vw;
+  height: calc(100vh - 35vh);
   padding: 1rem 1rem;
   flex-shrink: 0;
   border-radius: 10px;

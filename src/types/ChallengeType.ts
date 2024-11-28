@@ -16,6 +16,7 @@ export interface Challenge {
   isParticipant?: false;
   isAuthor?: true;
   completedMembers?: completedMember[];
+  authorId?: string;
 }
 
 // * 실시간 완료 멤버 타입

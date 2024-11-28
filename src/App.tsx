@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-// import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
 import MyPage from './pages/MyPage';
 import CreateBoard from './pages/CreateBoardPage';
@@ -36,6 +35,7 @@ import { useSSE } from './hooks/useSSE';
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import FriendsSearchPage from './pages/FriendsSearchPage/FriendsSearchPage';
 import RecommendedFriendsPage from './pages/RecommendedFriendsPage/RecommendedFriendsPage';
+import FriendPage from './pages/FriendPage';
 
 const queryClient = new QueryClient();
 
@@ -193,6 +193,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <MyPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/friendpage/:id"
+            element={
+              <ProtectedRoute>
+                <FriendPage />
               </ProtectedRoute>
             }
           />

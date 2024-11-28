@@ -10,7 +10,7 @@ export const MainDashBoardLayout = styled.div`
 
 export const MainDashBoardContainer = styled.section`
   width: 100%;
-  padding: 4.3125rem 2.5rem;
+  padding: 4.3125vw 2.5vw;
   overflow: hidden;
 
   hr {
@@ -21,11 +21,11 @@ export const MainDashBoardContainer = styled.section`
 export const CardContainer = styled.section`
   display: flex;
   justify-content: space-between;
-  padding: 4.5rem 3.8125rem;
+  padding: 4.5vw 3.8125vw;
   gap: 39px;
 
   @media screen and (min-width: 1700px) {
-    justify-content: center;
+    justify-content: space-evenly;
   }
 `;
 
@@ -47,8 +47,16 @@ export const DeleteDiv = styled.div`
   bottom: 20px;
   right: 20px;
   border-radius: 0.625rem;
-  h1 {
-    margin-bottom: 1rem;
+
+  button {
+    color: #858585;
+    background-color: #f4f4f4;
+    padding: 0.2rem 0.2rem;
+    border-radius: 0.2rem;
+  }
+
+  button:not(:first-of-type) {
+    margin-top: 0.5rem;
   }
 `;
 
@@ -81,7 +89,19 @@ export const BoxContainer = styled.section`
 export const BlockEntireContainer = styled.div`
   display: grid;
   grid-template-columns: 85% 5%;
-  grid-gap: 10px;
+  grid-gap: 8px;
   margin-bottom: 1rem;
   align-items: center;
+`;
+
+export const IsReadOnly = styled.div`
+  position: absolute;
+  width: calc(100% - 12.5rem);
+  right: 0px;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  text-align: center;
 `;

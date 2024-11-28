@@ -29,10 +29,6 @@ import {
 import * as S from '../styles/TeamDocumentStyled';
 import { useTeamDocument } from '../hooks/useTeamDocument';
 import { BlockNoteView } from '@blocknote/mantine';
-import useInterval from '../hooks/useInterval';
-import { getPersonalBlock } from '../api/PersonalBlockApi';
-import { BlockListResDto } from '../types/PersonalBlock';
-import Navbar from '../components/Navbar';
 import useInfo from '../hooks/useInfo';
 import { deleteTeamDocument } from '../api/TeamDocumentApi';
 import useModal from '../hooks/useModal';
@@ -49,7 +45,6 @@ const TeamDocument = () => {
   const teamDocumentId = segments[3]; // Assuming /15 is the teamDocumentId
 
   const { progress } = location.state || {};
-  const { info } = useInfo();
 
   const { data, categories, handleInputChange, onChange, editor, SubmitData } = useTeamDocument(
     teamDashboardId,

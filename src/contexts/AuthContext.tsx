@@ -44,8 +44,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const fetchMemberInfo = async () => {
     try {
-      const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/member/info`);
-      console.log(response);
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_API_BASE_URL}/members/mypage`
+      );
+      // console.log(response);
       setUserInfo(response.data.data);
     } catch (error) {
       console.error('유저 정보를 가져오는데 실패했습니다.', error);

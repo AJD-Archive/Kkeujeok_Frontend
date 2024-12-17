@@ -7,6 +7,7 @@ export interface ProfileData {
   socialType: 'GOOGLE' | 'KAKAO';
   introduction: string;
   memberId?: number;
+  tag?: string;
 }
 
 export interface UserInfo {

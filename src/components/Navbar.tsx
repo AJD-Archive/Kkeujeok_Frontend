@@ -92,7 +92,9 @@ const Navbar = () => {
           />
         </svg>
 
-        <p>공지사항</p>
+        <Link to="/notice">
+          <p>공지사항</p>
+        </Link>
       </S.NoticeContainer>
     </S.NavBarLayout>
   );

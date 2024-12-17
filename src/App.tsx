@@ -36,6 +36,7 @@ import FriendsPage from './pages/FriendsPage/FriendsPage';
 import FriendsSearchPage from './pages/FriendsSearchPage/FriendsSearchPage';
 import RecommendedFriendsPage from './pages/RecommendedFriendsPage/RecommendedFriendsPage';
 import FriendPage from './pages/FriendPage';
+import NoticePage from './pages/NoticePage/NoticePage';
 
 const queryClient = new QueryClient();
 
@@ -295,6 +296,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <RecommendedFriendsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/notice"
+            element={
+              <ProtectedRoute>
+                <NoticePage />
               </ProtectedRoute>
             }
           />

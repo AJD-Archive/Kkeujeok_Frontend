@@ -54,7 +54,7 @@ const ChallengeCommunityPage = () => {
     const response = await getSearchChallenge(keyword, selectedCategory, pageInfo?.currentPage, 10);
 
     if (response) {
-      console.log('이만큼 받아옴!', response);
+      // console.log('이만큼 받아옴!', response);
       setChallenges(response.challengeInfoResDto);
       setPageInfo(response.pageInfoResDto);
     }

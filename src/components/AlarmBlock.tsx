@@ -52,6 +52,10 @@ const AlarmBlock = ({ message, isRead }: Props) => {
   } else if (message.includes('친구 추가 수락')) {
     nameMatch = `${message.split(':')[1].split('님')[0].trim()}님이`;
     description = `친구 요청을 수락했어요!`;
+  } else if (message.includes('탈퇴')) {
+    const index = message.indexOf('챌린지');
+    nameMatch = `${message.slice(0, index).trim()}`;
+    description = `챌린지가 탈퇴되었습니다`;
   } else {
     const index = message.indexOf('님');
     nameMatch = `반가워요! ${message.slice(message.indexOf(' ') + 5, index)}님이`;
@@ -75,7 +79,10 @@ const AlarmBlock = ({ message, isRead }: Props) => {
   const onAcceptFriend = async () => {
     try {
       const response = await acceptFriendAlarm(followerIdMatch);
-      customErrToast(`${message.split('님')[0]}님의 친구요청을 수락했어요!`);
+      console.log(message.split('님')[0]);
+      customErrToast(
+        `${message.split('님')[0].split(':').slice(1).join(':').trim()}님의 친구요청을 수락했어요!`
+      );
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 403) {

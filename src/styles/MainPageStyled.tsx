@@ -20,9 +20,9 @@ export const MainDashBoardContainer = styled.section`
 
 export const CardContainer = styled.section`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   padding: 4.5vw 3.8125vw;
-  gap: 39px;
+  gap: 25px;
 
   @media screen and (min-width: 1700px) {
     justify-content: space-evenly;
@@ -36,7 +36,7 @@ export const DeleteContainer = styled.div`
 `;
 
 export const DeleteDiv = styled.div`
-  width: 18.4375rem;
+  width: 22.4375rem;
   height: 34.8125rem;
   padding: 1.625rem 1.3125rem;
   color: ${theme.color.gray};
@@ -51,7 +51,7 @@ export const DeleteDiv = styled.div`
   button {
     color: #858585;
     background-color: #f4f4f4;
-    padding: 0.2rem 0.2rem;
+    padding: 0.2rem 0.5rem;
     border-radius: 0.2rem;
   }
 
@@ -74,7 +74,7 @@ export const DeleteIconWrapper = styled.div`
 
   background: #f4f4f4;
   border-radius: 50%;
-
+  cursor: pointer;
   img {
     width: 27px;
     height: 31px;

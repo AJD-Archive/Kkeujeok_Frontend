@@ -209,7 +209,7 @@ const CreateTeamBoard = () => {
     navigate(`/mypage`);
   };
 
-  const onFriendPage = (id: number) => {
+  const onFriendPage = (id: number | string) => {
     navigate(`/friendpage/${id}`, {
       state: { wrapper: true },
     });
@@ -295,7 +295,7 @@ const CreateTeamBoard = () => {
                                 <MemberEmail>{member.name}</MemberEmail>
                               </MemberInfo>
                               <MemberState>
-                                {String(member.id) !== isCreator.creatorId ? '멤버' : '방장'}
+                                {member.id !== isCreator.creatorId ? '멤버' : '방장'}
                               </MemberState>
                             </Member>
                           ))}
@@ -340,7 +340,7 @@ const CreateTeamBoard = () => {
                             <MemberEmail>{member.name}</MemberEmail>
                           </MemberInfo>
                           <MemberState>
-                            {String(member.id) !== isCreator.creatorId ? '멤버' : '방장'}
+                            {member.id !== isCreator.creatorId ? '멤버' : '방장'}
                           </MemberState>
                         </Member>
                       ))}

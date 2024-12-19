@@ -94,14 +94,21 @@ const PersonalDashBoard = () => {
   const updateState = async (
     destinationKey: string,
     sourceKey: string,
-    targetItem: BlockListResDto
+    targetItem: BlockListResDto,
+    _items: TItems
   ) => {
     const blockId = targetItem.blockId;
 
     if (blockId) {
       if (destinationKey === 'icon') return;
       if (destinationKey !== 'delete') {
-        updatePersonalBlock(blockId, status(destinationKey)); // 블록 상태 업데이트
+        const orderArray = {
+          dashboardId: dashboardId,
+          notStartedList: _items.todo.map(item => item.blockId),
+          inProgressList: _items.doing.map(item => item.blockId),
+          completedList: _items.completed.map(item => item.blockId),
+        };
+        updatePersonalBlock(blockId, status(destinationKey), orderArray); // 블록 상태 업데이트
       } else {
         deleteBlock(blockId); // 블록 삭제
       }
@@ -144,10 +151,13 @@ const PersonalDashBoard = () => {
     setItems(_items);
 
     if (sourceKey !== destinationKey) {
-      updateState(destinationKey, sourceKey, targetItem);
+      updateState(destinationKey, sourceKey, targetItem, _items);
+    } else {
+      updateOrder(_items);
     }
+
     if (destination.droppableId === 'icon') {
-      console.log('icon');
+      deleteBlock(targetItem.blockId ?? '');
     }
     //시작점 상태에서 종착지가 시작점 상태와는 다른 상태일때 그 아이템 개수 -1
     if (source.droppableId === 'todo' && destination.droppableId !== 'todo')
@@ -178,7 +188,6 @@ const PersonalDashBoard = () => {
         [destination.droppableId]:
           blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
-    updateOrder(_items);
   };
 
   return (

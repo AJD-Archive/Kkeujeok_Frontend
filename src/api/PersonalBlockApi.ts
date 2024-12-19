@@ -45,10 +45,16 @@ export const getPersonalBlock = async (blockId: string | null): Promise<BlockLis
 };
 
 //블록의 상태 수정
-export const updatePersonalBlock = async (blockId?: string, progress?: string) => {
+export const updatePersonalBlock = async (
+  blockId?: string,
+  progress?: string,
+  order?: BlockOrder
+) => {
   try {
-    const response = await axiosInstance.patch(`/blocks/${blockId}/progress?progress=${progress}`);
-    console.log(response);
+    const response = await axiosInstance.patch(
+      `/blocks/${blockId}/progress?progress=${progress}`,
+      order
+    );
     return response.data;
   } catch (error) {
     console.error('Error fetching data:', error);

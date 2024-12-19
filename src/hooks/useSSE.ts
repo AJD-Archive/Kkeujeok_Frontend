@@ -3,12 +3,13 @@ import { atom, useAtom } from 'jotai';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import { unreadCount } from '../contexts/sseAtom';
 import { customErrToast } from '../utils/customErrorToast';
-import { FaMaskVentilator } from 'react-icons/fa6';
+import { useLocation } from 'react-router-dom';
 
 const sseConnectedAtom = atom(false); // SSE 연결 상태
 const sseMessagesAtom = atom<string[]>([]); // SSE 메시지 상태
 
 export const useSSE = () => {
+  const location = useLocation();
   const [, setConnected] = useAtom(sseConnectedAtom);
   const [, setUnReadCount] = useAtom(unreadCount);
 
@@ -47,10 +48,9 @@ export const useSSE = () => {
 
     eventSourceRef.current.onmessage = event => {
       const hasNoSuccessMessage = !event.data.includes('연결 성공');
-      const isNotTargetURL = !window.location.href.startsWith('http://localhost:3000/');
+      const isNotTargetURL = location.pathname !== '/';
 
-      console.log(event.data);
-      if (hasNoSuccessMessage || isNotTargetURL) {
+      if (hasNoSuccessMessage && isNotTargetURL) {
         const modifiedMessage = event.data.split('.')[0];
         if (modifiedMessage.includes('친구'))
           customErrToast(modifiedMessage.split(':').slice(1).join(':').trim());
@@ -72,7 +72,7 @@ export const useSSE = () => {
       localStorage.setItem('sseConnected', 'false'); // 연결 상태 저장
       reconnectTimeoutRef.current = setTimeout(connectToSSE, 1000); // 1초 후 재연결 시도
     };
-  }, [setConnected, clearReconnectTimeout]);
+  }, [setConnected, clearReconnectTimeout, location.pathname]);
 
   useEffect(() => {
     connectToSSE();

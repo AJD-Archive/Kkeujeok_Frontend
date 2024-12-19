@@ -108,7 +108,7 @@ export const CardContainer = styled.div<Props>`
   flex-shrink: 0;
   border-radius: 10px;
   background: ${({ backGroundColor }) => backGroundColor};
-  min-width: 311.188px;
+  min-width: 19.449rem;
 
   header {
     display: flex;

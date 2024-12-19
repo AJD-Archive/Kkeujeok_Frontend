@@ -22,7 +22,7 @@ export const CardContainer = styled.section`
   display: flex;
   justify-content: center;
   padding: 4.5vw 3.8125vw;
-  gap: 25px;
+  gap: 1.563rem;
 
   @media screen and (min-width: 1700px) {
     justify-content: space-evenly;

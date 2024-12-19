@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import theme from '../styles/Theme/Theme';
+import { Link } from 'react-router-dom';
 
 export const NavBarLayout = styled.nav`
   position: sticky;
@@ -38,6 +39,11 @@ export const UserDetailContainer = styled.div`
   img {
     width: 12px;
   }
+
+  .tag {
+    font-size: ${theme.font.size.caption};
+    color: ${theme.color.gray};
+  }
 `;
 
 export const ButtonContainer = styled.div`
@@ -75,3 +81,17 @@ export const NavButton = styled.button<{ variant: 'primary' | 'secondary' }>`
   `}
 `;
 export default NavButton;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+    color: inherit;
+  }
+`;

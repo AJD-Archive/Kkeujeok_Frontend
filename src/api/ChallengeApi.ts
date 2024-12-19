@@ -7,7 +7,7 @@ export const createChallenge = async (data: FormData): Promise<void | string> =>
     const response = await axiosInstance.post('/challenges', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log(response.data);
+    // console.log(response.data);
     return '';
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -37,7 +37,7 @@ export const getSearchChallenge = async (
   size: number
 ): Promise<ChallengeResponse | null> => {
   try {
-    console.log(keyword, category, '로 검색할게요');
+    // console.log(keyword, category, '로 검색할게요');
     const response = await axiosInstance.get(`/challenges/search`, {
       params: {
         category: category || '', // 빈 문자열은 전체 검색
@@ -46,7 +46,7 @@ export const getSearchChallenge = async (
         size: size,
       },
     });
-    console.log('챌린지 전체 데이터', response.data);
+    // console.log('챌린지 전체 데이터', response.data);
     return response.data.data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -70,7 +70,7 @@ export const deleteChallenge = async (id: string): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/challenges/${id}`);
 
-    console.log(response);
+    // console.log(response);
   } catch (error) {
     console.log('error');
   }
@@ -80,7 +80,7 @@ export const deleteChallenge = async (id: string): Promise<void> => {
 export const joinChallenge = async (challengeId: string, dashboardId: string): Promise<void> => {
   try {
     const response = await axiosInstance.post(`/challenges/${challengeId}/${dashboardId}`);
-    console.log(response.data);
+    // console.log(response.data);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -91,7 +91,7 @@ export const withdrawChallenge = async (id: string): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/challenges/${id}/withdraw`);
 
-    console.log(response);
+    // console.log(response);
   } catch (error) {
     console.log('error');
   }

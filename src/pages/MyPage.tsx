@@ -26,7 +26,7 @@ const MyPage = () => {
     queryKey: ['alarmNoti'],
     queryFn: getAlarmList,
   });
-  console.log(alarmNoti);
+  // console.log(alarmNoti);
   const { data: followersList } = useFollowersList(0, 8);
 
   const [teamBool, setTeamBool] = useState<string>('personal'); // 기본값으로 팀 탭을 보여줌

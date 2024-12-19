@@ -91,6 +91,11 @@ export const PersonalDashboardItem = styled.article`
   cursor: pointer;
   margin: 0.5rem 0;
   margin-left: 2rem;
+
+  &:not(:last-child) {
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e9e9e9ca;
+  }
 `;
 
 export const TeamDashboardItem = styled.article`
@@ -99,6 +104,11 @@ export const TeamDashboardItem = styled.article`
   font-weight: ${theme.font.weight.medium};
   cursor: pointer;
   margin: 0.5rem 0;
+
+  &:not(:last-child) {
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e9e9e9ca;
+  }
 `;
 
 export const CardContainer = styled.div<Props>`

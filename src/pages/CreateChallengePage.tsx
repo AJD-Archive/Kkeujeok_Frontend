@@ -189,7 +189,6 @@ const CreateChallengePage = () => {
 
   // * 폼 제출 핸들러
   const handleSubmit = async () => {
-    console.log(formData);
     // 빈 작성란이 있으면 모달창 띄우기
     if (validateFormData(formData)) {
       openModal('normal'); // 모달 띄우기 (yes/no 모달)
@@ -224,7 +223,6 @@ const CreateChallengePage = () => {
       const responseChallengeId = challengeId
         ? await patchChallenge(challengeId, data) // 기존 대시보드 수정
         : await createChallenge(data); // 새 대시보드 생성
-
       // 챌린지 페이지로 이동
       navigate(responseChallengeId ? `/challenge/${responseChallengeId}` : `/challenge`);
     } catch (error) {

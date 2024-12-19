@@ -126,10 +126,32 @@ const CreateTeamBoard = () => {
       openModal('normal', handleModalClose); // yes, no 모두 모달창 끄도록 호출
     } else {
       try {
+        // todo : 이메일 / 고유번호 가르기
+        // ["1206jiwoo@gmail.com", "지우#1234", "mong12@naver.com", "mooo@daum.net", "몽디#1555", "끄적#1023"]
+        const invitedEmails: string[] = [];
+        const invitedNicknamesAndTags: string[] = [];
+
+        // 정규식 정의
+        const emailRegex = /^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const nicknameTagRegex = /^[^\s@]+#[0-9]{4}$/;
+
+        // 데이터 분류
+        members.forEach(member => {
+          if (emailRegex.test(member)) {
+            invitedEmails.push(member);
+          } else if (nicknameTagRegex.test(member)) {
+            invitedNicknamesAndTags.push(member);
+          }
+        });
+
+        // console.log(invitedEmails);
+        // console.log(invitedNicknamesAndTags);
+
         // members를 invitedEmails에 추가
         const updatedFormData = {
           ...formData,
-          invitedEmails: members, // 사용자가 입력한 팀원 이메일을 제출할 데이터에 추가
+          invitedEmails: invitedEmails, // 사용자가 입력한 팀원 이메일을 제출할 데이터에 추가
+          invitedNicknamesAndTags: invitedNicknamesAndTags,
         };
 
         const responseDashboardId = dashboardId
@@ -285,7 +307,7 @@ const CreateTeamBoard = () => {
                       <>
                         <Input
                           type="text"
-                          placeholder="이메일을 입력해주세요."
+                          placeholder="이메일 혹은 닉네임#고유번호"
                           width="15rem"
                           value={emailInput}
                           onChange={handleEmailInput}

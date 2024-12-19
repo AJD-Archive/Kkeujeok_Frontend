@@ -10,9 +10,11 @@ import { useQuery } from '@tanstack/react-query';
 import { userInfoApi } from '../api/UserApi';
 import { useAtom } from 'jotai';
 import { nicknameAtom } from '../contexts/NickName';
+import { tagAtom } from '../contexts/NickName';
 import { searchPersonalDashBoard, searchTeamDashBoard } from '../api/BoardApi';
 import { navbarUpdateTriggerAtom } from '../contexts/atoms';
 import { unreadCount } from '../contexts/sseAtom';
+import { StyledLink } from '../styles/NavBarStyled';
 
 const Navbar = () => {
   const { data: dashboard } = useQuery({
@@ -29,6 +31,7 @@ const Navbar = () => {
   });
 
   const [nickname, setNickname] = useAtom(nicknameAtom);
+  const [tag, setTag] = useAtom(tagAtom);
   const [update] = useAtom(navbarUpdateTriggerAtom);
 
   // 닉네임을 API에서 받아와서 atom에 저장
@@ -36,7 +39,11 @@ const Navbar = () => {
     if (UserInfo?.data.nickName && nickname === null) {
       setNickname(UserInfo.data.nickName);
     }
-  }, [UserInfo, nickname, setNickname]);
+
+    if (UserInfo?.data.tag && tag === null) {
+      setTag(UserInfo.data.tag);
+    }
+  }, [UserInfo, nickname, tag]);
 
   //네브바 렌더링 트리거
   useEffect(() => {
@@ -46,13 +53,17 @@ const Navbar = () => {
     <S.NavBarLayout>
       <div>
         <S.UserInfoContainer>
-          <Profile width="45px" height="45px" profile={UserInfo?.data.picture} />
-          <S.UserDetailContainer>
-            <p>{nickname}</p> {/* 닉네임을 atom에서 가져와 출력 */}
-            <Link to="/mypage">
-              마이페이지 <img src={rightarrow} alt="마이페이지 이동 화살표" />
-            </Link>
-          </S.UserDetailContainer>
+          <Profile width="50px" height="50px" profile={UserInfo?.data.picture} />
+          <StyledLink to="/mypage">
+            <S.UserDetailContainer>
+              <p>{nickname}</p>
+              <p className="tag">{tag}</p>
+              {/* 닉네임을 atom에서 가져와 출력 */}
+              <Link to="/mypage">
+                마이페이지 <img src={rightarrow} alt="마이페이지 이동 화살표" />
+              </Link>
+            </S.UserDetailContainer>
+          </StyledLink>
         </S.UserInfoContainer>
         <S.ButtonContainer>
           <Link to="/createBoard">

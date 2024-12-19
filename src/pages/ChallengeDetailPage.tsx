@@ -132,7 +132,7 @@ const ChallengeDetailPage = () => {
   return (
     <>
       <Helmet>
-        <title>끄적끄적 | &apos;{challengeTitle}&apos; 챌린지</title>
+        <title>끄적끄적 | 챌린지 상세보기</title>
       </Helmet>
       <S.MainDashBoardLayout>
         <Navbar />

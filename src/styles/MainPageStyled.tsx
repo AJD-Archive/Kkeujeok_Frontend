@@ -23,10 +23,6 @@ export const CardContainer = styled.section`
   justify-content: center;
   padding: 4.5vw 3.8125vw;
   gap: 1.563rem;
-
-  @media screen and (min-width: 1700px) {
-    justify-content: space-evenly;
-  }
 `;
 
 export const DeleteContainer = styled.div`

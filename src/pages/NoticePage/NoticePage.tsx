@@ -14,6 +14,18 @@ import { getNotice } from '../../api/NoticeApi';
 import { BlockNoteView } from '@blocknote/mantine';
 import { useCreateBlockNote } from '@blocknote/react';
 
+const RenderEditor = ({ content }: { content: string }) => {
+  const editor = useCreateBlockNote();
+
+  editor.tryParseMarkdownToBlocks(content ?? '').then(blocks => {
+    editor.replaceBlocks(editor.document, blocks);
+  });
+
+  if (!content) return <p>내용이 없습니다.</p>;
+
+  return <BlockNoteView editor={editor} editable={false} theme="light" />;
+};
+
 const NoticePage = () => {
   const navigate = useNavigate();
   const editor = useCreateBlockNote();
@@ -22,19 +34,6 @@ const NoticePage = () => {
     queryKey: ['notices'],
     queryFn: getNotice,
   });
-
-  console.log(data);
-
-  const renderEditor = async (content: string) => {
-    const blocks = await editor.tryParseMarkdownToBlocks(content);
-    editor.replaceBlocks(editor.document, blocks);
-
-    return (
-      // <S.StyledEditorWrapper>
-      <BlockNoteView editor={editor} editable={false} theme="light" />
-      // </S.StyledEditorWrapper>
-    );
-  };
 
   return (
     <>
@@ -46,7 +45,7 @@ const NoticePage = () => {
         <S.MainDashBoardContainer>
           <S.NoticeModal>
             <S.Header>
-              {/* <img src={leftarrow} onClick={() => navigate(-1)} />  */}
+              {/* <img src={leftarrow} onClick={() => navigate(-1)} /> */}
               <S.Title>공지사항</S.Title>
             </S.Header>
 
@@ -56,101 +55,11 @@ const NoticePage = () => {
                   <summary>
                     <p className="version">{item.version}</p>
                     <p className="title">{item.title}</p>
-                    <p className="date">{item.createdAt}</p>
+                    <p className="date">{item.createdAt?.slice(0, 10)}</p>
                   </summary>
-                  {item.content}
+                  <RenderEditor content={item.content ?? ''} />
                 </details>
               ))}
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-              </details>
-
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-                여기에 자세한 내용을 작성합니다.
-              </details>
-
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-                여기에 자세한 내용을 작성합니다.
-              </details>
-
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-                여기에 자세한 내용을 작성합니다.
-              </details>
-
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-                여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한
-                내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다.
-                여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한
-                내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다.
-                여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한
-                내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다.
-                여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한
-                내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다.
-                여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한
-                내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다.
-                여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한
-                내용을 작성합니다. 여기에 자세한 내용을 작성합니다. 여기에 자세한 내용을 작성합니다.
-              </details>
-
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-                여기에 자세한 내용을 작성합니다.
-              </details>
-
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-                여기에 자세한 내용을 작성합니다.
-              </details>
-
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-                여기에 자세한 내용을 작성합니다.
-              </details>
-
-              <details>
-                <summary>
-                  <p className="version">[v1.3.2]</p>
-                  <p className="title">제목</p>
-                  <p className="date">2024.12.12</p>
-                </summary>
-                여기에 자세한 내용을 작성합니다.
-              </details>
             </S.NoticeContainer>
 
             <S.ContactContainer>

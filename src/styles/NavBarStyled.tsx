@@ -9,6 +9,7 @@ export const NavBarLayout = styled.nav`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  /* justify-content: space-between; */
   background: ${theme.color.navbar};
   padding: 2.5625rem 1.625rem;
   z-index: 10;
@@ -54,6 +55,23 @@ export const ButtonContainer = styled.div`
 
 export const DashboardsContainer = styled.div`
   overflow-y: auto;
+`;
+
+export const NoticeContainer = styled.div`
+  padding-top: 1rem;
+  position: absolute;
+  bottom: 1rem;
+
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+
+  p {
+    margin-left: 0.3rem;
+    font-size: ${theme.font.size.caption};
+    color: ${theme.color.gray};
+  }
 `;
 
 export const NavButton = styled.button<{ variant: 'primary' | 'secondary' }>`

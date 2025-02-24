@@ -20,7 +20,6 @@ import * as S from '../styles/MainPageStyled';
 import useItems from '../hooks/useItems';
 import { BlockListResDto } from '../types/PersonalBlock';
 import { TItems, TItemStatus } from '../utils/columnsConfig';
-import { useSSE } from '../hooks/useSSE';
 
 type PageState = {
   todo: number; // 할 일 페이지 번호

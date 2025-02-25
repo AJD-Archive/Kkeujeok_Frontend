@@ -31,12 +31,12 @@ import { MobileDisplay } from './styles/ErrorPageStyled';
 import RouteChangeTracker from './components/RouteChangeTracker';
 import PersonalDashboard from './components/PersonalDashboard';
 import TeamDashBoard from './components/TeamDashboard';
-import { useSSE } from './hooks/useSSE';
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import FriendsSearchPage from './pages/FriendsSearchPage/FriendsSearchPage';
 import RecommendedFriendsPage from './pages/RecommendedFriendsPage/RecommendedFriendsPage';
 import FriendPage from './pages/FriendPage';
 import NoticePage from './pages/NoticePage/NoticePage';
+import { SSEProvider } from './contexts/SSEProvider';
 
 const queryClient = new QueryClient();
 
@@ -57,7 +57,6 @@ const useAuth = () => {
 };
 
 const App = () => {
-  useSSE();
   const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
   const { isLoggedIn, loading } = useAuth();
 
@@ -96,218 +95,213 @@ const App = () => {
           <Route path="/" element={<LoginPage />} />
           <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
           <Route path="/error/403" element={<Error403Page />} />
-          <Route path="*" element={<Error404Page />} />
 
           <Route
-            path="/personal/:id"
+            path="/*"
             element={
-              <ProtectedRoute>
-                <PersonalDashboard />
-              </ProtectedRoute>
-            }
-          >
-            <Route
-              path=":blockId"
-              element={
-                <ProtectedRoute>
-                  <SidePage />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-          {/* <Route
-            path="/personalBlock/:blockId"
-            element={
-              <ProtectedRoute>
-                <SidePage />
-              </ProtectedRoute>
-            }
-          /> */}
-          <Route
-            path="/team/:id"
-            element={
-              <ProtectedRoute>
-                <TeamDashBoard />
-              </ProtectedRoute>
-            }
-          >
-            <Route
-              path=":blockId"
-              element={
-                <ProtectedRoute>
-                  <SidePage />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-          {/* <Route
-            path="/:id"
-            element={
-              <ProtectedRoute>
-                <MainPage />
-              </ProtectedRoute>
-            }
-          /> */}
+              <SSEProvider url="">
+                <Routes>
+                  <Route path="*" element={<Error404Page />} />
 
-          <Route
-            path="/createBoard"
-            element={
-              <ProtectedRoute>
-                <CreateBoard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/createPersonalBoard"
-            element={
-              <ProtectedRoute>
-                <CreatePersonalBoard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/createPersonalBoard/:id"
-            element={
-              <ProtectedRoute>
-                <CreatePersonalBoard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/createTeamBoard"
-            element={
-              <ProtectedRoute>
-                <CreateTeamBoard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/createTeamBoard/:id"
-            element={
-              <ProtectedRoute>
-                <CreateTeamBoard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mypage"
-            element={
-              <ProtectedRoute>
-                <MyPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/friendpage/:id"
-            element={
-              <ProtectedRoute>
-                <FriendPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mypage/edit"
-            element={
-              <ProtectedRoute>
-                <ProfileEdit />
-              </ProtectedRoute>
-            }
-          />
+                  <Route
+                    path="/personal/:id"
+                    element={
+                      <ProtectedRoute>
+                        <PersonalDashboard />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route
+                      path=":blockId"
+                      element={
+                        <ProtectedRoute>
+                          <SidePage />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Route>
 
-          <Route
-            path="/:id/teamdocument"
-            element={
-              <ProtectedRoute>
-                <TeamDocumentBoard />
-              </ProtectedRoute>
-            }
-          >
-            <Route
-              path=":documentId"
-              element={
-                <ProtectedRoute>
-                  <TeamDocument />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
+                  <Route
+                    path="/team/:id"
+                    element={
+                      <ProtectedRoute>
+                        <TeamDashBoard />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route
+                      path=":blockId"
+                      element={
+                        <ProtectedRoute>
+                          <SidePage />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Route>
 
-          <Route
-            path="/challenge"
-            element={
-              <ProtectedRoute>
-                <ChallengeCommunityPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/challenge/create"
-            element={
-              <ProtectedRoute>
-                <CreateChallengePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/challenge/create/:id"
-            element={
-              <ProtectedRoute>
-                <CreateChallengePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/challenge/:id"
-            element={
-              <ProtectedRoute>
-                <ChallengeDetailPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tutorial"
-            element={
-              <ProtectedRoute>
-                <TutorialPage />
-              </ProtectedRoute>
-            }
-          />
+                  <Route
+                    path="/createBoard"
+                    element={
+                      <ProtectedRoute>
+                        <CreateBoard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/createPersonalBoard"
+                    element={
+                      <ProtectedRoute>
+                        <CreatePersonalBoard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/createPersonalBoard/:id"
+                    element={
+                      <ProtectedRoute>
+                        <CreatePersonalBoard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/createTeamBoard"
+                    element={
+                      <ProtectedRoute>
+                        <CreateTeamBoard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/createTeamBoard/:id"
+                    element={
+                      <ProtectedRoute>
+                        <CreateTeamBoard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/mypage"
+                    element={
+                      <ProtectedRoute>
+                        <MyPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/friendpage/:id"
+                    element={
+                      <ProtectedRoute>
+                        <FriendPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/mypage/edit"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileEdit />
+                      </ProtectedRoute>
+                    }
+                  />
 
-          <Route
-            path="/friends"
-            element={
-              <ProtectedRoute>
-                <FriendsPage />
-              </ProtectedRoute>
-            }
-          />
+                  <Route
+                    path="/:id/teamdocument"
+                    element={
+                      <ProtectedRoute>
+                        <TeamDocumentBoard />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route
+                      path=":documentId"
+                      element={
+                        <ProtectedRoute>
+                          <TeamDocument />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Route>
 
-          <Route
-            path="/friends/search"
-            element={
-              <ProtectedRoute>
-                <FriendsSearchPage />
-              </ProtectedRoute>
-            }
-          />
+                  <Route
+                    path="/challenge"
+                    element={
+                      <ProtectedRoute>
+                        <ChallengeCommunityPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/challenge/create"
+                    element={
+                      <ProtectedRoute>
+                        <CreateChallengePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/challenge/create/:id"
+                    element={
+                      <ProtectedRoute>
+                        <CreateChallengePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/challenge/:id"
+                    element={
+                      <ProtectedRoute>
+                        <ChallengeDetailPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/tutorial"
+                    element={
+                      <ProtectedRoute>
+                        <TutorialPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-          <Route
-            path="/friends/recommend"
-            element={
-              <ProtectedRoute>
-                <RecommendedFriendsPage />
-              </ProtectedRoute>
-            }
-          />
+                  <Route
+                    path="/friends"
+                    element={
+                      <ProtectedRoute>
+                        <FriendsPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-          <Route
-            path="/notice"
-            element={
-              <ProtectedRoute>
-                <NoticePage />
-              </ProtectedRoute>
+                  <Route
+                    path="/friends/search"
+                    element={
+                      <ProtectedRoute>
+                        <FriendsSearchPage />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/friends/recommend"
+                    element={
+                      <ProtectedRoute>
+                        <RecommendedFriendsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/notice"
+                    element={
+                      <ProtectedRoute>
+                        <NoticePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </SSEProvider>
             }
-          />
+          ></Route>
         </Routes>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />

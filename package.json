@@ -2,6 +2,7 @@
   "name": "kkeujeok-frontend",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.17.1",
   "dependencies": {
     "@blocknote/core": "^0.15.5",
     "@blocknote/mantine": "^0.15.5",

@@ -59,7 +59,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: S3 동기화 (서비스)
-        run: aws s3 sync dist/ s3://${{ secrets.SERVICE_BUCKET_NAME }} --delete
+        run: aws s3 sync dist/ s3://${{ secrets.KKEUJEOK_BUCKET_NAME }} --delete
 
       - name: CloudFront 캐시 무효화 (서비스)
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.SERVICE_CLOUDFRONT_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.KKEUJEOK_CLOUDFRONT_ID }} --paths "/*"

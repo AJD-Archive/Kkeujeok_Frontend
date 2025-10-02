@@ -4,7 +4,6 @@ import { BlockNoteEditor } from '@blocknote/core';
 import { getPersonalBlock, patchPersonalBlock } from '../api/PersonalBlockApi';
 import { useDebounce } from './useDebounce';
 import { BlockListResDto } from '../types/PersonalBlock';
-import { patch } from '@mui/system';
 
 // 훅의 반환값 타입 정의
 export interface SidePageState {

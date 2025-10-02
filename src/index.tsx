@@ -1,19 +1,16 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import GlobalStyle from './styles/GlobalStyle';
 import ReactGA from 'react-ga4';
 import { HelmetProvider } from 'react-helmet-async';
+import { createRoot } from 'react-dom/client';
 
-if (process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID) {
-  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID);
+if (import.meta.env.VITE_GOOGLE_ANALYTICS_TRAKING_ID) {
+  ReactGA.initialize(import.meta.env.VITE_GOOGLE_ANALYTICS_TRAKING_ID);
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
+createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <HelmetProvider>
       <GlobalStyle />
@@ -21,8 +18,3 @@ root.render(
     </HelmetProvider>
   </BrowserRouter>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

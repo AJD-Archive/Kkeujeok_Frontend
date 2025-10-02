@@ -14,7 +14,7 @@ const RouteChangeTracker = () => {
   // localhost는 기록하지 않음
   useEffect(() => {
     if (!window.location.href.includes('localhost')) {
-      const trackingId = process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID;
+      const trackingId = import.meta.env.VITE_GOOGLE_ANALYTICS_TRAKING_ID;
 
       if (trackingId) {
         ReactGA.initialize(trackingId);

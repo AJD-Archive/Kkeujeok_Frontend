@@ -41,11 +41,11 @@ const OAuthRedirectHandler = () => {
   const getToken = async (authCode: string, provider: string) => {
     try {
       const idTokenResponse = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/oauth2/callback/${provider}?code=${authCode}`
+        `${import.meta.env.VITE_API_BASE_URL}/oauth2/callback/${provider}?code=${authCode}`
       );
 
       const tokenResponse = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/${provider}/token`,
+        `${import.meta.env.VITE_API_BASE_URL}/${provider}/token`,
         {
           authCode: idTokenResponse.data.idToken,
         }

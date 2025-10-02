@@ -1,0 +1,33 @@
+name: Cleanup PR Preview
+
+on:
+  pull_request:
+    branches:
+      - migration
+    types: [closed]
+
+concurrency:
+  # 이 워크플로우만의 별도 동시성 그룹
+  group: pr-cleanup-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    name: 프리뷰 리소스 정리
+    runs-on: ubuntu-latest
+    steps:
+      - name: AWS 자격 증명 구성
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: S3 프리뷰 폴더 삭제
+        run: aws s3 rm s3://${{ secrets.KKEUJEOK_BUCKET_NAME }}/preview/${{ github.event.pull_request.number }}/ --recursive
+
+      - name: CloudFront 캐시 무효화 (프리뷰 경로만)
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.KKEUJEOK_CLOUDFRONT_ID }} --paths "/preview/${{ github.event.pull_request.number }}/*"

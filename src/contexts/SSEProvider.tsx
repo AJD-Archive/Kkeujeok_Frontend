@@ -29,7 +29,7 @@ export const SSEProvider: React.FC<SSEProviderProps> = ({ children }) => {
     }
 
     eventSourceRef.current = new EventSourcePolyfill(
-      `${process.env.REACT_APP_API_BASE_URL}/notifications/stream`,
+      `${import.meta.env.VITE_API_BASE_URL}/notifications/stream`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

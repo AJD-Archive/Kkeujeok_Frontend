@@ -11,7 +11,7 @@ if (import.meta.env.VITE_GOOGLE_ANALYTICS_TRAKING_ID) {
 }
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
+  <BrowserRouter basename={import.meta.env.BASE_URL}>
     <HelmetProvider>
       <GlobalStyle />
       <App />

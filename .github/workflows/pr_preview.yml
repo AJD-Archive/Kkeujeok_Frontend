@@ -1,0 +1,92 @@
+name: Deploy PR Preview
+
+on:
+  pull_request:
+    branches:
+      - migration
+    types: [opened, synchronize, reopened]
+
+# 중복 실행 방지 설정
+concurrency:
+  group: pr-preview-${{ github.head_ref }}
+  cancel-in-progress: true
+
+# 보안 권한 설정
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  deploy-preview:
+    name: 끄적끄적 프리뷰 배포
+    runs-on: ubuntu-latest
+    steps:
+      - name: 리포지토리 체크아웃
+        uses: actions/checkout@v4
+
+      - name: PNPM 설치
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.17.1
+
+      - name: Node.js 설치 및 PNPM 캐시 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.20.0'
+          cache: 'pnpm'
+
+      - name: 의존성 설치
+        run: pnpm install
+
+      - name: 프리뷰 경로 변수 설정
+        id: vars
+        run: |
+          echo "TARGET_PATH=preview/${{ github.event.number }}/" >> $GITHUB_OUTPUT
+          echo "INVALIDATION_PATH=/preview/${{ github.event.number }}/*" >> $GITHUB_OUTPUT
+
+      - name: 서비스 앱 빌드 (Vite base 주입)
+        run: pnpm build
+        env:
+          VITE_BASE_URL: /${{ steps.vars.outputs.TARGET_PATH }}
+
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_KAKAO_CLIENT_ID: ${{ secrets.VITE_KAKAO_CLIENT_ID }}
+          VITE_KAKAO_REDIRECT_URI: ${{ secrets.VITE_KAKAO_REDIRECT_URI }}
+          VITE_GOOGLE_REDIRECT_URI: ${{ secrets.VITE_GOOGLE_REDIRECT_URI }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_GOOGLE_ANALYTICS_TRAKING_ID: ${{ secrets.VITE_GOOGLE_ANALYTICS_TRAKING_ID }}
+          DANGEROUSLY_DISABLE_HOST_CHECK: ${{ secrets.DANGEROUSLY_DISABLE_HOST_CHECK }}
+
+      - name: AWS 자격 증명 구성
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: S3 동기화 (프리뷰)
+        run: aws s3 sync dist/ s3://${{ secrets.KKEUJEOK_BUCKET_NAME }}/${{ steps.vars.outputs.TARGET_PATH }} --delete
+
+      - name: CloudFront 캐시 무효화 (프리뷰 경로만)
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.KKEUJEOK_CLOUDFRONT_ID }} --paths "${{ steps.vars.outputs.INVALIDATION_PATH }}"
+
+      - name: PR에 프리뷰 URL 댓글 작성
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.issue.number;
+            const sha = context.payload.pull_request.head.sha.slice(0,7);
+            const previewUrl = `https://kkeujeok.site/${{ steps.vars.outputs.TARGET_PATH }}`;
+
+            const body = `✅ **끄적끄적 프리뷰 배포 완료!**\n\n` +
+                        `🔗 [프리뷰 열기](${previewUrl})\n` +
+                        `> 새 탭에서 열려면 **Ctrl + 클릭** (Mac: ⌘ + 클릭)\n\n` +
+                        `🧩 commit: \`${sha}\``;
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body
+            });

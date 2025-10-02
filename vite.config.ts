@@ -9,8 +9,9 @@ export default defineConfig(() => {
       alias: [],
     },
     server: {
-      port: 3000,
+      port: 5173,
       open: true,
     },
+    base: process.env.VITE_BASE_URL || '/',
   };
 });

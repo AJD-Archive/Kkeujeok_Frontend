@@ -28,6 +28,8 @@ jobs:
 
       - name: PNPM 설치
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.17.1
 
       - name: Node.js 설치 및 PNPM 캐시 설정
         uses: actions/setup-node@v4

@@ -1,7 +1,6 @@
 import { BlockNoteView } from '@blocknote/mantine';
 import { useCreateBlockNote } from '@blocknote/react';
 import { useQuery } from '@tanstack/react-query';
-import { Helmet } from 'react-helmet-async';
 
 import { getNotice } from '../../api/NoticeApi';
 import Navbar from '../../components/Navbar';
@@ -28,40 +27,35 @@ const NoticePage = () => {
   });
 
   return (
-    <>
-      <Helmet>
-        <title>끄적끄적 | 공지사항</title>
-      </Helmet>
-      <S.MainDashBoardLayout>
-        <Navbar />
-        <S.MainDashBoardContainer>
-          <S.NoticeModal>
-            <S.Header>
-              {/* <img src={leftarrow} onClick={() => navigate(-1)} /> */}
-              <S.Title>공지사항</S.Title>
-            </S.Header>
+    <S.MainDashBoardLayout>
+      <Navbar />
+      <S.MainDashBoardContainer>
+        <S.NoticeModal>
+          <S.Header>
+            {/* <img src={leftarrow} onClick={() => navigate(-1)} /> */}
+            <S.Title>공지사항</S.Title>
+          </S.Header>
 
-            <S.NoticeContainer>
-              {data?.map((item, index) => (
-                <details key={item.id || index}>
-                  <summary>
-                    <p className='version'>{item.version}</p>
-                    <p className='title'>{item.title}</p>
-                    <p className='date'>{item.createdAt?.slice(0, 10)}</p>
-                  </summary>
-                  <RenderEditor content={item.content ?? ''} />
-                </details>
-              ))}
-            </S.NoticeContainer>
+          <S.NoticeContainer>
+            {data?.map((item, index) => (
+              <details key={item.id || index}>
+                <summary>
+                  <p className='version'>{item.version}</p>
+                  <p className='title'>{item.title}</p>
+                  <p className='date'>{item.createdAt?.slice(0, 10)}</p>
+                </summary>
+                <RenderEditor content={item.content ?? ''} />
+              </details>
+            ))}
+          </S.NoticeContainer>
 
-            <S.ContactContainer>
-              <p>Copyright © KKEUJEOK. All rights reserved.</p>
-              <p>kkeujeok1219@gmail.com</p>
-            </S.ContactContainer>
-          </S.NoticeModal>
-        </S.MainDashBoardContainer>
-      </S.MainDashBoardLayout>
-    </>
+          <S.ContactContainer>
+            <p>Copyright © KKEUJEOK. All rights reserved.</p>
+            <p>kkeujeok1219@gmail.com</p>
+          </S.ContactContainer>
+        </S.NoticeModal>
+      </S.MainDashBoardContainer>
+    </S.MainDashBoardLayout>
   );
 };
 

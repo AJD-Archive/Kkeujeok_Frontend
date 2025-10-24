@@ -1,7 +1,6 @@
 import Pagination from '@mui/material/Pagination';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 
 import { fetchFriendBlockData, friendProfile } from '../api/MyPageApi';
@@ -144,50 +143,39 @@ const FriendPage = () => {
   }
 
   return (
-    <>
-      <Helmet>
-        <title>끄적끄적 | 마이페이지</title>
-      </Helmet>
-      <Flex alignItems='flex-start'>
-        <Navbar />
-        <S.MyPageLayout>
-          <Flex alignItems='center' justifyContent='space-between'>
-            <Flex alignItems='center' justifyContent='space-between' margin='0 0 2.125rem 0' width='100%'>
-              <Flex gap='29px' justifyContent='space-between'>
-                <Profile height='8.875rem' profile={data?.data.picture} width='8.875rem' />
-                <Flex
-                  alignItems='flex-start'
-                  flexDirection='column'
-                  gap='0.45rem'
-                  height='4rem'
-                  justifyContent='center'
-                >
-                  <Flex alignItems='center' gap='0.5625rem'>
-                    <S.GoogleImageIcon
-                      alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
-                      src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
-                    />
-                    <S.MainText>{data?.data.name}</S.MainText>
-                  </Flex>
-                  <S.CaptionText>
-                    {data?.data.introduction ? data?.data.introduction : <span>자기 소개를 작성해주세요</span>}
-                  </S.CaptionText>
+    <Flex alignItems='flex-start'>
+      <Navbar />
+      <S.MyPageLayout>
+        <Flex alignItems='center' justifyContent='space-between'>
+          <Flex alignItems='center' justifyContent='space-between' margin='0 0 2.125rem 0' width='100%'>
+            <Flex gap='29px' justifyContent='space-between'>
+              <Profile height='8.875rem' profile={data?.data.picture} width='8.875rem' />
+              <Flex alignItems='flex-start' flexDirection='column' gap='0.45rem' height='4rem' justifyContent='center'>
+                <Flex alignItems='center' gap='0.5625rem'>
+                  <S.GoogleImageIcon
+                    alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
+                    src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
+                  />
+                  <S.MainText>{data?.data.name}</S.MainText>
                 </Flex>
+                <S.CaptionText>
+                  {data?.data.introduction ? data?.data.introduction : <span>자기 소개를 작성해주세요</span>}
+                </S.CaptionText>
               </Flex>
             </Flex>
           </Flex>
+        </Flex>
 
-          <Flex>
-            <S.ButtonContainer teamBool={teamBool}>
-              <button onClick={onOpenPersonalFunc}>개인</button>
-              <button onClick={onOpenChallengeFunc}>챌린지</button>
-            </S.ButtonContainer>
+        <Flex>
+          <S.ButtonContainer teamBool={teamBool}>
+            <button onClick={onOpenPersonalFunc}>개인</button>
+            <button onClick={onOpenChallengeFunc}>챌린지</button>
+          </S.ButtonContainer>
 
-            {content}
-          </Flex>
-        </S.MyPageLayout>
-      </Flex>
-    </>
+          {content}
+        </Flex>
+      </S.MyPageLayout>
+    </Flex>
   );
 };
 

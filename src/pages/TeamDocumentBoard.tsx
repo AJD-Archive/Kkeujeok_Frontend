@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
@@ -96,59 +95,54 @@ const TeamDocumentBoard = () => {
   };
 
   return (
-    <>
-      <Helmet>
-        <title>끄적끄적 | 팀 문서</title>
-      </Helmet>
-      <S.MainDashBoardLayout>
-        <Navbar />
-        <S.MainDashBoardContainer>
-          <S.Header>
-            <Flex>
-              <img src={leftarrow} onClick={() => navigate(-1)} /> {/* 뒤로가기 버튼 */}
-              <S.Title>팀 문서</S.Title>
-            </Flex>
-            <img src={addbutton} onClick={handleCreateTeamDocument} />
-          </S.Header>
+    <S.MainDashBoardLayout>
+      <Navbar />
+      <S.MainDashBoardContainer>
+        <S.Header>
+          <Flex>
+            <img src={leftarrow} onClick={() => navigate(-1)} /> {/* 뒤로가기 버튼 */}
+            <S.Title>팀 문서</S.Title>
+          </Flex>
+          <img src={addbutton} onClick={handleCreateTeamDocument} />
+        </S.Header>
 
-          <S.CategoriesContainer>
-            <S.Category isSelected={selectedCategory === ''} onClick={() => handleCategoryClick('')}>
-              전체
+        <S.CategoriesContainer>
+          <S.Category isSelected={selectedCategory === ''} onClick={() => handleCategoryClick('')}>
+            전체
+          </S.Category>
+          {categories.map((category, index) => (
+            <S.Category
+              key={index}
+              isSelected={selectedCategory === category}
+              onClick={() => handleCategoryClick(category)}
+            >
+              {category}
             </S.Category>
-            {categories.map((category, index) => (
-              <S.Category
-                key={index}
-                isSelected={selectedCategory === category}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category}
-              </S.Category>
-            ))}
-          </S.CategoriesContainer>
+          ))}
+        </S.CategoriesContainer>
 
-          {teamDocuments.length === 0 ? (
-            <Flex alignItems='center' height={300} justifyContent='center'>
-              <S.NotExistingDocument>생성된 팀 문서가 없어요</S.NotExistingDocument>
-            </Flex>
-          ) : (
-            <>
-              {/* 팀 문서 컴포넌트 */}
-              <S.DocumentContainer>
-                {teamDocuments.map((document, index) => (
-                  <DocumentCard key={index} document={document} />
-                ))}
-              </S.DocumentContainer>
+        {teamDocuments.length === 0 ? (
+          <Flex alignItems='center' height={300} justifyContent='center'>
+            <S.NotExistingDocument>생성된 팀 문서가 없어요</S.NotExistingDocument>
+          </Flex>
+        ) : (
+          <>
+            {/* 팀 문서 컴포넌트 */}
+            <S.DocumentContainer>
+              {teamDocuments.map((document, index) => (
+                <DocumentCard key={index} document={document} />
+              ))}
+            </S.DocumentContainer>
 
-              {/* 페이지네이션 */}
-              <S.PaginationWrapper>
-                <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
-              </S.PaginationWrapper>
-            </>
-          )}
-        </S.MainDashBoardContainer>
-        <Outlet /> {/* 사이드 페이지를 위한 중첩 라우팅 */}
-      </S.MainDashBoardLayout>
-    </>
+            {/* 페이지네이션 */}
+            <S.PaginationWrapper>
+              <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
+            </S.PaginationWrapper>
+          </>
+        )}
+      </S.MainDashBoardContainer>
+      <Outlet /> {/* 사이드 페이지를 위한 중첩 라우팅 */}
+    </S.MainDashBoardLayout>
   );
 };
 export default TeamDocumentBoard;

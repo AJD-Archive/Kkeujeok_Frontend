@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
 import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { quitTeamDashboard } from '../api/BoardApi';
@@ -219,183 +218,178 @@ const CreateTeamBoard = () => {
     });
   };
   return (
-    <>
-      <Helmet>
-        <title>끄적끄적 | 대시보드 생성</title>
-      </Helmet>
-      <CreateDashBoardLayout>
-        <Navbar />
-        <CreateDashBoardContainer>
-          <CreateDashBoardModal>
-            <ImgWrapper alt='닫기 버튼' src={closebutton} onClick={back} />
-            {isCreator?.myId === isCreator.creatorId ? (
-              <>
-                <Title>팀 대시보드 {dashboardId ? '수정' : '생성'}</Title>
-                <SubTitle>팀 이름과 팀 소개를 설정하고 팀원을 초대하세요.</SubTitle>
-              </>
-            ) : (
-              <Title>팀 대시보드 상세 정보</Title>
-            )}
+    <CreateDashBoardLayout>
+      <Navbar />
+      <CreateDashBoardContainer>
+        <CreateDashBoardModal>
+          <ImgWrapper alt='닫기 버튼' src={closebutton} onClick={back} />
+          {isCreator?.myId === isCreator.creatorId ? (
+            <>
+              <Title>팀 대시보드 {dashboardId ? '수정' : '생성'}</Title>
+              <SubTitle>팀 이름과 팀 소개를 설정하고 팀원을 초대하세요.</SubTitle>
+            </>
+          ) : (
+            <Title>팀 대시보드 상세 정보</Title>
+          )}
 
-            <CreateForm>
-              <Flex alignItems='flex-start'>
-                <Flex flexDirection='column'>
-                  <RowWrapper>
-                    <Label>팀 이름</Label>
-                    <Input
-                      disabled={dashboardId && formData?.myId !== formData.creatorId ? true : false} // 방장일 때만 수정 가능
-                      name='title'
-                      placeholder='팀 이름을 입력해주세요.'
-                      type='text'
-                      value={formData.title}
-                      width='15rem'
-                      onChange={handleChange}
-                    />
-                  </RowWrapper>
+          <CreateForm>
+            <Flex alignItems='flex-start'>
+              <Flex flexDirection='column'>
+                <RowWrapper>
+                  <Label>팀 이름</Label>
+                  <Input
+                    disabled={dashboardId && formData?.myId !== formData.creatorId ? true : false} // 방장일 때만 수정 가능
+                    name='title'
+                    placeholder='팀 이름을 입력해주세요.'
+                    type='text'
+                    value={formData.title}
+                    width='15rem'
+                    onChange={handleChange}
+                  />
+                </RowWrapper>
 
-                  <RowWrapper>
-                    <Label>팀 소개</Label>
-                    <Textarea
-                      disabled={dashboardId && isCreator?.myId !== isCreator.creatorId ? true : false} // 방장일 때만 수정 가능
-                      maxLength={300}
-                      name='description'
-                      placeholder='간단하게 팀을 소개해주세요.'
-                      value={formData.description}
-                      width='15rem'
-                      onChange={handleChange}
-                    />
-                  </RowWrapper>
-                </Flex>
-
-                <Flex alignItems='center' flexDirection='column'>
-                  <RowWrapper>
-                    {/* ! 팀원일 때 스타일 오류나면 고쳐야 할 곳 */}
-                    <LastLabel isNotCreator={isCreator?.myId === isCreator.creatorId}>팀원</LastLabel>
-                    {/* 팀원일 때 보여질 팀원 리스트 */}
-                    <Flex flexDirection='column'>
-                      {isCreator?.myId !== isCreator.creatorId && (
-                        <MemberWrapperMemberView>
-                          {members.map((member, index) => (
-                            <Member key={index}>
-                              <MemberImage alt='기본 프로필 사진' src={userDefault} />
-                              <MemberEmail>{member}</MemberEmail>
-                              <MemberState>초대</MemberState>
-                            </Member>
-                          ))}
-                          {joinMembers?.map((member, index) => (
-                            <Member key={index}>
-                              <MemberInfo
-                                onClick={() => {
-                                  String(isCreator.myId) === String(member.id) ? onMypage() : onFriendPage(member.id);
-                                }}
-                              >
-                                <MemberImage alt='프로필 사진' src={member.picture} />
-                                <MemberEmail>{member.name}</MemberEmail>
-                              </MemberInfo>
-                              <MemberState>{member.id !== isCreator.creatorId ? '멤버' : '방장'}</MemberState>
-                            </Member>
-                          ))}
-                        </MemberWrapperMemberView>
-                      )}
-                    </Flex>
-                    {/* 방장일 때 작성할 팀원 초대 이메일 (1) */}
-                    {isCreator?.myId === isCreator.creatorId && (
-                      <>
-                        <Input
-                          placeholder='이메일 혹은 닉네임#고유번호'
-                          type='text'
-                          value={emailInput}
-                          width='15rem'
-                          onChange={handleEmailInput}
-                        />
-                        <InvitedBtn onClick={handleAddMember}>초대</InvitedBtn>
-                      </>
-                    )}
-                  </RowWrapper>
-
-                  {/* 방장일 때 보여질 멤버 리스트 (2)  */}
-                  {isCreator?.myId === isCreator.creatorId && (
-                    <MemberWrapper>
-                      {members.map((member, index) => (
-                        <Member key={index}>
-                          <MemberImage alt='기본 프로필 사진' src={userDefault} />
-                          <MemberEmail>{member}</MemberEmail>
-                          <MemberState>초대</MemberState>
-                        </Member>
-                      ))}
-                      {joinMembers?.map((member, index) => (
-                        <Member key={index}>
-                          <MemberInfo
-                            onClick={() => {
-                              String(isCreator.myId) === String(member.id) ? onMypage() : onFriendPage(member.id);
-                            }}
-                          >
-                            <MemberImage alt='프로필 사진' src={member.picture} />
-                            <MemberEmail>{member.name}</MemberEmail>
-                          </MemberInfo>
-                          <MemberState>{member.id !== isCreator.creatorId ? '멤버' : '방장'}</MemberState>
-                        </Member>
-                      ))}
-                    </MemberWrapper>
-                  )}
-                </Flex>
+                <RowWrapper>
+                  <Label>팀 소개</Label>
+                  <Textarea
+                    disabled={dashboardId && isCreator?.myId !== isCreator.creatorId ? true : false} // 방장일 때만 수정 가능
+                    maxLength={300}
+                    name='description'
+                    placeholder='간단하게 팀을 소개해주세요.'
+                    value={formData.description}
+                    width='15rem'
+                    onChange={handleChange}
+                  />
+                </RowWrapper>
               </Flex>
-            </CreateForm>
 
-            {isCreator?.myId === isCreator.creatorId && (
-              <SubmitBtn onClick={submitTeamDashboard}>팀원 초대 및 대시보드 {dashboardId ? '수정' : '생성'}</SubmitBtn>
-            )}
+              <Flex alignItems='center' flexDirection='column'>
+                <RowWrapper>
+                  {/* ! 팀원일 때 스타일 오류나면 고쳐야 할 곳 */}
+                  <LastLabel isNotCreator={isCreator?.myId === isCreator.creatorId}>팀원</LastLabel>
+                  {/* 팀원일 때 보여질 팀원 리스트 */}
+                  <Flex flexDirection='column'>
+                    {isCreator?.myId !== isCreator.creatorId && (
+                      <MemberWrapperMemberView>
+                        {members.map((member, index) => (
+                          <Member key={index}>
+                            <MemberImage alt='기본 프로필 사진' src={userDefault} />
+                            <MemberEmail>{member}</MemberEmail>
+                            <MemberState>초대</MemberState>
+                          </Member>
+                        ))}
+                        {joinMembers?.map((member, index) => (
+                          <Member key={index}>
+                            <MemberInfo
+                              onClick={() => {
+                                String(isCreator.myId) === String(member.id) ? onMypage() : onFriendPage(member.id);
+                              }}
+                            >
+                              <MemberImage alt='프로필 사진' src={member.picture} />
+                              <MemberEmail>{member.name}</MemberEmail>
+                            </MemberInfo>
+                            <MemberState>{member.id !== isCreator.creatorId ? '멤버' : '방장'}</MemberState>
+                          </Member>
+                        ))}
+                      </MemberWrapperMemberView>
+                    )}
+                  </Flex>
+                  {/* 방장일 때 작성할 팀원 초대 이메일 (1) */}
+                  {isCreator?.myId === isCreator.creatorId && (
+                    <>
+                      <Input
+                        placeholder='이메일 혹은 닉네임#고유번호'
+                        type='text'
+                        value={emailInput}
+                        width='15rem'
+                        onChange={handleEmailInput}
+                      />
+                      <InvitedBtn onClick={handleAddMember}>초대</InvitedBtn>
+                    </>
+                  )}
+                </RowWrapper>
 
-            {dashboardId && isCreator?.myId === isCreator.creatorId && (
-              <DelBtn onClick={submitDelDashboard}>대시보드 삭제</DelBtn>
-            )}
-            {dashboardId && isCreator?.myId !== isCreator.creatorId && (
-              <DelBtn onClick={submitQuitDashboard}>대시보드 탈퇴</DelBtn>
-            )}
-          </CreateDashBoardModal>
-        </CreateDashBoardContainer>
+                {/* 방장일 때 보여질 멤버 리스트 (2)  */}
+                {isCreator?.myId === isCreator.creatorId && (
+                  <MemberWrapper>
+                    {members.map((member, index) => (
+                      <Member key={index}>
+                        <MemberImage alt='기본 프로필 사진' src={userDefault} />
+                        <MemberEmail>{member}</MemberEmail>
+                        <MemberState>초대</MemberState>
+                      </Member>
+                    ))}
+                    {joinMembers?.map((member, index) => (
+                      <Member key={index}>
+                        <MemberInfo
+                          onClick={() => {
+                            String(isCreator.myId) === String(member.id) ? onMypage() : onFriendPage(member.id);
+                          }}
+                        >
+                          <MemberImage alt='프로필 사진' src={member.picture} />
+                          <MemberEmail>{member.name}</MemberEmail>
+                        </MemberInfo>
+                        <MemberState>{member.id !== isCreator.creatorId ? '멤버' : '방장'}</MemberState>
+                      </Member>
+                    ))}
+                  </MemberWrapper>
+                )}
+              </Flex>
+            </Flex>
+          </CreateForm>
 
-        {/* 작성되지 않은 부분이 있으면 모달창으로 알림 */}
-        {isModalOpen && isEmptyModalOpen && (
-          <CustomModal
-            subTitle='잠깐! 작성되지 않은 칸이 있습니다.'
-            title='모든 칸을 작성해주세요.'
-            onNoClick={handleNoClick}
-            onYesClick={handleYesClick}
-          />
-        )}
+          {isCreator?.myId === isCreator.creatorId && (
+            <SubmitBtn onClick={submitTeamDashboard}>팀원 초대 및 대시보드 {dashboardId ? '수정' : '생성'}</SubmitBtn>
+          )}
 
-        {/* 삭제 동의 모달창 */}
-        {isModalOpen && isDelModalOpen && (
-          <CustomModal
-            subTitle='한 번 삭제된 대시보드는 되돌릴 수 없습니다.'
-            title='대시보드를 삭제하시겠습니까?'
-            onNoClick={handleNoClick}
-            onYesClick={handleYesClick}
-          />
-        )}
+          {dashboardId && isCreator?.myId === isCreator.creatorId && (
+            <DelBtn onClick={submitDelDashboard}>대시보드 삭제</DelBtn>
+          )}
+          {dashboardId && isCreator?.myId !== isCreator.creatorId && (
+            <DelBtn onClick={submitQuitDashboard}>대시보드 탈퇴</DelBtn>
+          )}
+        </CreateDashBoardModal>
+      </CreateDashBoardContainer>
 
-        {/* 탈퇴 동의 모달창 */}
-        {isModalOpen && isQuitModalOpen && (
-          <CustomModal
-            subTitle='탈퇴 후 다시 초대를 받으면 팀원이 되실 수 있습니다.'
-            title='팀 대시보드를 탈퇴하시겠습니까?'
-            onNoClick={handleNoClick}
-            onYesClick={handleYesClick}
-          />
-        )}
+      {/* 작성되지 않은 부분이 있으면 모달창으로 알림 */}
+      {isModalOpen && isEmptyModalOpen && (
+        <CustomModal
+          subTitle='잠깐! 작성되지 않은 칸이 있습니다.'
+          title='모든 칸을 작성해주세요.'
+          onNoClick={handleNoClick}
+          onYesClick={handleYesClick}
+        />
+      )}
 
-        {/* 초대 알람이 가지 않았을 때 창 끌 때 동의 모달창 */}
-        {isModalOpen && isBackModalOpen && (
-          <CustomModal
-            subTitle='대시보드를 저장해주세요.'
-            title='팀원 초대를 취소하시겠습니까?'
-            onNoClick={handleNoClick}
-            onYesClick={handleYesClick}
-          />
-        )}
-      </CreateDashBoardLayout>
-    </>
+      {/* 삭제 동의 모달창 */}
+      {isModalOpen && isDelModalOpen && (
+        <CustomModal
+          subTitle='한 번 삭제된 대시보드는 되돌릴 수 없습니다.'
+          title='대시보드를 삭제하시겠습니까?'
+          onNoClick={handleNoClick}
+          onYesClick={handleYesClick}
+        />
+      )}
+
+      {/* 탈퇴 동의 모달창 */}
+      {isModalOpen && isQuitModalOpen && (
+        <CustomModal
+          subTitle='탈퇴 후 다시 초대를 받으면 팀원이 되실 수 있습니다.'
+          title='팀 대시보드를 탈퇴하시겠습니까?'
+          onNoClick={handleNoClick}
+          onYesClick={handleYesClick}
+        />
+      )}
+
+      {/* 초대 알람이 가지 않았을 때 창 끌 때 동의 모달창 */}
+      {isModalOpen && isBackModalOpen && (
+        <CustomModal
+          subTitle='대시보드를 저장해주세요.'
+          title='팀원 초대를 취소하시겠습니까?'
+          onNoClick={handleNoClick}
+          onYesClick={handleYesClick}
+        />
+      )}
+    </CreateDashBoardLayout>
   );
 };
 

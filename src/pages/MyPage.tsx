@@ -2,7 +2,6 @@ import Pagination from '@mui/material/Pagination';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 
 import { fetchBlockData, fetchData, getAlarmList, updateAlarmIsRead } from '../api/MyPageApi';
@@ -246,86 +245,75 @@ const MyPage = () => {
   }
 
   return (
-    <>
-      <Helmet>
-        <title>끄적끄적 | 마이페이지</title>
-      </Helmet>
-      <Flex alignItems='flex-start'>
-        <Navbar />
-        <S.MyPageLayout>
-          <Flex alignItems='center' justifyContent='space-between'>
-            <Flex alignItems='center' justifyContent='space-between' margin='0 0 2.125rem 0' width='100%'>
-              <Flex gap='29px' justifyContent='space-between'>
-                <Profile height='8.875rem' profile={data?.data.picture} width='8.875rem' />
-                <Flex
-                  alignItems='flex-start'
-                  flexDirection='column'
-                  gap='0.45rem'
-                  height='4rem'
-                  justifyContent='center'
-                >
-                  <Flex alignItems='center' gap='0.5625rem'>
-                    <S.GoogleImageIcon
-                      alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
-                      src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
-                    />
-                    <S.MainText>{data?.data.name}</S.MainText>
-                  </Flex>
-                  <S.CaptionText>
-                    {data?.data.introduction ? data?.data.introduction : <span>자기 소개를 작성해주세요</span>}
-                  </S.CaptionText>
-                  <S.CaptionText onClick={() => navigate(`/friends`)}>
-                    <span>친구 {followersList?.pageInfoResDto.totalItems}명</span>
-                  </S.CaptionText>
+    <Flex alignItems='flex-start'>
+      <Navbar />
+      <S.MyPageLayout>
+        <Flex alignItems='center' justifyContent='space-between'>
+          <Flex alignItems='center' justifyContent='space-between' margin='0 0 2.125rem 0' width='100%'>
+            <Flex gap='29px' justifyContent='space-between'>
+              <Profile height='8.875rem' profile={data?.data.picture} width='8.875rem' />
+              <Flex alignItems='flex-start' flexDirection='column' gap='0.45rem' height='4rem' justifyContent='center'>
+                <Flex alignItems='center' gap='0.5625rem'>
+                  <S.GoogleImageIcon
+                    alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
+                    src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
+                  />
+                  <S.MainText>{data?.data.name}</S.MainText>
                 </Flex>
-              </Flex>
-
-              <Flex flexDirection='column' gap='0.75rem'>
-                <S.ButtonWrapper onClick={onModalVisibleFunc}>프로필 수정</S.ButtonWrapper>
-                <S.ButtonWrapper onClick={onLogoutHandler}> 로그아웃 </S.ButtonWrapper>
+                <S.CaptionText>
+                  {data?.data.introduction ? data?.data.introduction : <span>자기 소개를 작성해주세요</span>}
+                </S.CaptionText>
+                <S.CaptionText onClick={() => navigate(`/friends`)}>
+                  <span>친구 {followersList?.pageInfoResDto.totalItems}명</span>
+                </S.CaptionText>
               </Flex>
             </Flex>
 
-            <S.ImageWrapper onClick={onAlarmVisibleFunc}>
-              <img alt='알림 아이콘' src={bell} />
-              {unReadCount > 0 ? <div>!</div> : ''}
-            </S.ImageWrapper>
-            {visibleAlarm && (
-              <S.AlarmDataContainer>
-                {alarmList?.data.notificationInfoResDto.length === 0 ? (
-                  <Flex alignItems='center' height={96} justifyContent='center'>
-                    <span>생성된 알림이 없어요</span>
-                  </Flex>
-                ) : (
-                  alarmList?.data.notificationInfoResDto
-                    .slice()
-                    .reverse()
-                    .map((item, idx) => <AlarmBlock key={idx} isRead={item.isRead} message={item.message} />)
-                )}
-              </S.AlarmDataContainer>
-            )}
+            <Flex flexDirection='column' gap='0.75rem'>
+              <S.ButtonWrapper onClick={onModalVisibleFunc}>프로필 수정</S.ButtonWrapper>
+              <S.ButtonWrapper onClick={onLogoutHandler}> 로그아웃 </S.ButtonWrapper>
+            </Flex>
           </Flex>
 
-          <Flex>
-            <S.ButtonContainer teamBool={teamBool}>
-              <button onClick={onOpenPersonalFunc}>개인</button>
-              <button onClick={onOpenTeamFunc}>팀</button>
-              <button onClick={onOpenChallengeFunc}>챌린지</button>
-            </S.ButtonContainer>
+          <S.ImageWrapper onClick={onAlarmVisibleFunc}>
+            <img alt='알림 아이콘' src={bell} />
+            {unReadCount > 0 ? <div>!</div> : ''}
+          </S.ImageWrapper>
+          {visibleAlarm && (
+            <S.AlarmDataContainer>
+              {alarmList?.data.notificationInfoResDto.length === 0 ? (
+                <Flex alignItems='center' height={96} justifyContent='center'>
+                  <span>생성된 알림이 없어요</span>
+                </Flex>
+              ) : (
+                alarmList?.data.notificationInfoResDto
+                  .slice()
+                  .reverse()
+                  .map((item, idx) => <AlarmBlock key={idx} isRead={item.isRead} message={item.message} />)
+              )}
+            </S.AlarmDataContainer>
+          )}
+        </Flex>
 
-            {content}
-          </Flex>
-        </S.MyPageLayout>
+        <Flex>
+          <S.ButtonContainer teamBool={teamBool}>
+            <button onClick={onOpenPersonalFunc}>개인</button>
+            <button onClick={onOpenTeamFunc}>팀</button>
+            <button onClick={onOpenChallengeFunc}>챌린지</button>
+          </S.ButtonContainer>
 
-        {visibleModal && (
-          <ProfileUpdateModal
-            introduction={data?.data.introduction}
-            nickname={data?.data.nickName}
-            onModalVisibleFunc={onModalVisibleFunc}
-          />
-        )}
-      </Flex>
-    </>
+          {content}
+        </Flex>
+      </S.MyPageLayout>
+
+      {visibleModal && (
+        <ProfileUpdateModal
+          introduction={data?.data.introduction}
+          nickname={data?.data.nickName}
+          onModalVisibleFunc={onModalVisibleFunc}
+        />
+      )}
+    </Flex>
   );
 };
 

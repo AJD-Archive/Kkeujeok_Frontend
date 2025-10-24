@@ -3,7 +3,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { deleteChallenge, getChallengeDetail, withdrawChallenge } from '../api/ChallengeApi';
@@ -140,75 +139,97 @@ const ChallengeDetailPage = () => {
   };
 
   return (
-    <>
-      <Helmet>
-        <title>끄적끄적 | 챌린지 상세보기</title>
-      </Helmet>
-      <S.MainDashBoardLayout>
-        <Navbar />
-        <S.MainDashBoardContainer>
-          <S.DetailHeader>
-            <Flex>
-              <S.BackButton src={leftarrow} onClick={() => navigate(-1)} /> {/* 뒤로가기 버튼 */}
-              <Flex alignItems='flex-start' flexDirection='column'>
-                <S.DetaileSubTitle>
-                  {challengeData.category &&
-                    ChallengeCategory[challengeData.category as keyof typeof ChallengeCategory]}
-                </S.DetaileSubTitle>
-                <S.DetailTitle>{challengeData.title}</S.DetailTitle>
+    <S.MainDashBoardLayout>
+      <Navbar />
+      <S.MainDashBoardContainer>
+        <S.DetailHeader>
+          <Flex>
+            <S.BackButton src={leftarrow} onClick={() => navigate(-1)} /> {/* 뒤로가기 버튼 */}
+            <Flex alignItems='flex-start' flexDirection='column'>
+              <S.DetaileSubTitle>
+                {challengeData.category && ChallengeCategory[challengeData.category as keyof typeof ChallengeCategory]}
+              </S.DetaileSubTitle>
+              <S.DetailTitle>{challengeData.title}</S.DetailTitle>
+            </Flex>
+          </Flex>
+          <Flex>
+            {/* 생성자도 참여하기 버튼을 통해 챌린지에 참여 */}
+            {challengeData.isAuthor && (
+              <S.EditDelButtonWrapper>
+                <S.EditDelButton
+                  alt='수정 버튼'
+                  src={editBtn}
+                  onClick={() => {
+                    navigate(`/challenge/create/${challengeId}`);
+                  }}
+                />
+                <S.EditDelButton alt='삭제 버튼' src={delBtn} onClick={submitDelChallenge} />
+              </S.EditDelButtonWrapper>
+            )}
+
+            {/* 참여하기 or 탈퇴하기 버튼 */}
+            {isDateValid(challengeData?.endDate) ? (
+              <S.QuitButton>챌린지 마감</S.QuitButton> // 챌린지 종료됨
+            ) : challengeData.isParticipant ? ( // 챌린지 종료되지 않음, 참여 여부에 따라 버튼 표시
+              <S.QuitButton onClick={submitWithdrawChallenge}>탈퇴하기</S.QuitButton>
+            ) : (
+              <S.JoinButton onClick={joinChallenge}>참여하기</S.JoinButton>
+            )}
+
+            {join && challengeId && (
+              <JoinChallengeModal challengeId={challengeId} fetchedData={fetchedData} onNoClick={joinChallenge} />
+            )}
+          </Flex>
+        </S.DetailHeader>
+
+        <S.SectionTitle>챌린지 정보</S.SectionTitle>
+
+        <S.ChallengeDetailContainer>
+          <Flex>
+            <S.ChallengeThumbnail src={imageSrc || defaultImg} />
+            <S.DetailContainer>
+              <Flex alignItems='flex-start' justifyContent='space-between'>
+                <S.DetailContentWrapper>
+                  <S.DetailTitle>{challengeData.title}</S.DetailTitle>
+                  <S.DetailDate>
+                    {`${formatDate(challengeData.startDate ?? '')} ~ ${formatDate(challengeData.endDate ?? '')}`}
+                  </S.DetailDate>
+                  <S.DetailContent>
+                    <p>{challengeData.contents}</p>
+                  </S.DetailContent>
+                </S.DetailContentWrapper>
+                <S.DetailSquareWrapper>
+                  <S.DetailRealTimeCountSquare>{challengeData?.participantCount}명 참여 중</S.DetailRealTimeCountSquare>
+                  <S.DetailTermSquare>
+                    {challengeData.cycle
+                      ? ChallengeCycle[challengeData.cycle as keyof typeof ChallengeCycle]
+                      : '알 수 없는 주기'}{' '}
+                    {challengeData.cycle === 'WEEKLY' &&
+                      Array.isArray(challengeData.cycleDetails) &&
+                      challengeData.cycleDetails
+                        .map(
+                          (detail: string) =>
+                            ChallengeCycleDetail_Weekly[detail as keyof typeof ChallengeCycleDetail_Weekly],
+                        )
+                        .join(', ')}
+                    {challengeData.cycle === 'MONTHLY' &&
+                      Array.isArray(challengeData.cycleDetails) &&
+                      challengeData.cycleDetails
+                        .map(
+                          (detail: string) =>
+                            ChallengeCycleDetail_Monthly[detail as keyof typeof ChallengeCycleDetail_Monthly] + '일',
+                        )
+                        .join(', ')}
+                  </S.DetailTermSquare>
+                </S.DetailSquareWrapper>
               </Flex>
-            </Flex>
-            <Flex>
-              {/* 생성자도 참여하기 버튼을 통해 챌린지에 참여 */}
-              {challengeData.isAuthor && (
-                <S.EditDelButtonWrapper>
-                  <S.EditDelButton
-                    alt='수정 버튼'
-                    src={editBtn}
-                    onClick={() => {
-                      navigate(`/challenge/create/${challengeId}`);
-                    }}
-                  />
-                  <S.EditDelButton alt='삭제 버튼' src={delBtn} onClick={submitDelChallenge} />
-                </S.EditDelButtonWrapper>
-              )}
 
-              {/* 참여하기 or 탈퇴하기 버튼 */}
-              {isDateValid(challengeData?.endDate) ? (
-                <S.QuitButton>챌린지 마감</S.QuitButton> // 챌린지 종료됨
-              ) : challengeData.isParticipant ? ( // 챌린지 종료되지 않음, 참여 여부에 따라 버튼 표시
-                <S.QuitButton onClick={submitWithdrawChallenge}>탈퇴하기</S.QuitButton>
-              ) : (
-                <S.JoinButton onClick={joinChallenge}>참여하기</S.JoinButton>
-              )}
-
-              {join && challengeId && (
-                <JoinChallengeModal challengeId={challengeId} fetchedData={fetchedData} onNoClick={joinChallenge} />
-              )}
-            </Flex>
-          </S.DetailHeader>
-
-          <S.SectionTitle>챌린지 정보</S.SectionTitle>
-
-          <S.ChallengeDetailContainer>
-            <Flex>
-              <S.ChallengeThumbnail src={imageSrc || defaultImg} />
-              <S.DetailContainer>
-                <Flex alignItems='flex-start' justifyContent='space-between'>
-                  <S.DetailContentWrapper>
-                    <S.DetailTitle>{challengeData.title}</S.DetailTitle>
-                    <S.DetailDate>
-                      {`${formatDate(challengeData.startDate ?? '')} ~ ${formatDate(challengeData.endDate ?? '')}`}
-                    </S.DetailDate>
-                    <S.DetailContent>
-                      <p>{challengeData.contents}</p>
-                    </S.DetailContent>
-                  </S.DetailContentWrapper>
-                  <S.DetailSquareWrapper>
-                    <S.DetailRealTimeCountSquare>
-                      {challengeData?.participantCount}명 참여 중
-                    </S.DetailRealTimeCountSquare>
-                    <S.DetailTermSquare>
+              <Flex alignItems='flex-end' justifyContent='space-between'>
+                <Flex alignItems='flex-start' flexDirection='column'>
+                  <S.SubTitle>블록 미리보기</S.SubTitle>
+                  <S.ChallengeBlockPriview>
+                    <h3>{challengeData.title}</h3>
+                    <p>
                       {challengeData.cycle
                         ? ChallengeCycle[challengeData.cycle as keyof typeof ChallengeCycle]
                         : '알 수 없는 주기'}{' '}
@@ -228,107 +249,76 @@ const ChallengeDetailPage = () => {
                               ChallengeCycleDetail_Monthly[detail as keyof typeof ChallengeCycleDetail_Monthly] + '일',
                           )
                           .join(', ')}
-                    </S.DetailTermSquare>
-                  </S.DetailSquareWrapper>
+                    </p>
+                  </S.ChallengeBlockPriview>
                 </Flex>
 
-                <Flex alignItems='flex-end' justifyContent='space-between'>
-                  <Flex alignItems='flex-start' flexDirection='column'>
-                    <S.SubTitle>블록 미리보기</S.SubTitle>
-                    <S.ChallengeBlockPriview>
-                      <h3>{challengeData.title}</h3>
-                      <p>
-                        {challengeData.cycle
-                          ? ChallengeCycle[challengeData.cycle as keyof typeof ChallengeCycle]
-                          : '알 수 없는 주기'}{' '}
-                        {challengeData.cycle === 'WEEKLY' &&
-                          Array.isArray(challengeData.cycleDetails) &&
-                          challengeData.cycleDetails
-                            .map(
-                              (detail: string) =>
-                                ChallengeCycleDetail_Weekly[detail as keyof typeof ChallengeCycleDetail_Weekly],
-                            )
-                            .join(', ')}
-                        {challengeData.cycle === 'MONTHLY' &&
-                          Array.isArray(challengeData.cycleDetails) &&
-                          challengeData.cycleDetails
-                            .map(
-                              (detail: string) =>
-                                ChallengeCycleDetail_Monthly[detail as keyof typeof ChallengeCycleDetail_Monthly] +
-                                '일',
-                            )
-                            .join(', ')}
-                      </p>
-                    </S.ChallengeBlockPriview>
+                <S.ChallengeCreatorContainer>
+                  <S.DetaileSubTitle>챌린지 장</S.DetaileSubTitle>
+                  <Flex
+                    alignItems='center'
+                    onClick={() => {
+                      if (challengeData.authorId)
+                        String(UserInfo?.data.memberId) === String(challengeData.authorId)
+                          ? onMypage()
+                          : onFriendPage(challengeData.authorId);
+                    }}
+                  >
+                    <S.ProfileImage src={challengeData.authorProfileImage} />
+                    <span>{challengeData.authorName}</span>
                   </Flex>
+                </S.ChallengeCreatorContainer>
+              </Flex>
+            </S.DetailContainer>
+          </Flex>
+        </S.ChallengeDetailContainer>
 
-                  <S.ChallengeCreatorContainer>
-                    <S.DetaileSubTitle>챌린지 장</S.DetaileSubTitle>
-                    <Flex
-                      alignItems='center'
-                      onClick={() => {
-                        if (challengeData.authorId)
-                          String(UserInfo?.data.memberId) === String(challengeData.authorId)
-                            ? onMypage()
-                            : onFriendPage(challengeData.authorId);
-                      }}
-                    >
-                      <S.ProfileImage src={challengeData.authorProfileImage} />
-                      <span>{challengeData.authorName}</span>
-                    </Flex>
-                  </S.ChallengeCreatorContainer>
-                </Flex>
-              </S.DetailContainer>
-            </Flex>
-          </S.ChallengeDetailContainer>
+        <S.SectionTitle>실시간 완료</S.SectionTitle>
 
-          <S.SectionTitle>실시간 완료</S.SectionTitle>
-
-          {/* 사용자 프로필 누르면 프로필 조회 가능해야함 */}
-          <S.RealTimeContainer>
-            {challengeData?.completedMembers && challengeData.completedMembers.length > 0 ? (
-              challengeData.completedMembers.map((member, index) => (
-                <S.RealTimeComponent
-                  key={index}
-                  onClick={() => {
-                    if (member.memberId) {
-                      String(UserInfo?.data.memberId) === String(member.memberId)
-                        ? onMypage()
-                        : onFriendPage(member.memberId);
-                    }
-                  }}
-                >
-                  <S.RealTimeUserImg src={member.picture} />
-                  <S.RealTimeUserName>{member.nickname}</S.RealTimeUserName>
-                </S.RealTimeComponent>
-              ))
-            ) : (
-              <S.errorMessage>챌린지를 완료한 첫 번째 주인공이 되어보세요!</S.errorMessage>
-            )}
-          </S.RealTimeContainer>
-
-          {/* 챌린지 삭제 동의 모달창 */}
-          {isModalOpen && isDelModalOpen && (
-            <CustomModal
-              subTitle='한 번 삭제된 챌린지는 되돌릴 수 없습니다.'
-              title='챌린지를 삭제하시겠습니까?'
-              onNoClick={handleNoClick}
-              onYesClick={handleYesClick}
-            />
+        {/* 사용자 프로필 누르면 프로필 조회 가능해야함 */}
+        <S.RealTimeContainer>
+          {challengeData?.completedMembers && challengeData.completedMembers.length > 0 ? (
+            challengeData.completedMembers.map((member, index) => (
+              <S.RealTimeComponent
+                key={index}
+                onClick={() => {
+                  if (member.memberId) {
+                    String(UserInfo?.data.memberId) === String(member.memberId)
+                      ? onMypage()
+                      : onFriendPage(member.memberId);
+                  }
+                }}
+              >
+                <S.RealTimeUserImg src={member.picture} />
+                <S.RealTimeUserName>{member.nickname}</S.RealTimeUserName>
+              </S.RealTimeComponent>
+            ))
+          ) : (
+            <S.errorMessage>챌린지를 완료한 첫 번째 주인공이 되어보세요!</S.errorMessage>
           )}
+        </S.RealTimeContainer>
 
-          {/* 챌린지 탈퇴 동의 모달창 */}
-          {isModalOpen && isWithdrawModalOpen && (
-            <CustomModal
-              subTitle='새로운 도전이 기다리고 있습니다!'
-              title='챌린지를 탈퇴하시겠습니까?'
-              onNoClick={handleNoClick}
-              onYesClick={handleYesClick}
-            />
-          )}
-        </S.MainDashBoardContainer>
-      </S.MainDashBoardLayout>
-    </>
+        {/* 챌린지 삭제 동의 모달창 */}
+        {isModalOpen && isDelModalOpen && (
+          <CustomModal
+            subTitle='한 번 삭제된 챌린지는 되돌릴 수 없습니다.'
+            title='챌린지를 삭제하시겠습니까?'
+            onNoClick={handleNoClick}
+            onYesClick={handleYesClick}
+          />
+        )}
+
+        {/* 챌린지 탈퇴 동의 모달창 */}
+        {isModalOpen && isWithdrawModalOpen && (
+          <CustomModal
+            subTitle='새로운 도전이 기다리고 있습니다!'
+            title='챌린지를 탈퇴하시겠습니까?'
+            onNoClick={handleNoClick}
+            onYesClick={handleYesClick}
+          />
+        )}
+      </S.MainDashBoardContainer>
+    </S.MainDashBoardLayout>
   );
 };
 

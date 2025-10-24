@@ -1,34 +1,26 @@
-import { Helmet } from 'react-helmet-async';
-import Flex from '../../components/Flex';
-import Navbar from '../../components/Navbar';
-import * as S from './NoticePageStyled';
-import leftarrow from '../../img/leftarrow.png';
-import Friend from '../../components/Friend/Friend';
-import Pagination from '../../components/CustomPagination';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { useSearchFriendsList } from '../../hooks/useFollowersList';
-import { useDebounce } from '../../hooks/useDebounce';
-import { useQuery } from '@tanstack/react-query';
-import { getNotice } from '../../api/NoticeApi';
 import { BlockNoteView } from '@blocknote/mantine';
 import { useCreateBlockNote } from '@blocknote/react';
+import { useQuery } from '@tanstack/react-query';
+import { Helmet } from 'react-helmet-async';
+
+import { getNotice } from '../../api/NoticeApi';
+import Navbar from '../../components/Navbar';
+import * as S from './NoticePageStyled';
 
 const RenderEditor = ({ content }: { content: string }) => {
   const editor = useCreateBlockNote();
 
-  editor.tryParseMarkdownToBlocks(content ?? '').then(blocks => {
-    editor.replaceBlocks(editor.document, blocks);
-  });
+  const blocks = editor.tryParseMarkdownToBlocks(content ?? '');
+  editor.replaceBlocks(editor.document, blocks);
 
   if (!content) return <p>내용이 없습니다.</p>;
 
-  return <BlockNoteView editor={editor} editable={false} theme="light" />;
+  return <BlockNoteView editable={false} editor={editor} theme='light' />;
 };
 
 const NoticePage = () => {
-  const navigate = useNavigate();
   const editor = useCreateBlockNote();
+  console.log(editor);
 
   const { data } = useQuery({
     queryKey: ['notices'],
@@ -53,9 +45,9 @@ const NoticePage = () => {
               {data?.map((item, index) => (
                 <details key={item.id || index}>
                   <summary>
-                    <p className="version">{item.version}</p>
-                    <p className="title">{item.title}</p>
-                    <p className="date">{item.createdAt?.slice(0, 10)}</p>
+                    <p className='version'>{item.version}</p>
+                    <p className='title'>{item.title}</p>
+                    <p className='date'>{item.createdAt?.slice(0, 10)}</p>
                   </summary>
                   <RenderEditor content={item.content ?? ''} />
                 </details>

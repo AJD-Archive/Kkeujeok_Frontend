@@ -1,10 +1,13 @@
-import { TItems, TPages } from '../utils/columnsConfig';
-import { useState, useEffect } from 'react';
+//Todo: 여기 수정해야함 임시로 했음
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
+
 import { getPersonalBlock } from '../api/BoardApi';
 import { getDeleteBlock } from '../api/PersonalBlockApi';
-import { useAtom } from 'jotai';
 import { fetchTriggerAtom } from '../contexts/atoms';
+import type { TItems, TPages } from '../utils/columnsConfig';
 
 type PageState = {
   todo: number; // 할 일 페이지 번호
@@ -13,6 +16,7 @@ type PageState = {
 };
 
 export default function useItems(dashboardId: string, pageParam: PageState, pathname: string) {
+  console.log(pageParam);
   const [fetchTrigger] = useAtom(fetchTriggerAtom);
 
   const {
@@ -26,7 +30,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
       return getPersonalBlock(dashboardId, todo, 10, 'NOT_STARTED');
     },
     initialPageParam: 0,
-    getNextPageParam: lastPage => {
+    getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.pageInfoResDto?.currentPage ?? 0;
       const totalPages = lastPage?.pageInfoResDto?.totalPages ?? 1;
 
@@ -44,7 +48,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
       return getPersonalBlock(dashboardId, doing, 10, 'IN_PROGRESS');
     },
     initialPageParam: 0,
-    getNextPageParam: lastPage => {
+    getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.pageInfoResDto?.currentPage ?? 0;
       const totalPages = lastPage?.pageInfoResDto?.totalPages ?? 1;
 
@@ -63,7 +67,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
       return getPersonalBlock(dashboardId, completed, 10, 'COMPLETED');
     },
     initialPageParam: 0,
-    getNextPageParam: lastPage => {
+    getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.pageInfoResDto?.currentPage ?? 0;
       const totalPages = lastPage?.pageInfoResDto?.totalPages ?? 1;
 
@@ -93,8 +97,8 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
 
   useEffect(() => {
     if (NotStarted) {
-      const allNotStartedItems = NotStarted.pages.flatMap(page => page?.blockListResDto || []);
-      setItems(prevItems => ({
+      const allNotStartedItems = NotStarted.pages.flatMap((page) => page?.blockListResDto || []);
+      setItems((prevItems) => ({
         ...prevItems,
         todo: allNotStartedItems,
       }));
@@ -103,8 +107,8 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
 
   useEffect(() => {
     if (InProgress) {
-      const allInProgressItems = InProgress.pages.flatMap(page => page?.blockListResDto || []);
-      setItems(prevItems => ({
+      const allInProgressItems = InProgress.pages.flatMap((page) => page?.blockListResDto || []);
+      setItems((prevItems) => ({
         ...prevItems,
         doing: allInProgressItems,
       }));
@@ -113,8 +117,8 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
 
   useEffect(() => {
     if (Completed) {
-      const allCompletedItems = Completed.pages.flatMap(page => page?.blockListResDto || []);
-      setItems(prevItems => ({
+      const allCompletedItems = Completed.pages.flatMap((page) => page?.blockListResDto || []);
+      setItems((prevItems) => ({
         ...prevItems,
         completed: allCompletedItems,
       }));
@@ -122,7 +126,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
   }, [Completed]);
 
   useEffect(() => {
-    setItems(prevItems => ({
+    setItems((prevItems) => ({
       ...prevItems,
       delete: DeletedBlock?.blockListResDto || [],
     }));
@@ -131,7 +135,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
   //블록 갯수 새로고침시 자꾸 기본값 0으로 불러와져서 비동기 데이터 제대로 불러오기 위한 useEffect 코드
   useEffect(() => {
     if (NotStarted) {
-      setBlockTotal(prevTotal => ({
+      setBlockTotal((prevTotal) => ({
         ...prevTotal,
         todo: NotStarted.pages[0]?.pageInfoResDto.totalItems || 0,
       }));
@@ -140,7 +144,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
 
   useEffect(() => {
     if (InProgress) {
-      setBlockTotal(prevTotal => ({
+      setBlockTotal((prevTotal) => ({
         ...prevTotal,
         doing: InProgress.pages[0]?.pageInfoResDto.totalItems || 0,
       }));
@@ -149,7 +153,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
 
   useEffect(() => {
     if (Completed) {
-      setBlockTotal(prevTotal => ({
+      setBlockTotal((prevTotal) => ({
         ...prevTotal,
         completed: Completed.pages[0]?.pageInfoResDto.totalItems || 0,
       }));
@@ -158,7 +162,7 @@ export default function useItems(dashboardId: string, pageParam: PageState, path
 
   useEffect(() => {
     if (DeletedBlock) {
-      setBlockTotal(prevTotal => ({
+      setBlockTotal((prevTotal) => ({
         ...prevTotal,
         delete: DeletedBlock?.pageInfoResDto.totalItems || 0,
       }));

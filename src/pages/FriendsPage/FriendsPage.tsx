@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Flex from '../../components/Flex';
-import Navbar from '../../components/Navbar';
-import * as S from './FriendsPageStyled';
-import leftarrow from '../../img/leftarrow.png';
-import Friend from '../../components/Friend/Friend';
-import Pagination from '../../components/CustomPagination';
 import { useNavigate } from 'react-router-dom';
+
+import Pagination from '../../components/CustomPagination';
+import Flex from '../../components/Flex';
+import Friend from '../../components/Friend/Friend';
+import Navbar from '../../components/Navbar';
 import { useFollowersList, useRecommendFriendsList } from '../../hooks/useFollowersList';
+import leftarrow from '../../img/leftarrow.png';
+import * as S from './FriendsPageStyled';
 
 const FriendsPage = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const FriendsPage = () => {
 
   // * 페이지네이션 페이지 변경 감지 함수
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    console.log(event);
     setCurrentPage(value - 1);
   };
 
@@ -50,12 +52,8 @@ const FriendsPage = () => {
 
           <S.FriendsWrapper>
             {followersList?.followInfoResDto.length === 0
-              ? recommendList?.followInfoResDto.map((follower, index) => (
-                  <Friend key={index} follower={follower} />
-                ))
-              : followersList?.followInfoResDto.map((follower, index) => (
-                  <Friend key={index} follower={follower} />
-                ))}
+              ? recommendList?.followInfoResDto.map((follower, index) => <Friend key={index} follower={follower} />)
+              : followersList?.followInfoResDto.map((follower, index) => <Friend key={index} follower={follower} />)}
           </S.FriendsWrapper>
 
           {followersList?.followInfoResDto.length !== 0 && (

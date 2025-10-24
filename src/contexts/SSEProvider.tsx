@@ -1,9 +1,13 @@
-import React, { createContext, useContext, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { EventSourcePolyfill } from 'event-source-polyfill';
-import { customErrToast } from '../utils/customErrorToast';
-import { unreadCount } from '../contexts/sseAtom';
 import { useAtom } from 'jotai';
+import type { ReactNode } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react';
 
+import { unreadCount } from '../contexts/sseAtom';
+import { customErrToast } from '../utils/customErrorToast';
+
+// Todo: 여기 수정해야함 임시로 했음
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface SSEContextType {}
 
 const SSEContext = createContext<SSEContextType | undefined>(undefined);
@@ -28,27 +32,23 @@ export const SSEProvider: React.FC<SSEProviderProps> = ({ children }) => {
       return;
     }
 
-    eventSourceRef.current = new EventSourcePolyfill(
-      `${import.meta.env.VITE_API_BASE_URL}/notifications/stream`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          Accept: 'text/event-stream',
-        },
-        heartbeatTimeout: 86400000,
-        withCredentials: true,
-      }
-    );
+    eventSourceRef.current = new EventSourcePolyfill(`${import.meta.env.VITE_API_BASE_URL}/notifications/stream`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        Accept: 'text/event-stream',
+      },
+      heartbeatTimeout: 86400000,
+      withCredentials: true,
+    });
 
-    eventSourceRef.current.onmessage = event => {
+    eventSourceRef.current.onmessage = (event) => {
       const hasNoSuccessMessage = !event.data.includes('연결 성공');
 
       if (hasNoSuccessMessage) {
         const modifiedMessage = event.data.split('.')[0];
-        if (modifiedMessage.includes('친구'))
-          customErrToast(modifiedMessage.split(':').slice(1).join(':').trim());
+        if (modifiedMessage.includes('친구')) customErrToast(modifiedMessage.split(':').slice(1).join(':').trim());
         else customErrToast(modifiedMessage);
-        setUnReadCount(prev => prev + 1);
+        setUnReadCount((prev) => prev + 1);
       }
     };
 
@@ -57,11 +57,13 @@ export const SSEProvider: React.FC<SSEProviderProps> = ({ children }) => {
       console.log('SSE 스트림 연결 성공');
     };
 
-    eventSourceRef.current.onerror = e => {
+    eventSourceRef.current.onerror = (e) => {
       // 종료 또는 에러 발생 시 할 일
       console.error('SSE 에러 발생', e);
       closeEventSource();
       setTimeout(() => {
+        //Todo: 여기 수정해야함 임시로 했음
+        // eslint-disable-next-line react-hooks/immutability
         connectToSSE();
       }, 3000);
     };

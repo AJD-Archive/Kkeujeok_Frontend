@@ -3,8 +3,9 @@
  */
 
 import { useEffect, useState } from 'react';
-import { UserInfo } from '../types/UserInfo';
+
 import { userInfoApi } from '../api/UserApi';
+import type { UserInfo } from '../types/UserInfo';
 
 const useInfo = () => {
   const [info, setInfo] = useState<UserInfo>();

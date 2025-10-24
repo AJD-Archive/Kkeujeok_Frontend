@@ -1,9 +1,10 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 // import { getPersonalBlock } from '../api/BoardApi';
 import * as S from '../styles/DashboardStyled';
-import { DashboardItem } from '../types/PersonalDashBoard';
-import { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
-import { useEffect, useState } from 'react';
+import type { DashboardItem } from '../types/PersonalDashBoard';
+import type { TeamDashboardInfoResDto } from '../types/TeamDashBoard';
 
 interface Props {
   text: string;
@@ -18,6 +19,7 @@ const Dashboard = ({ text, dashboard }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const id = location.pathname.split('/')[1];
+  console.log(id);
   const [groupedDashboard, setGroupedDashboard] = useState<GroupedDashboards>({});
 
   const onChangeLocation = (id: number | string) => {
@@ -49,6 +51,8 @@ const Dashboard = ({ text, dashboard }: Props) => {
   useEffect(() => {
     if (dashboard) {
       const grouped = groupByCategory(dashboard as DashboardItem[]);
+      // Todo: 해당 라인 수정해야함.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setGroupedDashboard(grouped);
     }
   }, [dashboard]);
@@ -72,11 +76,11 @@ const Dashboard = ({ text, dashboard }: Props) => {
         </S.DashboardItemContainer>
       ) : (
         // 개인 대시보드일 때 렌더링
-        Object.keys(groupedDashboard).map(category => (
+        Object.keys(groupedDashboard).map((category) => (
           <details key={category}>
             <summary>{category}</summary>
             <S.DashboardItemContainer>
-              {groupedDashboard[category].map(dashboardItem => (
+              {groupedDashboard[category].map((dashboardItem) => (
                 <S.PersonalDashboardItem
                   key={dashboardItem.dashboardId}
                   onClick={() => onChangeLocation(dashboardItem.dashboardId ?? 0)}

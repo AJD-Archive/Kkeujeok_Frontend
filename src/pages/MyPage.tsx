@@ -1,23 +1,24 @@
+import Pagination from '@mui/material/Pagination';
+import { useQuery } from '@tanstack/react-query';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Flex from '../components/Flex';
+
+import { fetchBlockData, fetchData, getAlarmList, updateAlarmIsRead } from '../api/MyPageApi';
 import AlarmBlock from '../components/AlarmBlock';
-import ProfileUpdateModal from '../components/ProfileUpdateModal';
 import ChallengeBlock from '../components/ChallengeBlock';
+import Flex from '../components/Flex';
+import Navbar from '../components/Navbar';
 import Profile from '../components/Profile';
+import ProfileUpdateModal from '../components/ProfileUpdateModal';
+import { notifications, unreadCount } from '../contexts/sseAtom';
+import { useFollowersList } from '../hooks/useFollowersList';
+import bell from '../img/bell.png';
 import googleicon from '../img/googleicon.png';
 import kakaologo from '../img/kakaologo.png';
-import bell from '../img/bell.png';
 import * as S from '../styles/MyPageStyled';
-import { ChallengeList, PersonalDashboardList, TeamDashboardList } from '../types/MyPage';
-import { fetchBlockData, fetchData, getAlarmList, updateAlarmIsRead } from '../api/MyPageApi';
-import { useAtom } from 'jotai';
-import { useQuery } from '@tanstack/react-query';
-import Pagination from '@mui/material/Pagination';
-import { notifications, unreadCount } from '../contexts/sseAtom';
-import { Helmet } from 'react-helmet-async';
-import { useFollowersList } from '../hooks/useFollowersList';
+import type { ChallengeList, PersonalDashboardList, TeamDashboardList } from '../types/MyPage';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const MyPage = () => {
   const [visibleModal, setModalVisible] = useState(false);
 
   const onAlarmVisibleFunc = async () => {
-    setAlarmVisible(prev => !prev);
+    setAlarmVisible((prev) => !prev);
     if (unReadCount !== 0) {
       // unReadCount가 0이 아닐 때만 업데이트
       setUnReadCount(0);
@@ -54,11 +55,12 @@ const MyPage = () => {
 
   const onModalVisibleFunc = () => {
     refetch();
-    setModalVisible(prev => !prev);
+    setModalVisible((prev) => !prev);
   };
 
   // 페이지네이션 변경 시 동작하는 함수
   const onChangePageNation = async (event: React.ChangeEvent<unknown>, page: number) => {
+    console.log(event);
     setPageNumber(page);
     if (data?.data.email) {
       const fetchData = await fetchBlockData(page - 1, data?.data.email);
@@ -125,7 +127,7 @@ const MyPage = () => {
   useEffect(() => {
     if (alarmNoti?.data) {
       setAlarmList(alarmNoti);
-      setUnReadCount(alarmNoti.data.notificationInfoResDto.filter(item => !item.isRead).length);
+      setUnReadCount(alarmNoti.data.notificationInfoResDto.filter((item) => !item.isRead).length);
     }
   }, [alarmNoti]);
 
@@ -152,7 +154,7 @@ const MyPage = () => {
                       navigate(`/personal/${dashboardId}`);
                     }}
                   >
-                    <ChallengeBlock title={title} description={description} />
+                    <ChallengeBlock description={description} title={title} />
                   </S.TeamBlockWrapper>
                 );
               })}
@@ -160,9 +162,9 @@ const MyPage = () => {
 
             <S.PagenateBox>
               <Pagination
-                page={pageNumber}
                 count={personalBlockData?.pageInfoResDto.totalPages}
                 defaultPage={0}
+                page={pageNumber}
                 onChange={onChangePageNation}
               />
             </S.PagenateBox>
@@ -187,20 +189,16 @@ const MyPage = () => {
                       navigate(`/team/${dashboardId}`);
                     }}
                   >
-                    <ChallengeBlock
-                      title={title}
-                      joinMembers={joinMembers ?? 0}
-                      description={description}
-                    />
+                    <ChallengeBlock description={description} joinMembers={joinMembers ?? 0} title={title} />
                   </S.TeamBlockWrapper>
                 );
               })}
             </S.GridContainer>
             <S.PagenateBox>
               <Pagination
-                page={pageNumber}
                 count={teamBlockData?.pageInfoResDto.totalPages}
                 defaultPage={0}
+                page={pageNumber}
                 onChange={onChangePageNation}
               />
             </S.PagenateBox>
@@ -218,6 +216,7 @@ const MyPage = () => {
             <S.GridContainer>
               {challengeBlockData?.challengeInfoResDto.map((item, idx) => {
                 const { title, contents, cycle, challengeId } = item;
+                console.log(cycle);
 
                 return (
                   <div
@@ -227,16 +226,16 @@ const MyPage = () => {
                       navigate(`/challenge/${challengeId}`, { state: { title: title } });
                     }}
                   >
-                    <ChallengeBlock key={idx} title={title} description={contents} />
+                    <ChallengeBlock key={idx} description={contents} title={title} />
                   </div>
                 );
               })}
             </S.GridContainer>
             <S.PagenateBox>
               <Pagination
-                page={pageNumber}
                 count={challengeBlockData?.pageInfoResDto.totalPages}
                 defaultPage={0}
+                page={pageNumber}
                 onChange={onChangePageNation}
               />
             </S.PagenateBox>
@@ -251,38 +250,29 @@ const MyPage = () => {
       <Helmet>
         <title>끄적끄적 | 마이페이지</title>
       </Helmet>
-      <Flex alignItems="flex-start">
+      <Flex alignItems='flex-start'>
         <Navbar />
         <S.MyPageLayout>
-          <Flex alignItems="center" justifyContent="space-between">
-            <Flex
-              width="100%"
-              alignItems="center"
-              margin="0 0 2.125rem 0"
-              justifyContent="space-between"
-            >
-              <Flex justifyContent="space-between" gap="29px">
-                <Profile width="8.875rem" height="8.875rem" profile={data?.data.picture} />
+          <Flex alignItems='center' justifyContent='space-between'>
+            <Flex alignItems='center' justifyContent='space-between' margin='0 0 2.125rem 0' width='100%'>
+              <Flex gap='29px' justifyContent='space-between'>
+                <Profile height='8.875rem' profile={data?.data.picture} width='8.875rem' />
                 <Flex
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems="flex-start"
-                  height="4rem"
-                  gap="0.45rem"
+                  alignItems='flex-start'
+                  flexDirection='column'
+                  gap='0.45rem'
+                  height='4rem'
+                  justifyContent='center'
                 >
-                  <Flex alignItems="center" gap="0.5625rem">
+                  <Flex alignItems='center' gap='0.5625rem'>
                     <S.GoogleImageIcon
-                      src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
                       alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
+                      src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
                     />
                     <S.MainText>{data?.data.name}</S.MainText>
                   </Flex>
                   <S.CaptionText>
-                    {data?.data.introduction ? (
-                      data?.data.introduction
-                    ) : (
-                      <span>자기 소개를 작성해주세요</span>
-                    )}
+                    {data?.data.introduction ? data?.data.introduction : <span>자기 소개를 작성해주세요</span>}
                   </S.CaptionText>
                   <S.CaptionText onClick={() => navigate(`/friends`)}>
                     <span>친구 {followersList?.pageInfoResDto.totalItems}명</span>
@@ -290,29 +280,27 @@ const MyPage = () => {
                 </Flex>
               </Flex>
 
-              <Flex flexDirection="column" gap="0.75rem">
+              <Flex flexDirection='column' gap='0.75rem'>
                 <S.ButtonWrapper onClick={onModalVisibleFunc}>프로필 수정</S.ButtonWrapper>
                 <S.ButtonWrapper onClick={onLogoutHandler}> 로그아웃 </S.ButtonWrapper>
               </Flex>
             </Flex>
 
             <S.ImageWrapper onClick={onAlarmVisibleFunc}>
-              <img src={bell} alt="알림 아이콘" />
+              <img alt='알림 아이콘' src={bell} />
               {unReadCount > 0 ? <div>!</div> : ''}
             </S.ImageWrapper>
             {visibleAlarm && (
               <S.AlarmDataContainer>
                 {alarmList?.data.notificationInfoResDto.length === 0 ? (
-                  <Flex height={96} justifyContent="center" alignItems="center">
+                  <Flex alignItems='center' height={96} justifyContent='center'>
                     <span>생성된 알림이 없어요</span>
                   </Flex>
                 ) : (
                   alarmList?.data.notificationInfoResDto
                     .slice()
                     .reverse()
-                    .map((item, idx) => (
-                      <AlarmBlock key={idx} message={item.message} isRead={item.isRead} />
-                    ))
+                    .map((item, idx) => <AlarmBlock key={idx} isRead={item.isRead} message={item.message} />)
                 )}
               </S.AlarmDataContainer>
             )}
@@ -331,9 +319,9 @@ const MyPage = () => {
 
         {visibleModal && (
           <ProfileUpdateModal
-            onModalVisibleFunc={onModalVisibleFunc}
-            nickname={data?.data.nickName}
             introduction={data?.data.introduction}
+            nickname={data?.data.nickName}
+            onModalVisibleFunc={onModalVisibleFunc}
           />
         )}
       </Flex>
@@ -345,7 +333,7 @@ export default MyPage;
 
 const NoContentComponent = (
   <S.NoContentComponent>
-    <Flex height={500} alignItems="center" justifyContent="center">
+    <Flex alignItems='center' height={500} justifyContent='center'>
       참여 내역이 없습니다.
     </Flex>
   </S.NoContentComponent>

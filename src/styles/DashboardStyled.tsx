@@ -1,6 +1,7 @@
-import { styled, keyframes } from 'styled-components';
-import theme from '../styles/Theme/Theme';
+import { keyframes, styled } from 'styled-components';
+
 import rightArrowImg from '../img/rightarrow.png';
+import theme from '../styles/Theme/Theme';
 
 type Props = {
   backGroundColor?: string;
@@ -36,7 +37,7 @@ export const DashboardContainer = styled.section<DashboardContainerProps>`
     font-weight: ${theme.font.weight.medium};
     color: ${theme.color.gray};
     margin-bottom: 0.8rem;
-    ${props =>
+    ${(props) =>
       props.text === '팀' &&
       `
       margin-top: 2rem; /* '팀'일 때 적용할 스타일 */
@@ -186,8 +187,7 @@ export const GraphWrapper = styled.div`
   align-items: center;
 `;
 export const GraphProgress = styled.div<{ blockProgress: string | number }>`
-  width: ${({ blockProgress }) =>
-    blockProgress}%; /*todo의 완료도에 따라 부모 width의 퍼센테이지로 맞춰 크기 조정*/
+  width: ${({ blockProgress }) => blockProgress}%; /*todo의 완료도에 따라 부모 width의 퍼센테이지로 맞춰 크기 조정*/
   height: 1.3125rem;
 
   background: ${theme.color.gradation};
@@ -248,8 +248,7 @@ export const BlockContainer = styled.div<{
 
     // * d-day 7일 남았을 때부터 다른 스타일
     color: ${({ dayCount, isDone }) => (dayCount > -8 && !isDone ? 'red' : theme.color.gray)};
-    /* font-weight: ${({ dayCount }) =>
-      dayCount < 4 ? theme.font.weight.bold : theme.font.weight.light}; */
+    /* font-weight: ${({ dayCount }) => (dayCount < 4 ? theme.font.weight.bold : theme.font.weight.light)}; */
 
     animation-name: ${({ dayCount, isDone }) => (dayCount > -8 && !isDone ? shake : 'none')};
 
@@ -266,12 +265,7 @@ export const BlockContainer = styled.div<{
 
 export const ChallengeTypeWrapper = styled.p`
   p {
-    background: linear-gradient(
-      90deg,
-      ${theme.color.main},
-      ${theme.color.main2},
-      ${theme.color.main3}
-    );
+    background: linear-gradient(90deg, ${theme.color.main}, ${theme.color.main2}, ${theme.color.main3});
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

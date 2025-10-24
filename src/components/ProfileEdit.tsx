@@ -1,8 +1,9 @@
-import Navbar from './Navbar';
-import * as S from '../styles/MyPageStyled';
 import React, { useState } from 'react';
-import { updateUserInfo } from '../api/MyPageApi';
 import { useNavigate } from 'react-router-dom';
+
+import { updateUserInfo } from '../api/MyPageApi';
+import * as S from '../styles/MyPageStyled';
+import Navbar from './Navbar';
 
 const ProfileEdit = () => {
   const navigate = useNavigate();

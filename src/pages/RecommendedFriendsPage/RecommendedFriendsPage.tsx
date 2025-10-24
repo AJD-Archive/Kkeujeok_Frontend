@@ -1,13 +1,12 @@
 import { Helmet } from 'react-helmet-async';
-import Flex from '../../components/Flex';
-import Navbar from '../../components/Navbar';
-import * as S from './RecommendedFriendsPageStyled';
-import leftarrow from '../../img/leftarrow.png';
-import Friend from '../../components/Friend/Friend';
-import Pagination from '../../components/CustomPagination';
 import { useNavigate } from 'react-router-dom';
-import { useFollowersList, useRecommendFriendsList } from '../../hooks/useFollowersList';
-import { useState } from 'react';
+
+import Flex from '../../components/Flex';
+import Friend from '../../components/Friend/Friend';
+import Navbar from '../../components/Navbar';
+import { useRecommendFriendsList } from '../../hooks/useFollowersList';
+import leftarrow from '../../img/leftarrow.png';
+import * as S from './RecommendedFriendsPageStyled';
 
 const RecommendedFriendsPage = () => {
   const navigate = useNavigate();

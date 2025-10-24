@@ -1,23 +1,24 @@
-import Profile from './Profile';
-import Flex from './Flex';
-import edit from '../img/edit.png';
-import trash from '../img/delete2.png';
-import { visibleAtom } from '../contexts/sideScreenAtom';
 import { useAtom } from 'jotai';
-import closebutton from '../img/closebutton.png';
 import { useRef, useState } from 'react';
+
+import { visibleAtom } from '../contexts/sideScreenAtom';
+import closebutton from '../img/closebutton.png';
+import trash from '../img/delete2.png';
+import edit from '../img/edit.png';
 import * as S from '../styles/SideScreenStyled';
-import { useNavigate } from 'react-router-dom';
+import Flex from './Flex';
+import Profile from './Profile';
 
 const SidebarScreen = () => {
   const [inputText, setInputText] = useState<string>('');
+  console.log(inputText);
   const [_, setVisibleValue] = useAtom(visibleAtom);
 
   const editorRef = useRef<HTMLDivElement>(null);
 
   //사이드 스크린 상태 변수 변경 함수
   const toggleFunc = (event: React.MouseEvent) => {
-    setVisibleValue(prev => !prev);
+    setVisibleValue((prev) => !prev);
     event.stopPropagation();
   };
 
@@ -28,33 +29,29 @@ const SidebarScreen = () => {
   return (
     <S.SideScreenContainer onClick={toggleFunc}>
       <S.SideScreen
-        onClick={e => {
+        onClick={(e) => {
           e.stopPropagation();
         }}
       >
         <S.ImgWrapper>
-          <img src={closebutton} alt="닫기 버튼" onMouseDown={toggleFunc} />
+          <img alt='닫기 버튼' src={closebutton} onMouseDown={toggleFunc} />
         </S.ImgWrapper>
         <header>
-          <Flex gap="0.6785rem" margin="0 0 0.5rem 0">
-            <Profile width="35px" height="35px" />
+          <Flex gap='0.6785rem' margin='0 0 0.5rem 0'>
+            <Profile height='35px' width='35px' />
             <span>김신아</span>
           </Flex>
           <S.TitleContainer>
-            <input placeholder="제목을 입력해주세요" />
-            <Flex gap="0.5625rem">
-              <img src={edit} alt="편집 버튼" />
-              <img src={trash} alt="휴지통 버튼" />
+            <input placeholder='제목을 입력해주세요' />
+            <Flex gap='0.5625rem'>
+              <img alt='편집 버튼' src={edit} />
+              <img alt='휴지통 버튼' src={trash} />
             </Flex>
           </S.TitleContainer>
-          <hr></hr>
+          <hr />
         </header>
 
-        <S.TextEditingWrapper
-          contentEditable
-          onInput={onInputHandler}
-          ref={editorRef}
-        ></S.TextEditingWrapper>
+        <S.TextEditingWrapper ref={editorRef} contentEditable onInput={onInputHandler} />
       </S.SideScreen>
     </S.SideScreenContainer>
   );

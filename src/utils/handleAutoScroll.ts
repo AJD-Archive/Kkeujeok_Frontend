@@ -1,5 +1,5 @@
 // utils.ts
-import { DragUpdate } from 'react-beautiful-dnd';
+import type { DragUpdate } from 'react-beautiful-dnd';
 
 export const handleAutoScroll = (update: DragUpdate): void => {
   const container = document.querySelector('.container');

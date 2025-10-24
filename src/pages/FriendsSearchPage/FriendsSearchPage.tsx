@@ -1,15 +1,16 @@
-import { Helmet } from 'react-helmet-async';
-import Flex from '../../components/Flex';
-import Navbar from '../../components/Navbar';
-import * as S from './FriendsSearchPageStyled';
-import leftarrow from '../../img/leftarrow.png';
-import Friend from '../../components/Friend/Friend';
-import Pagination from '../../components/CustomPagination';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import SearchIcon from './SearchIcon';
-import { useSearchFriendsList } from '../../hooks/useFollowersList';
+import { Helmet } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
+
+import Pagination from '../../components/CustomPagination';
+import Flex from '../../components/Flex';
+import Friend from '../../components/Friend/Friend';
+import Navbar from '../../components/Navbar';
 import { useDebounce } from '../../hooks/useDebounce';
+import { useSearchFriendsList } from '../../hooks/useFollowersList';
+import leftarrow from '../../img/leftarrow.png';
+import * as S from './FriendsSearchPageStyled';
+import SearchIcon from './SearchIcon';
 
 const FriendsPage = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const FriendsPage = () => {
 
   // * 페이지네이션 페이지 변경 감지 함수
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    console.log(event);
     setCurrentPage(value - 1);
   };
 
@@ -57,12 +59,12 @@ const FriendsPage = () => {
               <SearchIcon />
 
               <S.InputWrapper
-                placeholder="이름이나 이메일로 검색하기"
-                type="text"
+                name='keyword'
+                placeholder='이름이나 이메일로 검색하기'
+                type='text'
                 value={keyword}
-                name="keyword"
                 onChange={handleInput}
-              ></S.InputWrapper>
+              />
             </S.SearchBarContainer>
           </S.SearchLayout>
 

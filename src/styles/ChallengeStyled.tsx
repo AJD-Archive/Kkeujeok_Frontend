@@ -1,7 +1,8 @@
+import type { TextareaAutosizeProps } from 'react-textarea-autosize';
+import TextareaAutosize from 'react-textarea-autosize';
 import { styled } from 'styled-components';
+
 import theme from '../styles/Theme/Theme';
-import TextareaAutosize, { TextareaAutosizeProps } from 'react-textarea-autosize';
-import DatePicker from 'react-datepicker';
 interface StyledTextareaProps extends TextareaAutosizeProps {
   width?: string;
 }
@@ -75,10 +76,9 @@ export const Category = styled.p<{ isSelected: boolean }>`
     color: ${theme.color.white};
   }
 
-  background: ${props =>
-    props.isSelected &&
-    `linear-gradient(45deg, ${theme.color.main}, ${theme.color.main2}) border-box`};
-  color: ${props => (props.isSelected ? `${theme.color.white}` : `${theme.color.gray}`)};
+  background: ${(props) =>
+    props.isSelected && `linear-gradient(45deg, ${theme.color.main}, ${theme.color.main2}) border-box`};
+  color: ${(props) => (props.isSelected ? `${theme.color.white}` : `${theme.color.gray}`)};
 `;
 
 export const SearchContainer = styled.div`
@@ -254,7 +254,7 @@ export const FileLabel = styled.label`
 `;
 
 export const InputForm = styled.input`
-  width: ${props => props.width};
+  width: ${(props) => props.width};
   padding: 0.5rem 1rem;
   /* font-size: 1rem; */
   border-radius: 0.3rem;
@@ -269,9 +269,9 @@ export const InputForm = styled.input`
 `;
 
 export const Textarea = styled(TextareaAutosize)<StyledTextareaProps>`
-  width: ${props => props.width};
-  min-width: ${props => props.width};
-  max-width: ${props => props.width};
+  width: ${(props) => props.width};
+  min-width: ${(props) => props.width};
+  max-width: ${(props) => props.width};
   min-height: 2rem;
   padding: 0.55rem 1rem;
   overflow-wrap: break-word;
@@ -289,7 +289,7 @@ export const Textarea = styled(TextareaAutosize)<StyledTextareaProps>`
 `;
 
 export const Select = styled.select<StyledTextareaProps>`
-  width: ${props => props.width};
+  width: ${(props) => props.width};
   padding: 0.5rem 1rem;
   /* font-size: 1rem; */
   border-radius: 0.3rem;

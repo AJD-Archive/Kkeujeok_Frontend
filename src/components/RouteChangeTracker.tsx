@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import ReactGA from 'react-ga4';
+import { useLocation } from 'react-router-dom';
 
 /**
  * 구글 애널리틱스 사용하기 위함.
@@ -18,6 +18,8 @@ const RouteChangeTracker = () => {
 
       if (trackingId) {
         ReactGA.initialize(trackingId);
+        // Todo: 해당 라인 수정해야함.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setInitialized(true);
       } else {
         console.error('Google Analytics tracking ID가 정의되어 있지 않습니다.');

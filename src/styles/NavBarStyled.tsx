@@ -1,6 +1,7 @@
-import { styled } from 'styled-components';
-import theme from '../styles/Theme/Theme';
 import { Link } from 'react-router-dom';
+import { styled } from 'styled-components';
+
+import theme from '../styles/Theme/Theme';
 
 export const NavBarLayout = styled.nav`
   position: sticky;
@@ -83,7 +84,7 @@ export const NavButton = styled.button<{ variant: 'primary' | 'secondary' }>`
   font-size: ${theme.font.size.main};
   cursor: pointer;
 
-  ${props =>
+  ${(props) =>
     props.variant === 'primary' &&
     `
     background: ${theme.color.white};
@@ -91,7 +92,7 @@ export const NavButton = styled.button<{ variant: 'primary' | 'secondary' }>`
     margin-bottom: 0.8125rem;
   `}
 
-  ${props =>
+  ${(props) =>
     props.variant === 'secondary' &&
     `
     background: ${theme.color.gradation};

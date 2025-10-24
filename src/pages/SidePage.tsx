@@ -1,29 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useLocation, useBlocker } from 'react-router-dom';
-import Flex from '../components/Flex';
-import trash from '../img/delete2.png';
-import closebutton from '../img/closebutton.png';
-
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
-import {
-  SideScreenContainer,
-  SideScreen,
-  StyledEditorWrapper,
-  ImgWrapper,
-  StatusBarContainer,
-  DateContainer,
-  TitleContainer,
-  D_Day,
-  StyledDatePicker,
-  Input,
-} from '../styles/SidePageStyled';
-import { useSidePage } from '../hooks/useSidePage';
+
 import { BlockNoteView } from '@blocknote/mantine';
-import { light } from '@mui/material/styles/createPalette';
+import React from 'react';
+import DatePicker from 'react-datepicker';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import Flex from '../components/Flex';
+import { useSidePage } from '../hooks/useSidePage';
+import closebutton from '../img/closebutton.png';
+import {
+  D_Day,
+  DateContainer,
+  ImgWrapper,
+  Input,
+  SideScreen,
+  SideScreenContainer,
+  StatusBarContainer,
+  StyledDatePicker,
+  StyledEditorWrapper,
+  TitleContainer,
+} from '../styles/SidePageStyled';
 
 const SidePage = () => {
   const navigate = useNavigate();
@@ -31,8 +29,11 @@ const SidePage = () => {
   const { highlightColor, progress } = location.state || {};
   const blockId = location.pathname.split('/').pop();
 
-  const { data, handleTitleChange, handleDateChange, onChange, editor, SubmitData, parseDate } =
-    useSidePage(blockId, progress);
+  const { data, handleTitleChange, handleDateChange, onChange, editor, SubmitData, parseDate } = useSidePage(
+    blockId,
+    progress,
+  );
+  console.log(SubmitData);
 
   const toggleFunc = (event: React.MouseEvent) => {
     // SubmitData();
@@ -97,11 +98,11 @@ const SidePage = () => {
   return (
     <SideScreenContainer onClick={toggleFunc}>
       <SideScreen
-        onClick={e => {
+        onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <ImgWrapper src={closebutton} alt="닫기 버튼" onClick={toggleFunc} />
+        <ImgWrapper alt='닫기 버튼' src={closebutton} onClick={toggleFunc} />
 
         {/* 제목 입력 */}
         <TitleContainer>
@@ -109,9 +110,9 @@ const SidePage = () => {
             <span>{progress}</span>
           </StatusBarContainer>
           <Input
-            type="text"
-            name="title"
-            placeholder="제목을 입력하세요."
+            name='title'
+            placeholder='제목을 입력하세요.'
+            type='text'
             value={data.title}
             onChange={handleTitleChange}
           />
@@ -119,34 +120,34 @@ const SidePage = () => {
 
         {/* 날짜 및 시간 설정 */}
         <DateContainer>
-          <Flex justifyContent="space-between">
+          <Flex justifyContent='space-between'>
             <D_Day>{data.dDay}</D_Day>
             <StyledDatePicker>
               <DatePicker
-                selected={parseDate(data.startDate)}
-                onChange={(date: Date | null) => handleDateChange(date, 'start')}
                 showTimeSelect
-                dateFormat="yyyy.MM.dd HH:mm"
+                dateFormat='yyyy.MM.dd HH:mm'
+                selected={parseDate(data.startDate)}
                 timeIntervals={10} // 10분 간격으로 시간 선택
+                onChange={(date: Date | null) => handleDateChange(date, 'start')}
               />
               <p>~</p>
               <DatePicker
-                selected={parseDate(data.deadLine)}
-                onChange={(date: Date | null) => handleDateChange(date, 'end')}
                 showTimeSelect
-                dateFormat="yyyy.MM.dd HH:mm"
-                timeIntervals={10} // 10분 간격으로 시간 선택
+                dateFormat='yyyy.MM.dd HH:mm'
                 minDate={data.startDate ? new Date(data.startDate) : undefined}
+                selected={parseDate(data.deadLine)}
+                timeIntervals={10} // 10분 간격으로 시간 선택
+                onChange={(date: Date | null) => handleDateChange(date, 'end')}
               />
             </StyledDatePicker>
-            <div></div>
+            <div />
           </Flex>
           <hr />
         </DateContainer>
 
         {/* 본문 작성 */}
         <StyledEditorWrapper>
-          <BlockNoteView editor={editor} onChange={onChange} theme="light" />
+          <BlockNoteView editor={editor} theme='light' onChange={onChange} />
         </StyledEditorWrapper>
       </SideScreen>
     </SideScreenContainer>

@@ -1,5 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+
 // import { GlobalStyle, CanvasContainer } from '../styles/ThreeSceneStyled';
 import middle from '../img/kkeujeok_middle.png';
 import out from '../img/kkeujeok_out.png';

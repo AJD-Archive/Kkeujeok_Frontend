@@ -1,26 +1,30 @@
-import Flex from '../components/Flex';
-import Navbar from '../components/Navbar';
-import * as S from '../styles/ChallengeStyled';
-import leftarrow from '../img/leftarrow.png';
-import editBtn from '../img/edit.png';
-import delBtn from '../img/delete2.png';
-import { useLocation, useNavigate } from 'react-router-dom';
+//Todo: 임시로해둔거라 수정해야함
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { deleteChallenge, getChallengeDetail, withdrawChallenge } from '../api/ChallengeApi';
+import { userInfoApi } from '../api/UserApi';
+import CustomModal from '../components/CustomModal';
+import Flex from '../components/Flex';
+import JoinChallengeModal from '../components/JoinChallengeModal';
+import Navbar from '../components/Navbar';
+import useModal from '../hooks/useModal';
+import defaultImg from '../img/default.png';
+import delBtn from '../img/delete2.png';
+import editBtn from '../img/edit.png';
+import leftarrow from '../img/leftarrow.png';
+import * as S from '../styles/ChallengeStyled';
+import type { Challenge } from '../types/ChallengeType';
 import {
-  Challenge,
   ChallengeCategory,
   ChallengeCycle,
   ChallengeCycleDetail_Monthly,
   ChallengeCycleDetail_Weekly,
 } from '../types/ChallengeType';
-import defaultImg from '../img/default.png';
-import CustomModal from '../components/CustomModal';
-import useModal from '../hooks/useModal';
-import JoinChallengeModal from '../components/JoinChallengeModal';
-import { Helmet } from 'react-helmet-async';
-import { userInfoApi } from '../api/UserApi';
-import { useQuery } from '@tanstack/react-query';
 
 const ChallengeDetailPage = () => {
   const navigate = useNavigate();
@@ -28,6 +32,7 @@ const ChallengeDetailPage = () => {
   const pathname = location.pathname;
   const challengeId = pathname.split('/').pop();
   const challengeTitle = location.state?.title;
+  console.log(challengeTitle);
 
   const [challengeData, setChallengeData] = useState<Challenge>({ representImage: undefined });
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
@@ -40,6 +45,7 @@ const ChallengeDetailPage = () => {
     queryKey: ['userinfo'],
     queryFn: userInfoApi,
   });
+  console.log(refetchTeamDashboard);
 
   // * 챌린지 상세보기 데이터 받아오기
   const fetchedData = async () => {
@@ -52,6 +58,8 @@ const ChallengeDetailPage = () => {
   };
 
   useEffect(() => {
+    // Todo: 해당 라인 수정해야함.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchedData();
   }, []);
 
@@ -60,6 +68,8 @@ const ChallengeDetailPage = () => {
     if (challengeData.representImage instanceof File) {
       // File 타입일 경우 URL로 변환
       const objectUrl = URL.createObjectURL(challengeData.representImage);
+      // Todo: 해당 라인 수정해야함.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setImageSrc(objectUrl);
 
       // 메모리 누수를 방지하기 위해 컴포넌트가 언마운트될 때 URL 해제
@@ -72,7 +82,7 @@ const ChallengeDetailPage = () => {
 
   // * 날짜 포맷 변경
   const formatDate = (dateString: string) => {
-    const [year, month, day] = dateString.split('-').map(part => part.trim());
+    const [year, month, day] = dateString.split('-').map((part) => part.trim());
 
     return `${year}년 ${month}월 ${day}일`;
   };
@@ -140,7 +150,7 @@ const ChallengeDetailPage = () => {
           <S.DetailHeader>
             <Flex>
               <S.BackButton src={leftarrow} onClick={() => navigate(-1)} /> {/* 뒤로가기 버튼 */}
-              <Flex flexDirection="column" alignItems="flex-start">
+              <Flex alignItems='flex-start' flexDirection='column'>
                 <S.DetaileSubTitle>
                   {challengeData.category &&
                     ChallengeCategory[challengeData.category as keyof typeof ChallengeCategory]}
@@ -153,13 +163,13 @@ const ChallengeDetailPage = () => {
               {challengeData.isAuthor && (
                 <S.EditDelButtonWrapper>
                   <S.EditDelButton
+                    alt='수정 버튼'
                     src={editBtn}
-                    alt="수정 버튼"
                     onClick={() => {
                       navigate(`/challenge/create/${challengeId}`);
                     }}
                   />
-                  <S.EditDelButton src={delBtn} alt="삭제 버튼" onClick={submitDelChallenge} />
+                  <S.EditDelButton alt='삭제 버튼' src={delBtn} onClick={submitDelChallenge} />
                 </S.EditDelButtonWrapper>
               )}
 
@@ -173,11 +183,7 @@ const ChallengeDetailPage = () => {
               )}
 
               {join && challengeId && (
-                <JoinChallengeModal
-                  challengeId={challengeId}
-                  onNoClick={joinChallenge}
-                  fetchedData={fetchedData}
-                />
+                <JoinChallengeModal challengeId={challengeId} fetchedData={fetchedData} onNoClick={joinChallenge} />
               )}
             </Flex>
           </S.DetailHeader>
@@ -188,7 +194,7 @@ const ChallengeDetailPage = () => {
             <Flex>
               <S.ChallengeThumbnail src={imageSrc || defaultImg} />
               <S.DetailContainer>
-                <Flex justifyContent="space-between" alignItems="flex-start">
+                <Flex alignItems='flex-start' justifyContent='space-between'>
                   <S.DetailContentWrapper>
                     <S.DetailTitle>{challengeData.title}</S.DetailTitle>
                     <S.DetailDate>
@@ -211,9 +217,7 @@ const ChallengeDetailPage = () => {
                         challengeData.cycleDetails
                           .map(
                             (detail: string) =>
-                              ChallengeCycleDetail_Weekly[
-                                detail as keyof typeof ChallengeCycleDetail_Weekly
-                              ]
+                              ChallengeCycleDetail_Weekly[detail as keyof typeof ChallengeCycleDetail_Weekly],
                           )
                           .join(', ')}
                       {challengeData.cycle === 'MONTHLY' &&
@@ -221,17 +225,15 @@ const ChallengeDetailPage = () => {
                         challengeData.cycleDetails
                           .map(
                             (detail: string) =>
-                              ChallengeCycleDetail_Monthly[
-                                detail as keyof typeof ChallengeCycleDetail_Monthly
-                              ] + '일'
+                              ChallengeCycleDetail_Monthly[detail as keyof typeof ChallengeCycleDetail_Monthly] + '일',
                           )
                           .join(', ')}
                     </S.DetailTermSquare>
                   </S.DetailSquareWrapper>
                 </Flex>
 
-                <Flex justifyContent="space-between" alignItems="flex-end">
-                  <Flex flexDirection="column" alignItems="flex-start">
+                <Flex alignItems='flex-end' justifyContent='space-between'>
+                  <Flex alignItems='flex-start' flexDirection='column'>
                     <S.SubTitle>블록 미리보기</S.SubTitle>
                     <S.ChallengeBlockPriview>
                       <h3>{challengeData.title}</h3>
@@ -244,9 +246,7 @@ const ChallengeDetailPage = () => {
                           challengeData.cycleDetails
                             .map(
                               (detail: string) =>
-                                ChallengeCycleDetail_Weekly[
-                                  detail as keyof typeof ChallengeCycleDetail_Weekly
-                                ]
+                                ChallengeCycleDetail_Weekly[detail as keyof typeof ChallengeCycleDetail_Weekly],
                             )
                             .join(', ')}
                         {challengeData.cycle === 'MONTHLY' &&
@@ -254,9 +254,8 @@ const ChallengeDetailPage = () => {
                           challengeData.cycleDetails
                             .map(
                               (detail: string) =>
-                                ChallengeCycleDetail_Monthly[
-                                  detail as keyof typeof ChallengeCycleDetail_Monthly
-                                ] + '일'
+                                ChallengeCycleDetail_Monthly[detail as keyof typeof ChallengeCycleDetail_Monthly] +
+                                '일',
                             )
                             .join(', ')}
                       </p>
@@ -266,7 +265,7 @@ const ChallengeDetailPage = () => {
                   <S.ChallengeCreatorContainer>
                     <S.DetaileSubTitle>챌린지 장</S.DetaileSubTitle>
                     <Flex
-                      alignItems="center"
+                      alignItems='center'
                       onClick={() => {
                         if (challengeData.authorId)
                           String(UserInfo?.data.memberId) === String(challengeData.authorId)
@@ -311,20 +310,20 @@ const ChallengeDetailPage = () => {
           {/* 챌린지 삭제 동의 모달창 */}
           {isModalOpen && isDelModalOpen && (
             <CustomModal
-              title="챌린지를 삭제하시겠습니까?"
-              subTitle="한 번 삭제된 챌린지는 되돌릴 수 없습니다."
-              onYesClick={handleYesClick}
+              subTitle='한 번 삭제된 챌린지는 되돌릴 수 없습니다.'
+              title='챌린지를 삭제하시겠습니까?'
               onNoClick={handleNoClick}
+              onYesClick={handleYesClick}
             />
           )}
 
           {/* 챌린지 탈퇴 동의 모달창 */}
           {isModalOpen && isWithdrawModalOpen && (
             <CustomModal
-              title="챌린지를 탈퇴하시겠습니까?"
-              subTitle="새로운 도전이 기다리고 있습니다!"
-              onYesClick={handleYesClick}
+              subTitle='새로운 도전이 기다리고 있습니다!'
+              title='챌린지를 탈퇴하시겠습니까?'
               onNoClick={handleNoClick}
+              onYesClick={handleYesClick}
             />
           )}
         </S.MainDashBoardContainer>

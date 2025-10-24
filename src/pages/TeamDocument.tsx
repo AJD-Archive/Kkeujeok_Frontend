@@ -1,38 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation, useBlocker } from 'react-router-dom';
-import Flex from '../components/Flex';
-import trash from '../img/delete2.png';
-import closebutton from '../img/closebutton.png';
-import deleteIcon from '../img/delete2.png';
-
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
+
+import { BlockNoteView } from '@blocknote/mantine';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import { deleteTeamDocument } from '../api/TeamDocumentApi';
+import CustomModal from '../components/CustomModal';
+import Flex from '../components/Flex';
+import useModal from '../hooks/useModal';
+import { useTeamDocument } from '../hooks/useTeamDocument';
+import closebutton from '../img/closebutton.png';
+import deleteIcon from '../img/delete2.png';
 import {
-  SideScreenContainer,
-  SideScreen,
-  StyledEditorWrapper,
+  DeleteIcon,
   ImgWrapper,
-  StatusBarContainer,
-  DateContainer,
-  TitleContainer,
-  D_Day,
-  StyledDatePicker,
   Input,
-  CategoryContainer,
   InputCategory,
   RowWrapper,
-  DeleteIcon,
+  SideScreen,
+  SideScreenContainer,
+  StyledEditorWrapper,
+  TitleContainer,
 } from '../styles/SidePageStyled';
 import * as S from '../styles/TeamDocumentStyled';
-import { useTeamDocument } from '../hooks/useTeamDocument';
-import { BlockNoteView } from '@blocknote/mantine';
-import useInfo from '../hooks/useInfo';
-import { deleteTeamDocument } from '../api/TeamDocumentApi';
-import useModal from '../hooks/useModal';
-import CustomModal from '../components/CustomModal';
 
 const TeamDocument = () => {
   const navigate = useNavigate();
@@ -49,8 +41,9 @@ const TeamDocument = () => {
   const { data, categories, handleInputChange, onChange, editor, SubmitData } = useTeamDocument(
     teamDashboardId,
     teamDocumentId,
-    progress
+    progress,
   );
+  console.log(SubmitData);
 
   console.log('전달받은 카테고리', categories);
 
@@ -87,44 +80,44 @@ const TeamDocument = () => {
   return (
     <SideScreenContainer onClick={toggleFunc}>
       <SideScreen
-        onClick={e => {
+        onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <ImgWrapper src={closebutton} alt="닫기 버튼" onClick={toggleFunc} />
+        <ImgWrapper alt='닫기 버튼' src={closebutton} onClick={toggleFunc} />
 
         {/* 제목 입력 */}
         <TitleContainer>
-          <Flex justifyContent="space-between">
+          <Flex justifyContent='space-between'>
             <Flex>
               <S.DocumentWriterImg>
-                <img src={data.picture} alt="프로필 사진" />
+                <img alt='프로필 사진' src={data.picture} />
               </S.DocumentWriterImg>
               <S.DocumnetWriter>{data.author}</S.DocumnetWriter>
             </Flex>
             {/* 팀 문서 삭제 */}
             <DeleteIcon onClick={submitDelTeamDocument}>
-              <img src={deleteIcon} alt="휴지통 아이콘" />
+              <img alt='휴지통 아이콘' src={deleteIcon} />
             </DeleteIcon>
           </Flex>
           <Input
-            type="text"
-            name="title"
-            placeholder="제목을 입력하세요."
+            name='title'
+            placeholder='제목을 입력하세요.'
+            type='text'
             value={data.title}
             onChange={handleInputChange}
           />
           <RowWrapper>
             <InputCategory
-              type="text"
-              name="category"
-              placeholder="대시보드 카테고리를 설정해주세요."
-              list="categoryList"
+              autoComplete='off'
+              list='categoryList'
+              name='category'
+              placeholder='대시보드 카테고리를 설정해주세요.'
+              type='text'
               value={data.category}
               onChange={handleInputChange}
-              autoComplete="off"
             />
-            <datalist id="categoryList">
+            <datalist id='categoryList'>
               {categories.map((category, index) => (
                 <option key={index} value={category} />
               ))}
@@ -135,15 +128,15 @@ const TeamDocument = () => {
 
         {/* 본문 작성 */}
         <StyledEditorWrapper>
-          <BlockNoteView editor={editor} onChange={onChange} theme="light" />
+          <BlockNoteView editor={editor} theme='light' onChange={onChange} />
         </StyledEditorWrapper>
 
         {isModalOpen && (
           <CustomModal
-            title="팀 문서를 삭제하시겠습니까?"
-            subTitle="한 번 삭제된 팀 문서는 되돌릴 수 없습니다."
-            onYesClick={handleYesClick}
+            subTitle='한 번 삭제된 팀 문서는 되돌릴 수 없습니다.'
+            title='팀 문서를 삭제하시겠습니까?'
             onNoClick={handleNoClick}
+            onYesClick={handleYesClick}
           />
         )}
       </SideScreen>

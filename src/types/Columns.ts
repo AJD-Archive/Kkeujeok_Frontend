@@ -1,5 +1,5 @@
 // types/Columns.ts
-import { BlockListResDto } from './PersonalBlock';
+import type { BlockListResDto } from './PersonalBlock';
 
 export type DashboardProps = {
   id: string;

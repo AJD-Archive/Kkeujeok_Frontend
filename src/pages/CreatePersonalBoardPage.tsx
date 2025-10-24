@@ -1,30 +1,27 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import Flex from '../components/Flex';
+import { Helmet } from 'react-helmet-async';
 import { FaLock } from 'react-icons/fa';
 import { FaEarthAsia } from 'react-icons/fa6';
+import { useLocation } from 'react-router-dom';
 
 import CustomModal from '../components/CustomModal';
+import Flex from '../components/Flex';
+import Navbar from '../components/Navbar';
 import usePersonalDashBoard from '../hooks/usePersonalDashBoard';
-
 import {
-  CreateDashBoardLayout,
   CreateDashBoardContainer,
-  Title,
-  SubTitle,
+  CreateDashBoardLayout,
   CreateDashBoardModal,
-  SubmitBtn,
   CreateForm,
-  Label,
+  DelBtn,
   Input,
-  Select,
+  Label,
   RowWrapper,
   Scope,
+  SubmitBtn,
+  SubTitle,
   Textarea,
-  DelBtn,
+  Title,
 } from '../styles/CreateBoardPageStyled';
-import { useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 
 const CreatePersonalBoard = () => {
   const location = useLocation();
@@ -60,11 +57,11 @@ const CreatePersonalBoard = () => {
               <RowWrapper>
                 <Label>제목</Label>
                 <Input
-                  type="text"
-                  name="title"
-                  placeholder="대시보드 제목을 설정해주세요."
-                  width="27.1rem"
+                  name='title'
+                  placeholder='대시보드 제목을 설정해주세요.'
+                  type='text'
                   value={formData.title}
+                  width='27.1rem'
                   onChange={handleChange}
                 />
               </RowWrapper>
@@ -72,11 +69,11 @@ const CreatePersonalBoard = () => {
               <RowWrapper>
                 <Label>설명</Label>
                 <Textarea
-                  name="description"
-                  placeholder="대시보드 설명을 설정해주세요."
-                  width="27.1rem"
                   maxLength={300}
+                  name='description'
+                  placeholder='대시보드 설명을 설정해주세요.'
                   value={formData.description}
+                  width='27.1rem'
                   onChange={handleChange}
                 />
               </RowWrapper>
@@ -86,16 +83,16 @@ const CreatePersonalBoard = () => {
                 <RowWrapper>
                   <Label>카테고리</Label>
                   <Input
-                    type="text"
-                    name="category"
-                    placeholder="대시보드 카테고리를 설정해주세요."
-                    width="20rem"
-                    list="categoryList"
+                    autoComplete='off'
+                    list='categoryList'
+                    name='category'
+                    placeholder='대시보드 카테고리를 설정해주세요.'
+                    type='text'
                     value={formData.category}
+                    width='20rem'
                     onChange={handleChange}
-                    autoComplete="off"
                   />
-                  <datalist id="categoryList">
+                  <datalist id='categoryList'>
                     {categoryList.map((category, index) => (
                       <option key={index} value={category} />
                     ))}
@@ -118,9 +115,7 @@ const CreatePersonalBoard = () => {
               </Flex>
             </CreateForm>
 
-            <SubmitBtn onClick={submitDashboard}>
-              대시보드 {dashboardId ? '수정' : '생성'}
-            </SubmitBtn>
+            <SubmitBtn onClick={submitDashboard}>대시보드 {dashboardId ? '수정' : '생성'}</SubmitBtn>
 
             {dashboardId && <DelBtn onClick={submitDelDashboard}>대시보드 삭제</DelBtn>}
           </CreateDashBoardModal>
@@ -129,20 +124,20 @@ const CreatePersonalBoard = () => {
         {/* 작성되지 않은 부분이 있으면 모달창으로 알림 */}
         {isModalOpen && isEmptyModalOpen && (
           <CustomModal
-            title="모든 칸을 작성해주세요."
-            subTitle="잠깐! 작성되지 않은 칸이 있습니다."
-            onYesClick={handleYesClick}
+            subTitle='잠깐! 작성되지 않은 칸이 있습니다.'
+            title='모든 칸을 작성해주세요.'
             onNoClick={handleNoClick}
+            onYesClick={handleYesClick}
           />
         )}
 
         {/* 삭제 동의 모달창 */}
         {isModalOpen && isDelModalOpen && (
           <CustomModal
-            title="대시보드를 삭제하시겠습니까?"
-            subTitle="한 번 삭제된 대시보드는 되돌릴 수 없습니다."
-            onYesClick={handleYesClick}
+            subTitle='한 번 삭제된 대시보드는 되돌릴 수 없습니다.'
+            title='대시보드를 삭제하시겠습니까?'
             onNoClick={handleNoClick}
+            onYesClick={handleYesClick}
           />
         )}
       </CreateDashBoardLayout>

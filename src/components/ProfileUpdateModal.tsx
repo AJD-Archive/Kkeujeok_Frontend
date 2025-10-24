@@ -1,14 +1,14 @@
-import { customStyles, Title, BtnUpdate, StyledModalUpdate } from '../styles/ModalStyled';
+import { useQuery } from '@tanstack/react-query';
+import { useAtom } from 'jotai';
+import { useState } from 'react';
+
+import { updateUserInfo } from '../api/MyPageApi';
+import { userInfoApi } from '../api/UserApi';
+import { descriptionAtom, nicknameAtom } from '../contexts/NickName';
+import closebutton from '../img/closebutton.png';
+import { BtnUpdate, customStyles, StyledModalUpdate, Title } from '../styles/ModalStyled';
 import * as S from '../styles/MyPageStyled';
 import Flex from './Flex';
-import { updateUserInfo } from '../api/MyPageApi';
-import { useState } from 'react';
-import { useAtom } from 'jotai';
-import { descriptionAtom, nicknameAtom } from '../contexts/NickName';
-import { useQuery } from '@tanstack/react-query';
-import { userInfoApi } from '../api/UserApi';
-import closebutton from '../img/closebutton.png';
-import { unreadCount } from '../contexts/sseAtom';
 
 type Props = {
   onModalVisibleFunc: () => void;
@@ -29,12 +29,7 @@ const ProfileUpdateModal = ({ onModalVisibleFunc, nickname, introduction }: Prop
   const onSubmitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (
-      newNickname.length >= 7 ||
-      newNickname === '' ||
-      newDescription.length > 20 ||
-      newDescription === ''
-    ) {
+    if (newNickname.length >= 7 || newNickname === '' || newDescription.length > 20 || newDescription === '') {
       return;
     }
 
@@ -71,40 +66,32 @@ const ProfileUpdateModal = ({ onModalVisibleFunc, nickname, introduction }: Prop
   };
 
   return (
-    <StyledModalUpdate isOpen={true} style={customStyles}>
+    <StyledModalUpdate isOpen style={customStyles}>
       <S.CloseButtonWrapper>
         <img src={closebutton} onClick={onModalVisibleFunc} />
       </S.CloseButtonWrapper>
-      <Flex flexDirection="column">
+      <Flex flexDirection='column'>
         <Title>내 정보수정</Title>
       </Flex>
       <S.EditContainer>
         <form onSubmit={onModalVisibleFunc}>
           <label>
             <div>닉네임</div>
-            <input
-              value={newNickname}
-              onChange={onNickNameHandler}
-              placeholder="닉네임을 입력해주세요"
-            />
+            <input placeholder='닉네임을 입력해주세요' value={newNickname} onChange={onNickNameHandler} />
             <p>{newNickname.length >= 7 && errMsg}</p>
             <p>{newNickname.length === 0 && errMsg}</p>
           </label>
 
           <label>
             <div>자기소개</div>
-            <input
-              value={newDescription}
-              onChange={onDescriptionHandler}
-              placeholder="자기소개를 입력해주세요"
-            />
+            <input placeholder='자기소개를 입력해주세요' value={newDescription} onChange={onDescriptionHandler} />
             <p>{newDescription.length >= 20 && descriptionErrMsg}</p>
             <p>{newDescription.length === 0 && descriptionErrMsg}</p>
           </label>
 
           <Flex>
             <BtnUpdate
-              onClick={e => {
+              onClick={(e) => {
                 onSubmitHandler(e);
               }}
             >

@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
-import theme from '../../styles/Theme/Theme';
+
 import rightArrowImg from '../../img/rightarrow.png';
+import theme from '../../styles/Theme/Theme';
 
 export const MainDashBoardLayout = styled.div`
   width: 100vw;

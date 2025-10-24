@@ -1,9 +1,8 @@
-import { useNavigate, Outlet } from 'react-router-dom';
-import Block from './Block';
-import * as S from '../styles/DashboardStyled';
 import { useAtom } from 'jotai';
+import { Outlet, useNavigate } from 'react-router-dom';
+
 import { visibleAtom } from '../contexts/sideScreenAtom';
-import SidePage from '../pages/SidePage';
+import * as S from '../styles/DashboardStyled';
 
 type Props = {
   backGroundColor?: string;
@@ -15,6 +14,7 @@ type Props = {
 const DashboardCard = ({ backGroundColor, highlightColor, progress, imgSrc }: Props) => {
   const navigate = useNavigate();
   const [visibleValue, _] = useAtom(visibleAtom);
+  console.log(visibleValue);
 
   const handleAddBtn = () => {
     console.log(progress);
@@ -28,7 +28,7 @@ const DashboardCard = ({ backGroundColor, highlightColor, progress, imgSrc }: Pr
           <span>{progress}</span>
         </S.StatusBarContainer>
         <S.AddButtonWrapper onClick={handleAddBtn}>
-          <img src={imgSrc} alt="블록 더하는 버튼" />
+          <img alt='블록 더하는 버튼' src={imgSrc} />
         </S.AddButtonWrapper>
       </header>
       <section>{/* <Block /> */}</section>

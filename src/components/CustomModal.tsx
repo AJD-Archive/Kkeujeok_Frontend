@@ -1,28 +1,18 @@
-import React from 'react';
-
 import ErrorIcon from '../img/error.png';
+import { BtnNo, BtnYes, customStyles, ErrorImg, StyledModal, SubTitle, Title } from '../styles/ModalStyled';
+import type { CustomModalProps } from '../types/CustomModal';
 import Flex from './Flex';
-import {
-  StyledModal,
-  customStyles,
-  ErrorImg,
-  SubTitle,
-  Title,
-  BtnYes,
-  BtnNo,
-} from '../styles/ModalStyled';
-import { CustomModalProps } from '../types/CustomModal';
 
 const CustomModal = ({ title, subTitle, onYesClick, onNoClick }: CustomModalProps) => {
   return (
     <StyledModal
-      isOpen={true}
+      isOpen
       shouldFocusAfterRender={false}
-      onRequestClose={onNoClick} // 기본적으로 No 버튼 클릭 시 모달 닫힘
       style={customStyles}
+      onRequestClose={onNoClick} // 기본적으로 No 버튼 클릭 시 모달 닫힘
     >
-      <ErrorImg src={ErrorIcon} alt="error_icon" />
-      <Flex flexDirection="column">
+      <ErrorImg alt='error_icon' src={ErrorIcon} />
+      <Flex flexDirection='column'>
         <SubTitle>{subTitle}</SubTitle>
         <Title>{title}</Title>
       </Flex>

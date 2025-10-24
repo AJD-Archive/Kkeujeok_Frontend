@@ -1,24 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
-import { getPersonalDashboard } from '../api/BoardApi';
-import {
-  deleteBlock,
-  restoreBlockFunc,
-  updateOrderBlock,
-  updatePersonalBlock,
-} from '../api/PersonalBlockApi';
-import DashBoardLayout from './DashBoardLayout';
-import Header from './Header';
-import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
-import NotStartedDashboard from './NotStartedDashboard';
-import InProgressDashboard from './InProgressDashboard';
-import CompletedDashboard from './CompletedDashboard';
 import { useState } from 'react';
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import * as S from '../styles/MainPageStyled';
-import DeleteButton from './DeleteButton';
-import { TItems, TItemStatus } from '../utils/columnsConfig';
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { Outlet, useLocation } from 'react-router-dom';
+
+import { getPersonalDashboard } from '../api/BoardApi';
+import { deleteBlock, restoreBlockFunc, updateOrderBlock, updatePersonalBlock } from '../api/PersonalBlockApi';
 import useItems from '../hooks/useItems';
-import { BlockListResDto } from '../types/PersonalBlock';
+import * as S from '../styles/MainPageStyled';
+import type { BlockListResDto } from '../types/PersonalBlock';
+import type { TItems, TItemStatus } from '../utils/columnsConfig';
+import CompletedDashboard from './CompletedDashboard';
+import DashBoardLayout from './DashBoardLayout';
+import DeleteButton from './DeleteButton';
+import Header from './Header';
+import InProgressDashboard from './InProgressDashboard';
+import NotStartedDashboard from './NotStartedDashboard';
 import Wrapper from './Wrapper';
 
 type PageState = {
@@ -33,6 +30,8 @@ const PersonalDashBoard = () => {
   const dashboardId = location.pathname.split('/')[2];
   const [todoPage, setTodoPage] = useState<number>(0);
   const [doingPage, setDoingPage] = useState<number>(0);
+  console.log(todoPage, doingPage);
+  console.log(setTodoPage, setDoingPage);
   const [page, setPage] = useState<PageState>({
     todo: 0,
     doing: 0,
@@ -71,19 +70,19 @@ const PersonalDashBoard = () => {
 
     // 페이지 상태 업데이트
     if (status === 'todo' && hasMoreNotStarted) {
-      setPage(prevPage => ({
+      setPage((prevPage) => ({
         ...prevPage,
         todo: prevPage.todo + 1,
       }));
     } else if (status === 'doing' && hasMoreInProgress) {
       // hasMoreDoing은 해당 상태에 대한 변수입니다.
-      setPage(prevPage => ({
+      setPage((prevPage) => ({
         ...prevPage,
         doing: prevPage.doing + 1,
       }));
     } else if (status === 'completed' && hasMoreCompleted) {
       // hasMoreCompleted은 해당 상태에 대한 변수입니다.
-      setPage(prevPage => ({
+      setPage((prevPage) => ({
         ...prevPage,
         completed: prevPage.completed + 1,
       }));
@@ -95,7 +94,7 @@ const PersonalDashBoard = () => {
     destinationKey: string,
     sourceKey: string,
     targetItem: BlockListResDto,
-    _items: TItems
+    _items: TItems,
   ) => {
     const blockId = targetItem.blockId;
 
@@ -104,9 +103,9 @@ const PersonalDashBoard = () => {
       if (destinationKey !== 'delete') {
         const orderArray = {
           dashboardId: dashboardId,
-          notStartedList: _items.todo.map(item => item.blockId),
-          inProgressList: _items.doing.map(item => item.blockId),
-          completedList: _items.completed.map(item => item.blockId),
+          notStartedList: _items.todo.map((item) => item.blockId),
+          inProgressList: _items.doing.map((item) => item.blockId),
+          completedList: _items.completed.map((item) => item.blockId),
         };
         updatePersonalBlock(blockId, status(destinationKey), orderArray); // 블록 상태 업데이트
       } else {
@@ -122,9 +121,9 @@ const PersonalDashBoard = () => {
   const updateOrder = (_items: TItems) => {
     const orderArray = {
       dashboardId: dashboardId,
-      notStartedList: _items.todo.map(item => item.blockId),
-      inProgressList: _items.doing.map(item => item.blockId),
-      completedList: _items.completed.map(item => item.blockId),
+      notStartedList: _items.todo.map((item) => item.blockId),
+      inProgressList: _items.doing.map((item) => item.blockId),
+      completedList: _items.completed.map((item) => item.blockId),
     };
     updateOrderBlock(orderArray);
   };
@@ -161,32 +160,28 @@ const PersonalDashBoard = () => {
     }
     //시작점 상태에서 종착지가 시작점 상태와는 다른 상태일때 그 아이템 개수 -1
     if (source.droppableId === 'todo' && destination.droppableId !== 'todo')
-      setBlockTotal(prev => ({
+      setBlockTotal((prev) => ({
         ...prev,
         todo: blockTotal.todo - 1,
-        [destination.droppableId]:
-          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+        [destination.droppableId]: blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
     else if (source.droppableId === 'doing' && destination.droppableId !== 'doing')
-      setBlockTotal(prev => ({
+      setBlockTotal((prev) => ({
         ...prev,
         doing: blockTotal.doing - 1,
-        [destination.droppableId]:
-          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+        [destination.droppableId]: blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
     else if (source.droppableId === 'completed' && destination.droppableId !== 'completed')
-      setBlockTotal(prev => ({
+      setBlockTotal((prev) => ({
         ...prev,
         completed: blockTotal.completed - 1,
-        [destination.droppableId]:
-          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+        [destination.droppableId]: blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
     else if (source.droppableId === 'delete' && destination.droppableId !== 'delete')
-      setBlockTotal(prev => ({
+      setBlockTotal((prev) => ({
         ...prev,
         delete: blockTotal.completed - 1,
-        [destination.droppableId]:
-          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+        [destination.droppableId]: blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
   };
 
@@ -194,33 +189,33 @@ const PersonalDashBoard = () => {
     <DashBoardLayout>
       <Wrapper isWrapperTrue={isWrapperTrue}>
         <Header
+          dashboardType
+          blockTotal={blockTotal}
           mainTitle={PersonalDashboardInfo?.title || ''}
           subTitle={PersonalDashboardInfo?.description || ''}
-          dashboardType={true}
-          blockTotal={blockTotal}
         />
         <DragDropContext onDragEnd={onDragEnd}>
           <S.CardContainer>
             <NotStartedDashboard
+              dashboardId={dashboardId}
+              id='todo'
               list={items.todo || []}
-              id="todo"
-              dashboardId={dashboardId}
               onLoadMore={() => handleLoadMore('todo')}
-            ></NotStartedDashboard>
+            />
             <InProgressDashboard
+              dashboardId={dashboardId}
+              id='doing'
               list={items.doing || []}
-              id="doing"
-              dashboardId={dashboardId}
               onLoadMore={() => handleLoadMore('doing')}
-            ></InProgressDashboard>
+            />
             <CompletedDashboard
-              list={items.completed || []}
-              id="completed"
               dashboardId={dashboardId}
+              id='completed'
+              list={items.completed || []}
               onLoadMore={() => handleLoadMore('completed')}
-            ></CompletedDashboard>
+            />
           </S.CardContainer>
-          <DeleteButton key="delete" id="delete" removeValue={true} list={items.delete || []} />
+          <DeleteButton key='delete' removeValue id='delete' list={items.delete || []} />
         </DragDropContext>
         <Outlet />
       </Wrapper>

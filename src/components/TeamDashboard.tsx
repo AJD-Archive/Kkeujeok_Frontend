@@ -1,25 +1,21 @@
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 import { Outlet, useLocation } from 'react-router-dom';
-import { getPersonalBlock } from '../api/BoardApi';
-import {
-  deleteBlock,
-  getDeleteBlock,
-  updateOrderBlock,
-  updatePersonalBlock,
-} from '../api/PersonalBlockApi';
+
+import { deleteBlock, updateOrderBlock, updatePersonalBlock } from '../api/PersonalBlockApi';
 import { getTeamDashboard } from '../api/TeamDashBoardApi';
-import DashBoardLayout from './DashBoardLayout';
-import Header from './Header';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import NotStartedDashboard from './NotStartedDashboard';
-import InProgressDashboard from './InProgressDashboard';
-import CompletedDashboard from './CompletedDashboard';
-import DeleteButton from './DeleteButton';
-import * as S from '../styles/MainPageStyled';
 import useItems from '../hooks/useItems';
-import { BlockListResDto } from '../types/PersonalBlock';
-import { TItems, TItemStatus } from '../utils/columnsConfig';
+import * as S from '../styles/MainPageStyled';
+import type { BlockListResDto } from '../types/PersonalBlock';
+import type { TItems, TItemStatus } from '../utils/columnsConfig';
+import CompletedDashboard from './CompletedDashboard';
+import DashBoardLayout from './DashBoardLayout';
+import DeleteButton from './DeleteButton';
+import Header from './Header';
+import InProgressDashboard from './InProgressDashboard';
+import NotStartedDashboard from './NotStartedDashboard';
 
 type PageState = {
   todo: number; // 할 일 페이지 번호
@@ -31,7 +27,7 @@ const TeamDashBoard = () => {
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[2];
   // const [page, setPage] = useState<number>(0);
-  const [todoPage, setTodoPage] = useState<number>(0);
+  // const [todoPage, setTodoPage] = useState<number>(0);
   const [page, setPage] = useState<PageState>({
     todo: 0,
     doing: 0,
@@ -71,19 +67,19 @@ const TeamDashBoard = () => {
 
     // 페이지 상태 업데이트
     if (status === 'todo' && hasMoreNotStarted) {
-      setPage(prevPage => ({
+      setPage((prevPage) => ({
         ...prevPage,
         todo: prevPage.todo + 1,
       }));
     } else if (status === 'doing' && hasMoreInProgress) {
       // hasMoreDoing은 해당 상태에 대한 변수입니다.
-      setPage(prevPage => ({
+      setPage((prevPage) => ({
         ...prevPage,
         doing: prevPage.doing + 1,
       }));
     } else if (status === 'completed' && hasMoreCompleted) {
       // hasMoreCompleted은 해당 상태에 대한 변수입니다.
-      setPage(prevPage => ({
+      setPage((prevPage) => ({
         ...prevPage,
         completed: prevPage.completed + 1,
       }));
@@ -98,9 +94,9 @@ const TeamDashBoard = () => {
       if (destinationKey !== 'delete') {
         const orderArray = {
           dashboardId: dashboardId,
-          notStartedList: _items.todo.map(item => item.blockId),
-          inProgressList: _items.doing.map(item => item.blockId),
-          completedList: _items.completed.map(item => item.blockId),
+          notStartedList: _items.todo.map((item) => item.blockId),
+          inProgressList: _items.doing.map((item) => item.blockId),
+          completedList: _items.completed.map((item) => item.blockId),
         };
         updatePersonalBlock(blockId, status(destinationKey), orderArray); // 블록 상태 업데이트
       } else {
@@ -114,9 +110,9 @@ const TeamDashBoard = () => {
   const updateOrder = (_items: TItems) => {
     const orderArray = {
       dashboardId: dashboardId,
-      notStartedList: _items.todo.map(item => item.blockId),
-      inProgressList: _items.doing.map(item => item.blockId),
-      completedList: _items.completed.map(item => item.blockId),
+      notStartedList: _items.todo.map((item) => item.blockId),
+      inProgressList: _items.doing.map((item) => item.blockId),
+      completedList: _items.completed.map((item) => item.blockId),
     };
     updateOrderBlock(orderArray);
   };
@@ -148,69 +144,63 @@ const TeamDashBoard = () => {
     }
     //시작점 상태에서 종착지가 시작점 상태와는 다른 상태일때 그 아이템 개수 -1
     if (source.droppableId === 'todo' && destination.droppableId !== 'todo')
-      setBlockTotal(prev => ({
+      setBlockTotal((prev) => ({
         ...prev,
         todo: blockTotal.todo - 1,
-        [destination.droppableId]:
-          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+        [destination.droppableId]: blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
     else if (source.droppableId === 'doing' && destination.droppableId !== 'doing')
-      setBlockTotal(prev => ({
+      setBlockTotal((prev) => ({
         ...prev,
         doing: blockTotal.doing - 1,
-        [destination.droppableId]:
-          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+        [destination.droppableId]: blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
     else if (source.droppableId === 'completed' && destination.droppableId !== 'completed')
-      setBlockTotal(prev => ({
+      setBlockTotal((prev) => ({
         ...prev,
         completed: blockTotal.completed - 1,
-        [destination.droppableId]:
-          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+        [destination.droppableId]: blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
     else if (source.droppableId === 'delete' && destination.droppableId !== 'delete')
-      setBlockTotal(prev => ({
+      setBlockTotal((prev) => ({
         ...prev,
         delete: blockTotal.completed - 1,
-        [destination.droppableId]:
-          blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
+        [destination.droppableId]: blockTotal[destination.droppableId as keyof typeof blockTotal] + 1,
       }));
   };
   return (
-    <>
-      <DashBoardLayout>
-        <Header
-          mainTitle={TeamDashboardInfo?.title || ''}
-          subTitle={TeamDashboardInfo?.description || ''}
-          dashboardType={false}
-          blockTotal={blockTotal}
-        />
-        <DragDropContext onDragEnd={onDragEnd}>
-          <S.CardContainer>
-            <NotStartedDashboard
-              list={items.todo || []}
-              id="todo"
-              dashboardId={dashboardId}
-              onLoadMore={() => handleLoadMore('todo')}
-            ></NotStartedDashboard>
-            <InProgressDashboard
-              list={items.doing || []}
-              id="doing"
-              dashboardId={dashboardId}
-              onLoadMore={() => handleLoadMore('doing')}
-            ></InProgressDashboard>
-            <CompletedDashboard
-              list={items.completed || []}
-              id="completed"
-              dashboardId={dashboardId}
-              onLoadMore={() => handleLoadMore('completed')}
-            ></CompletedDashboard>
-          </S.CardContainer>
-          <DeleteButton key="delete" id="delete" removeValue={true} list={items.delete || []} />
-        </DragDropContext>
-        <Outlet />
-      </DashBoardLayout>
-    </>
+    <DashBoardLayout>
+      <Header
+        blockTotal={blockTotal}
+        dashboardType={false}
+        mainTitle={TeamDashboardInfo?.title || ''}
+        subTitle={TeamDashboardInfo?.description || ''}
+      />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <S.CardContainer>
+          <NotStartedDashboard
+            dashboardId={dashboardId}
+            id='todo'
+            list={items.todo || []}
+            onLoadMore={() => handleLoadMore('todo')}
+          />
+          <InProgressDashboard
+            dashboardId={dashboardId}
+            id='doing'
+            list={items.doing || []}
+            onLoadMore={() => handleLoadMore('doing')}
+          />
+          <CompletedDashboard
+            dashboardId={dashboardId}
+            id='completed'
+            list={items.completed || []}
+            onLoadMore={() => handleLoadMore('completed')}
+          />
+        </S.CardContainer>
+        <DeleteButton key='delete' removeValue id='delete' list={items.delete || []} />
+      </DragDropContext>
+      <Outlet />
+    </DashBoardLayout>
   );
 };
 export default TeamDashBoard;

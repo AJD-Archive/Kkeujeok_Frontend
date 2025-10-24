@@ -1,17 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Flex from '../components/Flex';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 
+import Flex from '../components/Flex';
+import Navbar from '../components/Navbar';
 import personalDashboardIcon from '../img/personalDashboardIcon.png';
 import teamDashboardIcon from '../img/teamDashboardIcon.png';
-
 import {
-  CreateDashBoardLayout,
-  CreateDashBoardContainer,
   BoardTitle,
   CreateBoardWrapper,
+  CreateDashBoardContainer,
+  CreateDashBoardLayout,
   Explanation,
   LinksContainer,
   PersonalIconImgWrapper,
@@ -33,18 +31,18 @@ const CreateBoard = () => {
           <SubTitle>생성할 대시보드 종류를 선택해주세요.</SubTitle>
 
           <LinksContainer>
-            <Flex justifyContent="center" alignItems="center">
-              <Link to="/createPersonalBoard">
+            <Flex alignItems='center' justifyContent='center'>
+              <Link to='/createPersonalBoard'>
                 <CreateBoardWrapper>
                   <Flex
-                    height="13rem"
-                    padding="3rem 4rem 2rem 4rem"
-                    flexDirection="column"
-                    justifyContent="center"
-                    alignItems="flex-start"
+                    alignItems='flex-start'
+                    flexDirection='column'
+                    height='13rem'
+                    justifyContent='center'
+                    padding='3rem 4rem 2rem 4rem'
                   >
                     <PersonalIconImgWrapper>
-                      <img src={personalDashboardIcon} alt="설정 이미지" />
+                      <img alt='설정 이미지' src={personalDashboardIcon} />
                     </PersonalIconImgWrapper>
                     <Explanation>
                       정신 없는 하루도, <br />
@@ -55,17 +53,17 @@ const CreateBoard = () => {
                 </CreateBoardWrapper>
               </Link>
 
-              <Link to="/createTeamBoard">
+              <Link to='/createTeamBoard'>
                 <CreateBoardWrapper>
                   <Flex
-                    height="13rem"
-                    padding="3rem 4rem 2rem 4rem"
-                    flexDirection="column"
-                    justifyContent="center"
-                    alignItems="flex-start"
+                    alignItems='flex-start'
+                    flexDirection='column'
+                    height='13rem'
+                    justifyContent='center'
+                    padding='3rem 4rem 2rem 4rem'
                   >
                     <TeamIconImgWrapper>
-                      <img src={teamDashboardIcon} alt="설정 이미지" />
+                      <img alt='설정 이미지' src={teamDashboardIcon} />
                     </TeamIconImgWrapper>
                     <Explanation>
                       협업도 문제 없어요. <br />

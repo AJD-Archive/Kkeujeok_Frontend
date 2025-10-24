@@ -3,8 +3,9 @@
  */
 
 import { useEffect, useState } from 'react';
+
 import { searchTeamDashBoard } from '../api/BoardApi';
-import { TeamDashboardResponse } from '../types/TeamDashBoard';
+import type { TeamDashboardResponse } from '../types/TeamDashBoard';
 
 const useTeamDashBoard = () => {
   const [teamDashboard, setTeamDashboard] = useState<TeamDashboardResponse>();

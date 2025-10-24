@@ -1,17 +1,18 @@
+import Pagination from '@mui/material/Pagination';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Flex from '../components/Flex';
+import { Helmet } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
+
+import { fetchFriendBlockData, friendProfile } from '../api/MyPageApi';
 import ChallengeBlock from '../components/ChallengeBlock';
+import Flex from '../components/Flex';
+import Navbar from '../components/Navbar';
 import Profile from '../components/Profile';
 import googleicon from '../img/googleicon.png';
 import kakaologo from '../img/kakaologo.png';
 import * as S from '../styles/MyPageStyled';
-import { ChallengeList, PersonalDashboardList } from '../types/MyPage';
-import { fetchFriendBlockData, friendProfile } from '../api/MyPageApi';
-import { useQuery } from '@tanstack/react-query';
-import Pagination from '@mui/material/Pagination';
-import { Helmet } from 'react-helmet-async';
+import type { ChallengeList, PersonalDashboardList } from '../types/MyPage';
 
 const FriendPage = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const FriendPage = () => {
 
   //* 페이지네이션 변경 시 동작하는 함수
   const onChangePageNation = async (event: React.ChangeEvent<unknown>, page: number) => {
+    console.log(event);
     setPageNumber(page);
     const fetchData = await fetchFriendBlockData(page - 1, friendId);
     if (teamBool === 'personal') setPersonalBlockData(fetchData?.personalDashboardList);
@@ -61,6 +63,8 @@ const FriendPage = () => {
 
   //* 처음 렌더링 시 팀 탭 데이터 호출
   useEffect(() => {
+    // Todo: 해당 라인 수정해야함.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPersonalBlockData(friendBlock?.personalDashboardList);
     setChallengeBlockData(friendBlock?.challengeList);
   }, [friendBlock]);
@@ -83,7 +87,7 @@ const FriendPage = () => {
                       navigate(`/personal/${dashboardId}`, { state: { wrapper: true } });
                     }}
                   >
-                    <ChallengeBlock title={title} description={description} />
+                    <ChallengeBlock description={description} title={title} />
                   </S.TeamBlockWrapper>
                 );
               })}
@@ -91,9 +95,9 @@ const FriendPage = () => {
 
             <S.PagenateBox>
               <Pagination
-                page={pageNumber}
                 count={personalBlockData?.pageInfoResDto.totalPages}
                 defaultPage={0}
+                page={pageNumber}
                 onChange={onChangePageNation}
               />
             </S.PagenateBox>
@@ -111,6 +115,7 @@ const FriendPage = () => {
             <S.GridContainer>
               {challengeBlockData?.challengeInfoResDto.map((item, idx) => {
                 const { title, contents, cycle, challengeId } = item;
+                console.log(cycle);
 
                 return (
                   <div
@@ -119,16 +124,16 @@ const FriendPage = () => {
                       navigate(`/challenge/${challengeId}`, { state: { title: title } });
                     }}
                   >
-                    <ChallengeBlock key={idx} title={title} description={contents} />
+                    <ChallengeBlock key={idx} description={contents} title={title} />
                   </div>
                 );
               })}
             </S.GridContainer>
             <S.PagenateBox>
               <Pagination
-                page={pageNumber}
                 count={challengeBlockData?.pageInfoResDto.totalPages}
                 defaultPage={0}
+                page={pageNumber}
                 onChange={onChangePageNation}
               />
             </S.PagenateBox>
@@ -143,38 +148,29 @@ const FriendPage = () => {
       <Helmet>
         <title>끄적끄적 | 마이페이지</title>
       </Helmet>
-      <Flex alignItems="flex-start">
+      <Flex alignItems='flex-start'>
         <Navbar />
         <S.MyPageLayout>
-          <Flex alignItems="center" justifyContent="space-between">
-            <Flex
-              width="100%"
-              alignItems="center"
-              margin="0 0 2.125rem 0"
-              justifyContent="space-between"
-            >
-              <Flex justifyContent="space-between" gap="29px">
-                <Profile width="8.875rem" height="8.875rem" profile={data?.data.picture} />
+          <Flex alignItems='center' justifyContent='space-between'>
+            <Flex alignItems='center' justifyContent='space-between' margin='0 0 2.125rem 0' width='100%'>
+              <Flex gap='29px' justifyContent='space-between'>
+                <Profile height='8.875rem' profile={data?.data.picture} width='8.875rem' />
                 <Flex
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems="flex-start"
-                  height="4rem"
-                  gap="0.45rem"
+                  alignItems='flex-start'
+                  flexDirection='column'
+                  gap='0.45rem'
+                  height='4rem'
+                  justifyContent='center'
                 >
-                  <Flex alignItems="center" gap="0.5625rem">
+                  <Flex alignItems='center' gap='0.5625rem'>
                     <S.GoogleImageIcon
-                      src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
                       alt={data?.data.socialType === 'KAKAO' ? '카카오 아이콘' : '구글 아이콘'}
+                      src={data?.data.socialType === 'KAKAO' ? kakaologo : googleicon}
                     />
                     <S.MainText>{data?.data.name}</S.MainText>
                   </Flex>
                   <S.CaptionText>
-                    {data?.data.introduction ? (
-                      data?.data.introduction
-                    ) : (
-                      <span>자기 소개를 작성해주세요</span>
-                    )}
+                    {data?.data.introduction ? data?.data.introduction : <span>자기 소개를 작성해주세요</span>}
                   </S.CaptionText>
                 </Flex>
               </Flex>
@@ -199,7 +195,7 @@ export default FriendPage;
 
 const NoContentComponent = (
   <S.NoContentComponent>
-    <Flex height={500} alignItems="center" justifyContent="center">
+    <Flex alignItems='center' height={500} justifyContent='center'>
       참여 내역이 없습니다.
     </Flex>
   </S.NoContentComponent>

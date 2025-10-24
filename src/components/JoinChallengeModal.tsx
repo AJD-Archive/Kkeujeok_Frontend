@@ -1,22 +1,12 @@
+import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 
-import ErrorIcon from '../img/error.png';
-import Flex from './Flex';
-import {
-  StyledModal,
-  customStyles,
-  ErrorImg,
-  SubTitle,
-  Title,
-  BtnYes,
-  BtnNo,
-} from '../styles/ModalStyled';
-import * as S from '../styles/ChallengeStyled';
 import { searchPersonalDashBoard } from '../api/BoardApi';
-import { useQuery } from '@tanstack/react-query';
-import { DashboardItem } from '../types/PersonalDashBoard';
 import { joinChallenge } from '../api/ChallengeApi';
-import { useNavigate } from 'react-router-dom';
+import * as S from '../styles/ChallengeStyled';
+import { BtnNo, BtnYes, customStyles, StyledModal, SubTitle, Title } from '../styles/ModalStyled';
+import type { DashboardItem } from '../types/PersonalDashBoard';
+import Flex from './Flex';
 
 export interface CustomModalProps {
   challengeId: string;
@@ -34,12 +24,11 @@ const JoinChallengeModal = ({ challengeId, onNoClick, fetchedData }: CustomModal
 
   // * 데이터가 로드되면 첫 번째 대시보드 ID를 기본값으로 설정
   useEffect(() => {
-    if (
-      data?.data.personalDashboardListResDto &&
-      data.data.personalDashboardListResDto.length > 0
-    ) {
+    if (data?.data.personalDashboardListResDto && data.data.personalDashboardListResDto.length > 0) {
       const firstDashboardId = data.data.personalDashboardListResDto[0].dashboardId;
       if (firstDashboardId !== null && firstDashboardId !== undefined) {
+        // Todo: 해당 라인 수정해야함.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectDashboard(String(firstDashboardId)); // 첫 번째 값을 기본 선택값으로 설정
       }
     }
@@ -62,9 +51,9 @@ const JoinChallengeModal = ({ challengeId, onNoClick, fetchedData }: CustomModal
   };
 
   return (
-    <StyledModal isOpen={true} shouldFocusAfterRender={false} style={customStyles}>
+    <StyledModal isOpen shouldFocusAfterRender={false} style={customStyles}>
       {/* <ErrorImg src={ErrorIcon} alt="error_icon" /> */}
-      <Flex flexDirection="column">
+      <Flex flexDirection='column'>
         <Title>챌린지 참여하기</Title>
         <SubTitle
           style={{
@@ -74,18 +63,13 @@ const JoinChallengeModal = ({ challengeId, onNoClick, fetchedData }: CustomModal
           챌린지를 추가할 대시보드를 선택해주세요.
         </SubTitle>
       </Flex>
-      {data?.data.personalDashboardListResDto &&
-      data.data.personalDashboardListResDto.length > 0 ? (
+      {data?.data.personalDashboardListResDto && data.data.personalDashboardListResDto.length > 0 ? (
         <>
           <S.JoinSelect onChange={handleSelectChange}>
             {data?.data.personalDashboardListResDto?.map((item: DashboardItem) => (
               <option
                 key={item.dashboardId}
-                value={
-                  item.dashboardId !== null && item.dashboardId !== undefined
-                    ? item.dashboardId
-                    : ''
-                }
+                value={item.dashboardId !== null && item.dashboardId !== undefined ? item.dashboardId : ''}
               >
                 {item.title}
               </option>
@@ -103,7 +87,7 @@ const JoinChallengeModal = ({ challengeId, onNoClick, fetchedData }: CustomModal
             참여할 수 있는 대시보드가 없어요. <br />
             개인 대시보드를 생성하고 다시 시도해주세요!
           </S.ErrorMessage>
-          <BtnYes onClick={onNoClick} style={{ margin: 0 }}>
+          <BtnYes style={{ margin: 0 }} onClick={onNoClick}>
             취소
           </BtnYes>
         </>

@@ -58,7 +58,8 @@ const ChallengeCommunityPage = () => {
 
     if (response) {
       // console.log('이만큼 받아옴!', response);
-      setChallenges(response.challengeInfoResDto);
+      // setChallenges(response.challengeInfoResDto);
+      setChallenges(response.challengeSummaries);
       setPageInfo(response.pageInfoResDto);
     }
   };

@@ -35,7 +35,7 @@ export interface PageInfoResDto {
 
 // * 최종 응답 타입
 export interface ChallengeResponse {
-  challengeInfoResDto: Challenge[];
+  challengeSummaries: Challenge[];
   pageInfoResDto: PageInfoResDto;
 }
 

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { FollowersListData } from '../types/FriendType';
+
 import {
   deleteFollow,
   getFollowersList,
@@ -7,8 +7,8 @@ import {
   getSearchFriendsList,
   postFollow,
 } from '../api/FriendApi';
+import type { FollowersListData } from '../types/FriendType';
 import { customErrToast } from '../utils/customErrorToast';
-import { axiosInstance } from '../utils/apiConfig';
 
 export const useFollowersList = (page: number, size: number) => {
   return useQuery<FollowersListData | null>({

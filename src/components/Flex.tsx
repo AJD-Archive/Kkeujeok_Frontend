@@ -1,5 +1,4 @@
-import { CSSProperties, ComponentPropsWithoutRef, ReactNode } from 'react';
-
+import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
 import styled from 'styled-components';
 
 interface FlexProps extends ComponentPropsWithoutRef<'div'> {
@@ -46,16 +45,16 @@ export default function Flex({
 }: FlexProps) {
   return (
     <StyledFlex
-      flexDirection={flexDirection}
-      justifyContent={justifyContent}
       alignItems={alignItems}
-      gap={gap}
-      width={width}
-      height={height}
+      flexDirection={flexDirection}
       flexGrow={flexGrow}
+      flexWrap={flexWrap}
+      gap={gap}
+      height={height}
+      justifyContent={justifyContent}
       margin={margin}
       padding={padding}
-      flexWrap={flexWrap}
+      width={width}
       {...rest}
     >
       {children}

@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+
 import theme from './Theme/Theme';
 
 export const FolderEntireContainer = styled.div`
@@ -54,9 +55,8 @@ export const Category = styled.p<{ isSelected: boolean }>`
   cursor: pointer;
 
   /* 카테고리 선택에 맞게 다른 스타일 적용 */
-  background: ${props =>
-    props.isSelected ? `${theme.color.gradation}` : `${theme.color.stroke2}`};
-  color: ${props => (props.isSelected ? `${theme.color.white}` : `${theme.color.gray}`)};
+  background: ${(props) => (props.isSelected ? `${theme.color.gradation}` : `${theme.color.stroke2}`)};
+  color: ${(props) => (props.isSelected ? `${theme.color.white}` : `${theme.color.gray}`)};
 
   &:hover {
     background-color: ${theme.color.lightGray};

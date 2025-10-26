@@ -1,11 +1,10 @@
+import { Link, useLocation } from 'react-router-dom';
+
 import Graph from '../components/Graph';
-import Flex from './Flex';
 import setting from '../img/setting.png';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as S from '../styles/HeaderStyled';
-import { useQuery } from '@tanstack/react-query';
-import { getPersonalDashboard } from '../api/BoardApi';
-import { TPages } from '../utils/columnsConfig';
+import type { TPages } from '../utils/columnsConfig';
+import Flex from './Flex';
 
 type Props = {
   mainTitle?: string;
@@ -15,7 +14,6 @@ type Props = {
 };
 
 const Header = ({ mainTitle, subTitle, dashboardType, blockTotal }: Props) => {
-  const navigate = useNavigate();
   const location = useLocation();
   const dashboardId = location.pathname.split('/')[2];
 
@@ -24,25 +22,25 @@ const Header = ({ mainTitle, subTitle, dashboardType, blockTotal }: Props) => {
   // const teamLocationUrl = location.pathname.includes('teamdocument') ?? true;
   return (
     <>
-      <Flex justifyContent="space-between" gap={100} margin="0 0 0.875rem 0">
+      <Flex gap={100} justifyContent='space-between' margin='0 0 0.875rem 0'>
         <S.HeaderContentContainer>
-          <Flex alignItems="flex-start">
+          <Flex alignItems='flex-start'>
             {/* {!dashboardType && (
               <S.LeftArrowWrapper>
                 <img src={leftarrow} onClick={handleBackClick} />
               </S.LeftArrowWrapper>
             )} */}
             <div>
-              <Flex margin="0px 0px 6px 0px">
+              <Flex margin='0px 0px 6px 0px'>
                 <S.TitleWrapper>{mainTitle}</S.TitleWrapper>
                 <S.SettingImgWrapper>
                   {dashboardType ? (
                     <Link to={`/createPersonalBoard/${dashboardId}`}>
-                      <img src={setting} alt="설정 이미지" />
+                      <img alt='설정 이미지' src={setting} />
                     </Link>
                   ) : (
                     <Link to={`/createTeamBoard/${dashboardId}`}>
-                      <img src={setting} alt="설정 이미지" />
+                      <img alt='설정 이미지' src={setting} />
                     </Link>
                   )}
                 </S.SettingImgWrapper>
@@ -60,7 +58,7 @@ const Header = ({ mainTitle, subTitle, dashboardType, blockTotal }: Props) => {
           )}
         </Flex>
       </Flex>
-      <hr></hr>
+      <hr />
     </>
   );
 };

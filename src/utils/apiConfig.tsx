@@ -9,7 +9,7 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-  config => {
+  (config) => {
     const accessToken = localStorage.getItem('accessToken');
 
     if (accessToken) {
@@ -18,16 +18,16 @@ axiosInstance.interceptors.request.use(
 
     return config;
   },
-  error => {
+  (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 axiosInstance.interceptors.response.use(
-  response => {
+  (response) => {
     return response;
   },
-  async error => {
+  async (error) => {
     if (error.response.status === 401 && localStorage.getItem('refreshToken')) {
       try {
         const refreshToken = localStorage.getItem('refreshToken');
@@ -51,5 +51,5 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );

@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+
 import Flex from '../components/Flex';
 import * as S from '../styles/TeamDocumentStyled';
+import type { TeamDocument } from '../types/TeamDocumentType';
 
 type Props = {
   // documentId: string | undefined;
@@ -21,7 +23,7 @@ const DocumentCard = ({ document }: Props) => {
           <S.DocumentTitle>{document.title}</S.DocumentTitle>
           <Flex>
             <S.DocumentWriterImg>
-              <img src={document.picture} alt="프로필 사진" />
+              <img alt='프로필 사진' src={document.picture} />
             </S.DocumentWriterImg>
             <S.DocumnetWriter>{document.author}</S.DocumnetWriter>
           </Flex>

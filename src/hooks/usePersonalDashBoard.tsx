@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  createDashBoard,
-  deletePersonalDashboard,
-  getPersonalDashboard,
-  patchDashBoard,
-} from '../api/BoardApi';
-import {
+
+import { createDashBoard, deletePersonalDashboard, getPersonalDashboard, patchDashBoard } from '../api/BoardApi';
+import { getCategories, searchPersonalDashBoard } from '../api/BoardApi';
+import type {
   DashboardItem,
   // PersonalDashBoard,
   PersonalSearchDashBoard,
 } from '../types/PersonalDashBoard';
-import { searchPersonalDashBoard, getCategories } from '../api/BoardApi';
 import useModal from './useModal';
 
 /*
@@ -47,21 +43,21 @@ const usePersonalDashBoard = (dashboardId: string | null) => {
   };
 
   useEffect(() => {
+    // Todo: 해당 라인 수정해야함.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
   }, [dashboardId]);
 
   // input 데이터 설정 함수 (제목, 설명, 카테고리 - 직접 입력)
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
 
-    setFormData(prevState => ({ ...prevState, [name]: value }));
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   // 공개범위 설정 함수 (전체 공개 / 나만 보기)
   const handleScopeToggle = () => {
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       isPublic: !prevState.isPublic,
     }));
@@ -69,7 +65,7 @@ const usePersonalDashBoard = (dashboardId: string | null) => {
 
   // 제출시 빈 칸이 있나 확인하는 함수 (있다면 true)
   const validateFormData = (formData: DashboardItem): boolean => {
-    return Object.values(formData).some(value => value === '');
+    return Object.values(formData).some((value) => value === '');
   };
 
   // 대시보드 생성(제출) 함수

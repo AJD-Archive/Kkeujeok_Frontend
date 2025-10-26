@@ -1,5 +1,5 @@
 // * 팀 문서 타입
-interface TeamDocument {
+export interface TeamDocument {
   author?: string;
   picture?: string;
   title?: string;
@@ -10,14 +10,14 @@ interface TeamDocument {
 }
 
 // * 페이지 정보 타입
-interface PageInfoResDto {
+export interface PageInfoResDto {
   currentPage: number;
   totalPages: number;
   totalItems: number;
 }
 
 // * 최종 응답 타입
-interface TeamDocumentResponse {
+export interface TeamDocumentResponse {
   teamDocuments: TeamDocument[];
   pageInfoResDto: PageInfoResDto;
 }

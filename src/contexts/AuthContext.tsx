@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+
 import { axiosInstance } from '../utils/apiConfig';
 
 // 유저 정보 타입 정의
@@ -33,20 +35,9 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      fetchMemberInfo();
-    } else {
-      setUserInfo(null);
-    }
-  }, []);
-
   const fetchMemberInfo = async () => {
     try {
-      const response = await axiosInstance.get(
-        `${import.meta.env.VITE_API_BASE_URL}/members/mypage`
-      );
+      const response = await axiosInstance.get(`${import.meta.env.VITE_API_BASE_URL}/members/mypage`);
       // console.log(response);
       setUserInfo(response.data.data);
     } catch (error) {
@@ -62,6 +53,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('로그아웃 실패', error);
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      // Todo: 해당 라인 수정해야함.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchMemberInfo();
+    } else {
+      setUserInfo(null);
+    }
+  }, []);
 
   const login = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
     localStorage.setItem('accessToken', accessToken);

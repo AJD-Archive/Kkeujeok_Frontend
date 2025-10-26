@@ -1,13 +1,6 @@
-import { useState } from 'react';
 import * as S from '../styles/MainPageStyled';
 
-const Wrapper = ({
-  children,
-  isWrapperTrue,
-}: {
-  children: React.ReactNode;
-  isWrapperTrue: boolean;
-}) => {
+const Wrapper = ({ children, isWrapperTrue }: { children: React.ReactNode; isWrapperTrue: boolean }) => {
   return (
     <div
       style={{

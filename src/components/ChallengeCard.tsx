@@ -1,13 +1,10 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as S from '../styles/ChallengeStyled';
-import {
-  Challenge,
-  ChallengeCycle,
-  ChallengeCycleDetail_Monthly,
-  ChallengeCycleDetail_Weekly,
-} from '../types/ChallengeType';
-import { useState, useEffect } from 'react';
+
 import defaultImg from '../img/default.png';
+import * as S from '../styles/ChallengeStyled';
+import type { Challenge } from '../types/ChallengeType';
+import { ChallengeCycle, ChallengeCycleDetail_Monthly, ChallengeCycleDetail_Weekly } from '../types/ChallengeType';
 
 const ChallengeCard = ({ challenge }: { challenge: Challenge }) => {
   const navigate = useNavigate();
@@ -17,6 +14,8 @@ const ChallengeCard = ({ challenge }: { challenge: Challenge }) => {
     if (challenge.representImage instanceof File) {
       // File 타입일 경우 URL로 변환
       const objectUrl = URL.createObjectURL(challenge.representImage);
+      // Todo: 해당 라인 수정해야함.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setImageSrc(objectUrl);
 
       // 메모리 누수를 방지하기 위해 컴포넌트가 언마운트될 때 URL 해제
@@ -36,24 +35,18 @@ const ChallengeCard = ({ challenge }: { challenge: Challenge }) => {
       {imageSrc ? <S.ChallengeImg src={imageSrc} /> : <S.ChallengeImg src={defaultImg} />}
       <S.ChallengeName>{challenge.title}</S.ChallengeName>
       <S.ChallengeHeadCount>
-        {challenge.cycle
-          ? ChallengeCycle[challenge.cycle as keyof typeof ChallengeCycle]
-          : '알 수 없는 주기'}{' '}
+        {challenge.cycle ? ChallengeCycle[challenge.cycle as keyof typeof ChallengeCycle] : '알 수 없는 주기'}{' '}
         {challenge.cycle === 'WEEKLY' &&
           Array.isArray(challenge.cycleDetails) &&
           challenge.cycleDetails
-            .map(
-              (detail: string) =>
-                ChallengeCycleDetail_Weekly[detail as keyof typeof ChallengeCycleDetail_Weekly]
-            )
+            .map((detail: string) => ChallengeCycleDetail_Weekly[detail as keyof typeof ChallengeCycleDetail_Weekly])
             .join(', ')}
         {challenge.cycle === 'MONTHLY' &&
           Array.isArray(challenge.cycleDetails) &&
           challenge.cycleDetails
             .map(
               (detail: string) =>
-                ChallengeCycleDetail_Monthly[detail as keyof typeof ChallengeCycleDetail_Monthly] +
-                '일'
+                ChallengeCycleDetail_Monthly[detail as keyof typeof ChallengeCycleDetail_Monthly] + '일',
             )
             .join(', ')}
       </S.ChallengeHeadCount>

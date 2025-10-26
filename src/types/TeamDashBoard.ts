@@ -1,4 +1,4 @@
-import { ProfileData } from './UserInfo';
+import type { ProfileData } from './UserInfo';
 
 // 각 요소의 타입을 정의
 export interface TeamDashboardInfoResDto {

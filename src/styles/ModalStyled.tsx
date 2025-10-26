@@ -1,6 +1,6 @@
 import Modal from 'react-modal';
-
 import styled from 'styled-components';
+
 import theme from '../styles/Theme/Theme';
 
 /* 모달 뒷배경 스타일 */

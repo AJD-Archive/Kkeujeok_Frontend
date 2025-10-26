@@ -1,5 +1,6 @@
 import { atom } from 'jotai';
-import { NotificationResponse } from '../types/MyPage';
+
+import type { NotificationResponse } from '../types/MyPage';
 
 // Jotai atom 정의
 export const sseConnectedAtom = atom(false); // SSE 연결 상태

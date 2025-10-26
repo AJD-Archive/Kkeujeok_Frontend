@@ -1,4 +1,5 @@
 // import { BlockListResDto, BlockOrder } from '../types/PersonalBlock';
+import type { TeamDocument, TeamDocumentResponse } from '../types/TeamDocumentType';
 import { axiosInstance } from '../utils/apiConfig';
 
 // * 팀 문서 카테고리별 확인 api
@@ -6,19 +7,16 @@ export const getTeamDocument = async (
   teamDashboardId: string,
   category: string | null,
   page: number,
-  size: number
+  size: number,
 ): Promise<TeamDocumentResponse | null> => {
   try {
-    const response = await axiosInstance.get(
-      `/dashboards/team/document/search/${teamDashboardId}`,
-      {
-        params: {
-          category: category || '', // category가 null이면 쿼리에서 생략
-          page: page,
-          size: size,
-        },
-      }
-    );
+    const response = await axiosInstance.get(`/dashboards/team/document/search/${teamDashboardId}`, {
+      params: {
+        category: category || '', // category가 null이면 쿼리에서 생략
+        page: page,
+        size: size,
+      },
+    });
     console.log('팀 문서 전체 데이터', response.data);
     return response.data.data;
   } catch (error) {
@@ -28,13 +26,9 @@ export const getTeamDocument = async (
 };
 
 // * 팀 문서 카테고리 확인 api
-export const getTeamDocumentCategories = async (
-  teamDashboardId: string
-): Promise<string[] | null> => {
+export const getTeamDocumentCategories = async (teamDashboardId: string): Promise<string[] | null> => {
   try {
-    const response = await axiosInstance.get(
-      `/dashboards/team/document/categories/${teamDashboardId}`
-    );
+    const response = await axiosInstance.get(`/dashboards/team/document/categories/${teamDashboardId}`);
     return response.data.data.categories;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -56,9 +50,7 @@ export const createTeamDocument = async (data: TeamDocument): Promise<string | n
 };
 
 // * 팀 문서 상세 확인 get
-export const getTeamDocumentDetail = async (
-  teamDocumentId: string
-): Promise<TeamDocument | null> => {
+export const getTeamDocumentDetail = async (teamDocumentId: string): Promise<TeamDocument | null> => {
   try {
     const response = await axiosInstance.get(`/dashboards/team/document/${teamDocumentId}`);
     // console.log('팀 문서 상세 조회', response);
@@ -73,10 +65,7 @@ export const getTeamDocumentDetail = async (
 export const patchTeamDocument = async (data: TeamDocument): Promise<string | null> => {
   try {
     console.log('수정할게요', data);
-    const response = await axiosInstance.patch(
-      `/dashboards/team/document/${data.teamDocumentId}`,
-      data
-    );
+    const response = await axiosInstance.patch(`/dashboards/team/document/${data.teamDocumentId}`, data);
     console.log('수정된 팀문서', response.data);
     return response.data.data.teamDocumentId;
   } catch (error) {
@@ -89,6 +78,7 @@ export const patchTeamDocument = async (data: TeamDocument): Promise<string | nu
 export const deleteTeamDocument = async (teamDocumentId: string): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/dashboards/team/document/${teamDocumentId}`);
+    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }

@@ -1,4 +1,4 @@
-import { Challenge, ChallengeResponse } from '../types/ChallengeType';
+import type { Challenge, ChallengeResponse } from '../types/ChallengeType';
 import { axiosInstance } from '../utils/apiConfig';
 
 // * 챌린지 create
@@ -7,7 +7,7 @@ export const createChallenge = async (data: FormData): Promise<void | string> =>
     const response = await axiosInstance.post('/challenges', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    // console.log(response.data);
+    console.log(response.data);
     return '';
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -34,7 +34,7 @@ export const getSearchChallenge = async (
   keyword: string | null,
   category: string | null,
   page: number,
-  size: number
+  size: number,
 ): Promise<ChallengeResponse | null> => {
   try {
     // console.log(keyword, category, '로 검색할게요');
@@ -70,9 +70,9 @@ export const deleteChallenge = async (id: string): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/challenges/${id}`);
 
-    // console.log(response);
+    console.log(response);
   } catch (error) {
-    console.log('error');
+    console.log(error);
   }
 };
 
@@ -80,7 +80,7 @@ export const deleteChallenge = async (id: string): Promise<void> => {
 export const joinChallenge = async (challengeId: string, dashboardId: string): Promise<void> => {
   try {
     const response = await axiosInstance.post(`/challenges/${challengeId}/${dashboardId}`);
-    // console.log(response.data);
+    console.log(response.data);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -91,8 +91,8 @@ export const withdrawChallenge = async (id: string): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/challenges/${id}/withdraw`);
 
-    // console.log(response);
+    console.log(response);
   } catch (error) {
-    console.log('error');
+    console.log(error);
   }
 };

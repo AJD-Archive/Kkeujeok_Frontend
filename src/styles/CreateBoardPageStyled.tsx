@@ -1,6 +1,8 @@
+import type { TextareaAutosizeProps } from 'react-textarea-autosize';
+import TextareaAutosize from 'react-textarea-autosize';
 import styled from 'styled-components';
+
 import theme from '../styles/Theme/Theme';
-import TextareaAutosize, { TextareaAutosizeProps } from 'react-textarea-autosize';
 interface StyledTextareaProps extends TextareaAutosizeProps {
   width?: string;
 }
@@ -129,7 +131,7 @@ export const LastLabel = styled(Label)<{ isNotCreator: boolean }>`
 `;
 
 export const Input = styled.input`
-  width: ${props => props.width};
+  width: ${(props) => props.width};
   padding: 0.5rem 1rem;
   /* font-size: 1rem; */
   border-radius: 0.3rem;
@@ -162,9 +164,9 @@ export const Scope = styled.div`
 `;
 
 export const Textarea = styled(TextareaAutosize)<StyledTextareaProps>`
-  width: ${props => props.width};
-  min-width: ${props => props.width};
-  max-width: ${props => props.width};
+  width: ${(props) => props.width};
+  min-width: ${(props) => props.width};
+  max-width: ${(props) => props.width};
   min-height: 2rem;
   padding: 0.55rem 1rem;
 
@@ -193,7 +195,7 @@ export const Select = styled.select`
   border-radius: 0.3rem;
   border: 1px solid ${theme.color.stroke2};
 
-  color: ${props => (props.value ? `${theme.color.black}` : `${theme.color.lightGray}`)};
+  color: ${(props) => (props.value ? `${theme.color.black}` : `${theme.color.lightGray}`)};
 
   &:focus {
     outline: none;

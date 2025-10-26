@@ -1,7 +1,4 @@
-import NotStartedDashboard from '../components/NotStartedDashboard';
-import InProgressDashboard from '../components/InProgressDashboard';
-import CompletedDashboard from '../components/CompletedDashboard';
-import { BlockListResDto } from '../types/PersonalBlock';
+import type { BlockListResDto } from '../types/PersonalBlock';
 
 export type TItemStatus = 'todo' | 'doing' | 'completed' | 'delete' | 'icon';
 

@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { BlockListResDto, BlockOrder, DeletedBlockList } from '../types/PersonalBlock';
+import type { BlockListResDto, BlockOrder, DeletedBlockList } from '../types/PersonalBlock';
 import { axiosInstance } from '../utils/apiConfig';
 
 // 블록 생성 post
@@ -22,7 +21,7 @@ export const createPersonalBlock = async (data: BlockListResDto): Promise<number
 */
 export const patchPersonalBlock = async (
   blockId: string | undefined,
-  data: BlockListResDto
+  data: BlockListResDto,
 ): Promise<number | null> => {
   try {
     const response = await axiosInstance.patch(`/blocks/${blockId}`, data);
@@ -45,16 +44,9 @@ export const getPersonalBlock = async (blockId: string | null): Promise<BlockLis
 };
 
 //블록의 상태 수정
-export const updatePersonalBlock = async (
-  blockId?: string,
-  progress?: string,
-  order?: BlockOrder
-) => {
+export const updatePersonalBlock = async (blockId?: string, progress?: string, order?: BlockOrder) => {
   try {
-    const response = await axiosInstance.patch(
-      `/blocks/${blockId}/progress?progress=${progress}`,
-      order
-    );
+    const response = await axiosInstance.patch(`/blocks/${blockId}/progress?progress=${progress}`, order);
     return response.data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -73,9 +65,8 @@ export const updateOrderBlock = async (data: BlockOrder) => {
 //블록 삭제 조회
 export const getDeleteBlock = async (dashboardId: string, page?: number, size?: number) => {
   try {
-    const response = await axiosInstance.get(
-      `/blocks/deleted?dashboardId=${dashboardId}&page=0&size=10`
-    );
+    const response = await axiosInstance.get(`/blocks/deleted?dashboardId=${dashboardId}&page=0&size=10`);
+    console.log(page, size);
     return response.data.data as DeletedBlockList;
   } catch (error) {
     console.log('Error fetching data:', error);
@@ -85,6 +76,7 @@ export const getDeleteBlock = async (dashboardId: string, page?: number, size?: 
 export const deleteBlock = async (blockId: string) => {
   try {
     const response = await axiosInstance.delete(`/blocks/${blockId}`);
+    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -93,6 +85,7 @@ export const deleteBlock = async (blockId: string) => {
 export const realDeleteBlock = async (blockId: string) => {
   try {
     const response = await axiosInstance.delete(`/blocks/permanent/${blockId}`);
+    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -101,6 +94,7 @@ export const realDeleteBlock = async (blockId: string) => {
 export const restoreBlockFunc = async (blockId: string) => {
   try {
     const response = await axiosInstance.delete(`/blocks/${blockId}`);
+    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }

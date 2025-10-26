@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+
 import theme from '../styles/Theme/Theme';
 
 export const MyPageLayout = styled.section`
@@ -133,20 +134,20 @@ export const ButtonContainer = styled.div<{ teamBool: string }>`
   }
 
   button:first-child {
-    background: ${props => props.teamBool === 'personal' && theme.color.gradation};
-    color: ${props => props.teamBool === 'personal' && 'white'};
-    border: ${props => props.teamBool === 'personal' && theme.color.stroke2};
+    background: ${(props) => props.teamBool === 'personal' && theme.color.gradation};
+    color: ${(props) => props.teamBool === 'personal' && 'white'};
+    border: ${(props) => props.teamBool === 'personal' && theme.color.stroke2};
   }
 
   button:nth-child(2) {
-    background: ${props => props.teamBool === 'team' && theme.color.gradation};
-    color: ${props => props.teamBool === 'team' && 'white'};
-    border: ${props => props.teamBool === 'team' && theme.color.stroke2};
+    background: ${(props) => props.teamBool === 'team' && theme.color.gradation};
+    color: ${(props) => props.teamBool === 'team' && 'white'};
+    border: ${(props) => props.teamBool === 'team' && theme.color.stroke2};
   }
   button:last-child {
-    background: ${props => props.teamBool === 'challenge' && theme.color.gradation};
-    color: ${props => props.teamBool === 'challenge' && 'white'};
-    border: ${props => props.teamBool === 'challenge' && theme.color.stroke2};
+    background: ${(props) => props.teamBool === 'challenge' && theme.color.gradation};
+    color: ${(props) => props.teamBool === 'challenge' && 'white'};
+    border: ${(props) => props.teamBool === 'challenge' && theme.color.stroke2};
   }
 `;
 

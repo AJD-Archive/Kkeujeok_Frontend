@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+
 import Loading from '../components/Loading';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LoginToken {
   accessToken: string;
@@ -18,11 +19,31 @@ const OAuthRedirectHandler = () => {
     refreshToken: '',
   });
 
+  const getToken = async (authCode: string, provider: string) => {
+    try {
+      const idTokenResponse = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/oauth2/callback/${provider}?code=${authCode}`,
+      );
+
+      const tokenResponse = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/${provider}/token`, {
+        authCode: idTokenResponse.data.idToken,
+      });
+
+      if (tokenResponse.data.data) {
+        setLoginToken(tokenResponse.data.data);
+      }
+    } catch (error) {
+      console.error('토큰을 가져오는데 실패했습니다.', error);
+    }
+  };
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
     if (code && provider) {
+      // Todo: 해당 라인 수정해야함.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getToken(code, provider);
     }
   }, [provider]);
@@ -37,27 +58,6 @@ const OAuthRedirectHandler = () => {
       navigate(latestBoard ? `/${dashboardSort}/${latestBoard}` : '/tutorial');
     }
   }, [loginToken, login, navigate]);
-
-  const getToken = async (authCode: string, provider: string) => {
-    try {
-      const idTokenResponse = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/oauth2/callback/${provider}?code=${authCode}`
-      );
-
-      const tokenResponse = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/${provider}/token`,
-        {
-          authCode: idTokenResponse.data.idToken,
-        }
-      );
-
-      if (tokenResponse.data.data) {
-        setLoginToken(tokenResponse.data.data);
-      }
-    } catch (error) {
-      console.error('토큰을 가져오는데 실패했습니다.', error);
-    }
-  };
 
   // * 로그인 처리 중일때 보여질 로딩창
   return <Loading />;

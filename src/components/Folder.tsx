@@ -1,7 +1,8 @@
-import folderimg from '../img/folderimg.png';
-import Flex from './Flex';
 import { useNavigate } from 'react-router-dom';
+
+import folderimg from '../img/folderimg.png';
 import * as S from '../styles/TeamDocumentStyled';
+import Flex from './Flex';
 
 type Props = {
   caption: string;
@@ -15,8 +16,8 @@ const Folder = ({ caption }: Props) => {
 
   return (
     <S.FolderItmeContainer>
-      <Flex justifyContent="center" flexDirection="column">
-        <img src={folderimg} alt="폴더 이미지" onClick={handleNavigate} />
+      <Flex flexDirection='column' justifyContent='center'>
+        <img alt='폴더 이미지' src={folderimg} onClick={handleNavigate} />
         <span>{caption}</span>
       </Flex>
     </S.FolderItmeContainer>

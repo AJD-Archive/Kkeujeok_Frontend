@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteEditor } from '@blocknote/core';
+import { useCreateBlockNote } from '@blocknote/react';
+import { useEffect, useState } from 'react';
+
 import { getPersonalBlock, patchPersonalBlock } from '../api/PersonalBlockApi';
+import type { BlockListResDto } from '../types/PersonalBlock';
 import { useDebounce } from './useDebounce';
-import { BlockListResDto } from '../types/PersonalBlock';
 
 // 훅의 반환값 타입 정의
 export interface SidePageState {
@@ -17,6 +18,7 @@ export interface SidePageState {
 }
 
 export const useSidePage = (blockId: string | undefined, progress: string): SidePageState => {
+  console.log(progress);
   const [data, setData] = useState<BlockListResDto>({});
 
   // 블록 에디터 초기화
@@ -48,7 +50,7 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
 
   // 제목 변경 함수
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setData(prevData => ({
+    setData((prevData) => ({
       ...prevData,
       title: event.target.value,
     }));
@@ -80,11 +82,7 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
     const today = new Date();
     const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    const startDateOnly = new Date(
-      startDate.getFullYear(),
-      startDate.getMonth(),
-      startDate.getDate()
-    );
+    const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
 
     const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
 
@@ -99,10 +97,7 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       // console.log(`D-${diffDays}`);
       return `D-${diffDays}`;
-    } else if (
-      startDateOnly.getTime() <= todayOnly.getTime() &&
-      endDateOnly.getTime() > todayOnly.getTime()
-    ) {
+    } else if (startDateOnly.getTime() <= todayOnly.getTime() && endDateOnly.getTime() > todayOnly.getTime()) {
       // 시작 날짜는 오늘 전이면서 종료 날짜가 오늘 이후라면 종료 - 오늘
       const diffTime = endDateOnly.getTime() - todayOnly.getTime();
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -139,7 +134,7 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
     if (newData.startDate && newData.deadLine) {
       const testDay = calculateDDay(new Date(newData.startDate), new Date(newData.deadLine));
 
-      setData(prevData => ({
+      setData((prevData) => ({
         ...prevData,
         dDay: testDay,
       }));
@@ -151,7 +146,7 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
       const start = new Date(data.startDate);
       const end = new Date(data.deadLine);
       if (start > end) {
-        setData(prevData => ({
+        setData((prevData) => ({
           ...prevData,
           deadLine: start.toISOString(),
         }));
@@ -163,7 +158,7 @@ export const useSidePage = (blockId: string | undefined, progress: string): Side
   const onChange = async () => {
     if (editor) {
       const markdownContent = await editor.blocksToMarkdownLossy(editor.document);
-      setData(prevData => ({
+      setData((prevData) => ({
         ...prevData,
         contents: markdownContent,
       }));

@@ -40,12 +40,7 @@ export const useModal = () => {
   // 콜백 함수 추가
   const [onCloseCallback, setOnCloseCallback] = useState<(() => void) | null>(null);
 
-  const openModal = (
-    action: ModalAction,
-    handler?: () => void,
-    noHandler?: () => void,
-    closeCallback?: () => void
-  ) => {
+  const openModal = (action: ModalAction, handler?: () => void, noHandler?: () => void, closeCallback?: () => void) => {
     if (action === 'yes') {
       setActionHandlers({ yes: handler || null, no: noHandler || null, normal: noHandler || null });
     } else if (action === 'no') {

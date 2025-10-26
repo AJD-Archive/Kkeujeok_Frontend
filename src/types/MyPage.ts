@@ -1,4 +1,4 @@
-import { DashboardItem } from './PersonalDashBoard';
+import type { DashboardItem } from './PersonalDashBoard';
 
 //* 사용자 프로필 타입
 export interface ProfileInfo {

@@ -1,5 +1,5 @@
+import type { UserInfo } from '../types/UserInfo';
 import { axiosInstance } from '../utils/apiConfig';
-import { UserInfo } from '../types/UserInfo';
 
 export const userInfoApi = async (): Promise<UserInfo | undefined> => {
   try {

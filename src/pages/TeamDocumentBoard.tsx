@@ -1,19 +1,18 @@
-import Navbar from '../components/Navbar';
-import Flex from '../components/Flex';
-import * as S from '../styles/TeamDocumentStyled';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import addbutton from '../img/addbutton.png';
-import leftarrow from '../img/leftarrow.png';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+
+import type { PageInfoResDto } from '@/types/ChallengeType';
+import type { TeamDocument } from '@/types/TeamDocumentType';
+
+import { createTeamDocument, getTeamDocument, getTeamDocumentCategories } from '../api/TeamDocumentApi';
 import Pagination from '../components/CustomPagination';
 import DocumentCard from '../components/DocumentCard';
-import { Outlet } from 'react-router-dom';
-import {
-  createTeamDocument,
-  getTeamDocument,
-  getTeamDocumentCategories,
-} from '../api/TeamDocumentApi';
-import { Helmet } from 'react-helmet-async';
+import Flex from '../components/Flex';
+import Navbar from '../components/Navbar';
+import addbutton from '../img/addbutton.png';
+import leftarrow from '../img/leftarrow.png';
+import * as S from '../styles/TeamDocumentStyled';
 
 const TeamDocumentBoard = () => {
   const location = useLocation();
@@ -21,10 +20,12 @@ const TeamDocumentBoard = () => {
   const [folder, setFolder] = useState('');
   const [folderArray, setFolderArray] = useState<string[]>(['프론트엔드', '백엔드', '기획']);
   const [visible, setVisible] = useState<boolean>(false);
+  console.log(folder, folderArray, visible, setFolder, setFolderArray, setVisible);
   const navigate = useNavigate();
 
   const [page, setPage] = useState<number>(1); // 현재 페이지 (프론트에서 띄울 페이지. 1부터 시작)
   const [size, setSize] = useState<number>(1); // 한 페이지에 요청할 요소 개수
+  console.log(size, setSize);
 
   const [categories, setCategories] = useState<string[]>([]);
   const [teamDocuments, setTeamDocuments] = useState<TeamDocument[]>([]);
@@ -38,8 +39,9 @@ const TeamDocumentBoard = () => {
 
   // * 페이지네이션 페이지 변경 감지 함수
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    console.log(event);
     setPage(value); // 페이지 변경 시 현재 페이지 상태 업데이트
-    setPageInfo(prevPageInfo => ({
+    setPageInfo((prevPageInfo) => ({
       ...prevPageInfo, // 기존 pageInfo 값을 유지
       currentPage: value - 1,
     }));
@@ -63,6 +65,8 @@ const TeamDocumentBoard = () => {
   };
 
   useEffect(() => {
+    // Todo: 해당 라인 수정해야함.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchDocumentData();
     fetchCategoriesData();
   }, [pageInfo.currentPage, location.pathname, selectedCategory]); // 페이지가 변경될 때와, 데이터가 변경되었을 때 (즉 라우터가 변경되었을 때) 리렌더링
@@ -84,69 +88,61 @@ const TeamDocumentBoard = () => {
   const handleCategoryClick = async (category: string) => {
     setSelectedCategory(category);
     setPage(1);
-    setPageInfo(prevPageInfo => ({
+    setPageInfo((prevPageInfo) => ({
       ...prevPageInfo, // 기존 pageInfo 값을 유지
       currentPage: 0,
     }));
   };
 
   return (
-    <>
-      <Helmet>
-        <title>끄적끄적 | 팀 문서</title>
-      </Helmet>
-      <S.MainDashBoardLayout>
-        <Navbar />
-        <S.MainDashBoardContainer>
-          <S.Header>
-            <Flex>
-              <img src={leftarrow} onClick={() => navigate(-1)} /> {/* 뒤로가기 버튼 */}
-              <S.Title>팀 문서</S.Title>
-            </Flex>
-            <img src={addbutton} onClick={handleCreateTeamDocument} />
-          </S.Header>
+    <S.MainDashBoardLayout>
+      <Navbar />
+      <S.MainDashBoardContainer>
+        <S.Header>
+          <Flex>
+            <img src={leftarrow} onClick={() => navigate(-1)} /> {/* 뒤로가기 버튼 */}
+            <S.Title>팀 문서</S.Title>
+          </Flex>
+          <img src={addbutton} onClick={handleCreateTeamDocument} />
+        </S.Header>
 
-          <S.CategoriesContainer>
+        <S.CategoriesContainer>
+          <S.Category isSelected={selectedCategory === ''} onClick={() => handleCategoryClick('')}>
+            전체
+          </S.Category>
+          {categories.map((category, index) => (
             <S.Category
-              onClick={() => handleCategoryClick('')}
-              isSelected={selectedCategory === ''}
+              key={index}
+              isSelected={selectedCategory === category}
+              onClick={() => handleCategoryClick(category)}
             >
-              전체
+              {category}
             </S.Category>
-            {categories.map((category, index) => (
-              <S.Category
-                key={index}
-                onClick={() => handleCategoryClick(category)}
-                isSelected={selectedCategory === category}
-              >
-                {category}
-              </S.Category>
-            ))}
-          </S.CategoriesContainer>
+          ))}
+        </S.CategoriesContainer>
 
-          {teamDocuments.length === 0 ? (
-            <Flex justifyContent="center" alignItems="center" height={300}>
-              <S.NotExistingDocument>생성된 팀 문서가 없어요</S.NotExistingDocument>
-            </Flex>
-          ) : (
-            <>
-              {/* 팀 문서 컴포넌트 */}
-              <S.DocumentContainer>
-                {teamDocuments.map((document, index) => (
-                  <DocumentCard key={index} document={document} />
-                ))}
-              </S.DocumentContainer>
+        {teamDocuments.length === 0 ? (
+          <Flex alignItems='center' height={300} justifyContent='center'>
+            <S.NotExistingDocument>생성된 팀 문서가 없어요</S.NotExistingDocument>
+          </Flex>
+        ) : (
+          <>
+            {/* 팀 문서 컴포넌트 */}
+            <S.DocumentContainer>
+              {teamDocuments.map((document, index) => (
+                <DocumentCard key={index} document={document} />
+              ))}
+            </S.DocumentContainer>
 
-              {/* 페이지네이션 */}
-              <S.PaginationWrapper>
-                <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
-              </S.PaginationWrapper>
-            </>
-          )}
-        </S.MainDashBoardContainer>
-        <Outlet /> {/* 사이드 페이지를 위한 중첩 라우팅 */}
-      </S.MainDashBoardLayout>
-    </>
+            {/* 페이지네이션 */}
+            <S.PaginationWrapper>
+              <Pagination count={pageInfo?.totalPages} page={page} onChange={handleChangePage} />
+            </S.PaginationWrapper>
+          </>
+        )}
+      </S.MainDashBoardContainer>
+      <Outlet /> {/* 사이드 페이지를 위한 중첩 라우팅 */}
+    </S.MainDashBoardLayout>
   );
 };
 export default TeamDocumentBoard;

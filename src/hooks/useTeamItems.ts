@@ -1,8 +1,9 @@
-import { TItems } from '../utils/columnsConfig';
-import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+
 import { getPersonalBlock } from '../api/BoardApi';
 import { getDeleteBlock } from '../api/PersonalBlockApi';
+import type { TItems } from '../utils/columnsConfig';
 
 export default function useItems(dashboardId: string) {
   const { data: NotStarted } = useQuery({
@@ -35,6 +36,8 @@ export default function useItems(dashboardId: string) {
 
   // Update items whenever the fetched data changes
   useEffect(() => {
+    // Todo: 해당 라인 수정해야함.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setItems({
       todo: NotStarted?.blockListResDto || [],
       doing: InProgress?.blockListResDto || [],

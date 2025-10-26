@@ -1,5 +1,5 @@
-import * as S from '../styles/ProfileStyled';
 import defaultImage from '../img/default.png';
+import * as S from '../styles/ProfileStyled';
 
 export type Props = {
   width?: string;
@@ -12,8 +12,8 @@ const Profile = ({ width, height, profile }: Props) => {
   };
 
   return (
-    <S.ProfileImgWrapper width={width} height={height}>
-      <img src={profile} alt="프로필 이미지" onError={handleImageError} />
+    <S.ProfileImgWrapper height={height} width={width}>
+      <img alt='프로필 이미지' src={profile} onError={handleImageError} />
     </S.ProfileImgWrapper>
   );
 };

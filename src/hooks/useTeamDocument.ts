@@ -1,13 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteEditor } from '@blocknote/core';
+import { useCreateBlockNote } from '@blocknote/react';
+import { useEffect, useState } from 'react';
+
+import { getTeamDocumentCategories, getTeamDocumentDetail, patchTeamDocument } from '../api/TeamDocumentApi';
+import type { TeamDocument } from '../types/TeamDocumentType';
 import { useDebounce } from './useDebounce';
-import { BlockListResDto } from '../types/PersonalBlock';
-import {
-  getTeamDocumentCategories,
-  getTeamDocumentDetail,
-  patchTeamDocument,
-} from '../api/TeamDocumentApi';
 
 export interface SidePageState {
   data: TeamDocument;
@@ -18,11 +15,8 @@ export interface SidePageState {
   SubmitData: () => void;
 }
 
-export const useTeamDocument = (
-  teamDashboardId: string,
-  teamDocumentId: string,
-  progress: string
-): SidePageState => {
+export const useTeamDocument = (teamDashboardId: string, teamDocumentId: string, progress: string): SidePageState => {
+  console.log(progress);
   const [data, setData] = useState<TeamDocument>({});
   const [categories, setCategories] = useState<string[]>([]);
 
@@ -64,7 +58,7 @@ export const useTeamDocument = (
   // 제목, 카테고리 변경 함수
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setData(prevData => ({
+    setData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -74,7 +68,7 @@ export const useTeamDocument = (
   const onChange = async () => {
     if (editor) {
       const markdownContent = await editor.blocksToMarkdownLossy(editor.document);
-      setData(prevData => ({
+      setData((prevData) => ({
         ...prevData,
         content: markdownContent,
       }));
@@ -84,16 +78,16 @@ export const useTeamDocument = (
   // debounce : 300ms 입력이 감지되지 않으면 자동 저장
   const debouncedData = useDebounce(data, 300);
 
-  useEffect(() => {
-    console.log('debouce!');
-    SubmitData();
-  }, [debouncedData]);
-
   // patch api 요청
   const SubmitData = () => {
     // patch 요청 수행
     patchTeamDocument(data);
   };
+
+  useEffect(() => {
+    console.log('debouce!');
+    SubmitData();
+  }, [debouncedData]);
 
   return {
     data,

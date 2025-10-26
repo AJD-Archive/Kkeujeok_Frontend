@@ -1,23 +1,22 @@
-import { axiosInstance } from '../utils/apiConfig';
-import {
+import type { StatusPersonalBlock } from '../types/PersonalBlock';
+import type {
   DashboardItem,
   // PersonalDashBoard,
   PersonalSearchDashBoard,
 } from '../types/PersonalDashBoard';
-import { TeamDashboardResponse } from '../types/TeamDashBoard';
-import { StatusPersonalBlock } from '../types/PersonalBlock';
-import { useNavigate } from 'react-router-dom';
+import type { TeamDashboardResponse } from '../types/TeamDashBoard';
+import { axiosInstance } from '../utils/apiConfig';
 
 // * 개인 대시보드 블록 get (세로 무한 스크롤)
 export const getPersonalBlock = async (
   id: number | string,
   page: number = 0, // default 페이지 0으로 설정
   size: number = 10,
-  progress: string
+  progress: string,
 ): Promise<StatusPersonalBlock | undefined> => {
   try {
     const response = await axiosInstance.get(
-      `/blocks?dashboardId=${id}&progress=${progress}&page=${page}&size=${size}`
+      `/blocks?dashboardId=${id}&progress=${progress}&page=${page}&size=${size}`,
     );
     return response.data.data as StatusPersonalBlock;
   } catch (error) {
@@ -38,10 +37,7 @@ export const createDashBoard = async (data: DashboardItem): Promise<string | nul
 };
 
 // * 개인 대시보드 patch
-export const patchDashBoard = async (
-  dashboardId: string,
-  data: DashboardItem
-): Promise<string | null> => {
+export const patchDashBoard = async (dashboardId: string, data: DashboardItem): Promise<string | null> => {
   try {
     const response = await axiosInstance.patch(`/dashboards/personal/${dashboardId}`, data);
     // console.log(response);
@@ -76,7 +72,7 @@ export const getCategories = async (): Promise<string[] | null> => {
     const response = await axiosInstance.get(`/dashboards/personal/categories`);
     return response.data.data.categories;
   } catch (error) {
-    console.log('error');
+    console.log(error);
     return null;
   }
 };
@@ -100,9 +96,9 @@ export const deletePersonalDashboard = async (id: string): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/dashboards/personal/${id}`);
     // return response.data.data;
-    // console.log(response);
+    console.log(response);
   } catch (error) {
-    // console.log('error');
+    console.log(error);
     // return null;
   }
 };
@@ -112,9 +108,9 @@ export const quitTeamDashboard = async (id: string): Promise<void> => {
   try {
     const response = await axiosInstance.post(`/dashboards/team/${id}/leave`);
     // return response.data.data;
-    // console.log(response);
+    console.log(response);
   } catch (error) {
-    // console.log('error');
+    console.log(error);
     // return null;
   }
 };

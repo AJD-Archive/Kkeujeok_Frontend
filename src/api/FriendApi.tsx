@@ -1,12 +1,10 @@
+import type { AxiosResponse } from 'axios';
+
+import type { FollowersListData } from '../types/FriendType';
 import { axiosInstance } from '../utils/apiConfig';
-import { FollowersListData } from '../types/FriendType';
-import { AxiosResponse } from 'axios';
 
 // * 내 친구 목록 get
-export const getFollowersList = async (
-  page: number,
-  size: number
-): Promise<FollowersListData | null> => {
+export const getFollowersList = async (page: number, size: number): Promise<FollowersListData | null> => {
   try {
     const response = await axiosInstance.get(`/member/follow?page=${page}&size=${size}`);
     return response.data.data;
@@ -20,12 +18,10 @@ export const getFollowersList = async (
 export const getSearchFriendsList = async (
   keyword: string,
   page: number,
-  size: number
+  size: number,
 ): Promise<FollowersListData | null> => {
   try {
-    const response = await axiosInstance.get(
-      `/member/follow/search/all?keyword=${keyword}&page=${page}&size=${size}`
-    );
+    const response = await axiosInstance.get(`/member/follow/search/all?keyword=${keyword}&page=${page}&size=${size}`);
 
     return {
       followInfoResDto: response.data.data.memberInfoForFollowResDtos,
@@ -38,14 +34,9 @@ export const getSearchFriendsList = async (
 };
 
 // * 추천 친구 get
-export const getRecommendedFriendsList = async (
-  page: number,
-  size: number
-): Promise<FollowersListData | null> => {
+export const getRecommendedFriendsList = async (page: number, size: number): Promise<FollowersListData | null> => {
   try {
-    const response = await axiosInstance.get(
-      `/member/follow/recommended?page=${page}&size=${size}`
-    );
+    const response = await axiosInstance.get(`/member/follow/recommended?page=${page}&size=${size}`);
 
     return {
       followInfoResDto: response.data.data.recommendedFollowInfoResDtos,

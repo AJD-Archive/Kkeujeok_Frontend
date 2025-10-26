@@ -1,14 +1,15 @@
-import Flex from './Flex';
-import * as S from '../styles/DashboardStyled';
+import { useAtom } from 'jotai';
+import { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
-import CustomModal from './CustomModal';
-import Profile from './Profile';
-import useModal from '../hooks/useModal';
-import { getPersonalBlock, realDeleteBlock, restoreBlockFunc } from '../api/PersonalBlockApi';
-import { useEffect, useState } from 'react';
-import { useAtom } from 'jotai';
+
+import { realDeleteBlock, restoreBlockFunc } from '../api/PersonalBlockApi';
 import { fetchTriggerAtom } from '../contexts/atoms';
+import useModal from '../hooks/useModal';
+import * as S from '../styles/DashboardStyled';
+import CustomModal from './CustomModal';
+import Flex from './Flex';
+import Profile from './Profile';
 
 type Props = {
   blockId: string | null | undefined;
@@ -35,7 +36,6 @@ const Block = ({
   contents,
   dDay,
   remove = false,
-  onBlockIdHandler,
   removeValue,
   dType,
   name,
@@ -58,14 +58,14 @@ const Block = ({
   const removeFunc = async () => {
     if (blockId) {
       await realDeleteBlock(blockId); // 블록을 삭제하는 API 호출
-      setFetchTrigger(prev => prev + 1); // 상태를 변경하여 MainPage에서 데이터를 다시 불러오도록 트리거
+      setFetchTrigger((prev) => prev + 1); // 상태를 변경하여 MainPage에서 데이터를 다시 불러오도록 트리거
     }
   };
 
   //모달 복구에 전달할 함수
   const restoreFunc = async () => {
     if (blockId) await restoreBlockFunc(blockId);
-    setFetchTrigger(prev => prev + 1); // 상태를 변경하여 MainPage에서 데이터를 다시 불러오도록 트리거
+    setFetchTrigger((prev) => prev + 1); // 상태를 변경하여 MainPage에서 데이터를 다시 불러오도록 트리거
   };
 
   //완전 삭제 로직
@@ -82,11 +82,11 @@ const Block = ({
 
   return (
     <>
-      <Draggable draggableId={updatedBlockId} key={updatedBlockId} index={index}>
-        {provided => (
+      <Draggable key={updatedBlockId} draggableId={updatedBlockId} index={index}>
+        {(provided) => (
           <>
             <S.BlockContainer
-              marginValue={remove ? '0' : '1'}
+              ref={provided.innerRef}
               dayCount={
                 dDay
                   ? dDay === 'D-Day'
@@ -97,7 +97,7 @@ const Block = ({
                   : 999
               }
               isDone={progress === '완료'}
-              ref={provided.innerRef}
+              marginValue={remove ? '0' : '1'}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
               onClick={() => {
@@ -112,7 +112,7 @@ const Block = ({
                 </S.ChallengeTypeWrapper>
               )}
 
-              <Flex justifyContent="space-between">
+              <Flex justifyContent='space-between'>
                 <h3>{title}</h3>
                 <span>{dDay}</span>
               </Flex>
@@ -121,7 +121,7 @@ const Block = ({
               ) : (
                 <Flex>
                   <S.ProfileImageWrapper>
-                    <Profile width="" height="" profile={picture} />
+                    <Profile height='' profile={picture} width='' />
                   </S.ProfileImageWrapper>
                   <S.UserName>{name}</S.UserName>
                 </Flex>
@@ -138,18 +138,18 @@ const Block = ({
       </Draggable>
       {isModalOpen && isRemove && (
         <CustomModal
-          title="블록을 삭제하시겠습니까?"
-          subTitle="한 번 삭제된 블록은 되돌릴 수 없습니다"
-          onYesClick={handleYesClick}
+          subTitle='한 번 삭제된 블록은 되돌릴 수 없습니다'
+          title='블록을 삭제하시겠습니까?'
           onNoClick={handleNoClick}
+          onYesClick={handleYesClick}
         />
       )}
       {isModalOpen && !isRemove && (
         <CustomModal
-          title="블록을 복구하시겠습니까?"
-          subTitle="블록을 복구하시면 전의 상태로 되돌아갑니다"
-          onYesClick={handleYesClick}
+          subTitle='블록을 복구하시면 전의 상태로 되돌아갑니다'
+          title='블록을 복구하시겠습니까?'
           onNoClick={handleNoClick}
+          onYesClick={handleYesClick}
         />
       )}
     </>

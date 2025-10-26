@@ -1,12 +1,13 @@
-import styled from 'styled-components';
-import Flex from './Flex';
-import theme from '../styles/Theme/Theme';
-import { postTeamDashboard } from '../api/TeamDashBoardApi';
-import { customErrToast } from '../utils/customErrorToast';
-import { useAtom } from 'jotai';
-import { navbarUpdateTriggerAtom } from '../contexts/atoms';
-import { acceptFriendAlarm } from '../api/MyPageApi';
 import axios from 'axios';
+import { useAtom } from 'jotai';
+import styled from 'styled-components';
+
+import { acceptFriendAlarm } from '../api/MyPageApi';
+import { postTeamDashboard } from '../api/TeamDashBoardApi';
+import { navbarUpdateTriggerAtom } from '../contexts/atoms';
+import theme from '../styles/Theme/Theme';
+import { customErrToast } from '../utils/customErrorToast';
+import Flex from './Flex';
 
 type Props = {
   message: string;
@@ -64,6 +65,7 @@ const AlarmBlock = ({ message, isRead }: Props) => {
   const numberMatch = modifiedMessage.match(/\d+$/);
   const name = nameMatch ? nameMatch : null;
   const dashboard = dashboardMatch ? dashboardMatch[0] : null;
+  console.log(dashboard);
   const number = numberMatch ? numberMatch[0] : '';
 
   const [, setUpdate] = useAtom(navbarUpdateTriggerAtom);
@@ -73,16 +75,15 @@ const AlarmBlock = ({ message, isRead }: Props) => {
     if (response) {
       customErrToast(`${wordsBeforeLastDashboard}대시보드 초대를 수락했어요!`);
     }
-    setUpdate(prev => !prev);
+    setUpdate((prev) => !prev);
   };
 
   const onAcceptFriend = async () => {
     try {
       const response = await acceptFriendAlarm(followerIdMatch);
+      console.log(response);
       console.log(message.split('님')[0]);
-      customErrToast(
-        `${message.split('님')[0].split(':').slice(1).join(':').trim()}님의 친구요청을 수락했어요!`
-      );
+      customErrToast(`${message.split('님')[0].split(':').slice(1).join(':').trim()}님의 친구요청을 수락했어요!`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 403) {
@@ -94,7 +95,7 @@ const AlarmBlock = ({ message, isRead }: Props) => {
 
   return (
     <AlarmContainer isRead={isRead}>
-      <Flex alignItems="center">
+      <Flex alignItems='center'>
         <UserInfoContainer>
           <h6>{name}</h6>
           <p>{description}</p>
@@ -109,7 +110,7 @@ export default AlarmBlock;
 
 const AlarmContainer = styled.div<{ isRead: boolean }>`
   padding: 2rem;
-  background: ${props => (props.isRead ? 'white' : '#fffdcc')};
+  background: ${(props) => (props.isRead ? 'white' : '#fffdcc')};
   font-size: 0.8rem;
   border-bottom: 1px solid ${theme.color.stroke2};
   h6 {

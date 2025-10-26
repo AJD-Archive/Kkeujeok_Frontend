@@ -1,42 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import MyPage from './pages/MyPage';
-import CreateBoard from './pages/CreateBoardPage';
-import CreatePersonalBoard from './pages/CreatePersonalBoardPage';
-import CreateTeamBoard from './pages/CreateTeamBoardPage';
-import OAuthRedirectHandler from './contexts/OAuthRedirectHandler';
-import { AuthProvider } from './contexts/AuthContext';
-import TeamDocument from './pages/TeamDocument';
-import TeamDocumentBoard from './pages/TeamDocumentBoard';
-import SidePage from './pages/SidePage';
-import ChallengeCommunityPage from './pages/ChallengeCommunityPage';
-import CreateChallengePage from './pages/CreateChallengePage';
-import ChallengeDetailPage from './pages/ChallengeDetailPage';
-import TutorialPage from './pages/TutorialPage';
+import 'aos/dist/aos.css';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AOS from 'aos';
-import 'aos/dist/aos.css';
-import ProfileEdit from './components/ProfileEdit';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import './App.css';
-import ProtectedRoute from './components/ProtectedRoute';
-import Error404Page from './pages/Error404Page';
-import Error403Page from './pages/Error403Page';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+
 import Flex from './components/Flex';
-import { MobileDisplay } from './styles/ErrorPageStyled';
-import RouteChangeTracker from './components/RouteChangeTracker';
 import PersonalDashboard from './components/PersonalDashboard';
+import ProfileEdit from './components/ProfileEdit';
+import ProtectedRoute from './components/ProtectedRoute';
 import TeamDashBoard from './components/TeamDashboard';
+import { AuthProvider } from './contexts/AuthContext';
+import OAuthRedirectHandler from './contexts/OAuthRedirectHandler';
+import { SSEProvider } from './contexts/SSEProvider';
+import ChallengeCommunityPage from './pages/ChallengeCommunityPage';
+import ChallengeDetailPage from './pages/ChallengeDetailPage';
+import CreateBoard from './pages/CreateBoardPage';
+import CreateChallengePage from './pages/CreateChallengePage';
+import CreatePersonalBoard from './pages/CreatePersonalBoardPage';
+import CreateTeamBoard from './pages/CreateTeamBoardPage';
+import Error403Page from './pages/Error403Page';
+import Error404Page from './pages/Error404Page';
+import FriendPage from './pages/FriendPage';
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import FriendsSearchPage from './pages/FriendsSearchPage/FriendsSearchPage';
-import RecommendedFriendsPage from './pages/RecommendedFriendsPage/RecommendedFriendsPage';
-import FriendPage from './pages/FriendPage';
+import LoginPage from './pages/LoginPage';
+import MyPage from './pages/MyPage';
 import NoticePage from './pages/NoticePage/NoticePage';
-import { SSEProvider } from './contexts/SSEProvider';
+import RecommendedFriendsPage from './pages/RecommendedFriendsPage/RecommendedFriendsPage';
+import SidePage from './pages/SidePage';
+import TeamDocument from './pages/TeamDocument';
+import TeamDocumentBoard from './pages/TeamDocumentBoard';
+import TutorialPage from './pages/TutorialPage';
+import { MobileDisplay } from './styles/ErrorPageStyled';
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,8 @@ const useAuth = () => {
   useEffect(() => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
+      // Todo: 해당 라인 수정해야함.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoggedIn(true);
     }
     setLoading(false);
@@ -59,6 +62,7 @@ const useAuth = () => {
 const App = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
   const { isLoggedIn, loading } = useAuth();
+  console.log('로그인 상태:', isLoggedIn);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -67,7 +71,7 @@ const App = () => {
   if (isMobile) {
     return (
       <MobileDisplay>
-        <Flex justifyContent="center" alignItems="center">
+        <Flex alignItems='center' justifyContent='center'>
           데스크톱만 지원합니다
         </Flex>
       </MobileDisplay>
@@ -78,230 +82,230 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ToastContainer
-          position="top-center"
+          closeOnClick
+          draggable
+          pauseOnFocusLoss
+          pauseOnHover
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
-          closeOnClick
+          position='top-center'
           rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
           style={{ width: '21.875rem', lineHeight: '1.5rem' }}
+          theme='light'
         />
 
         <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/api/oauth2/callback/:provider" element={<OAuthRedirectHandler />} />
-          <Route path="/error/403" element={<Error403Page />} />
+          <Route element={<LoginPage />} path='/' />
+          <Route element={<OAuthRedirectHandler />} path='/api/oauth2/callback/:provider' />
+          <Route element={<Error403Page />} path='/error/403' />
 
           <Route
-            path="/*"
             element={
-              <SSEProvider url="">
+              <SSEProvider url=''>
                 <Routes>
-                  <Route path="*" element={<Error404Page />} />
+                  <Route element={<Error404Page />} path='*' />
 
                   <Route
-                    path="/personal/:id"
                     element={
                       <ProtectedRoute>
                         <PersonalDashboard />
                       </ProtectedRoute>
                     }
+                    path='/personal/:id'
                   >
                     <Route
-                      path=":blockId"
                       element={
                         <ProtectedRoute>
                           <SidePage />
                         </ProtectedRoute>
                       }
+                      path=':blockId'
                     />
                   </Route>
 
                   <Route
-                    path="/team/:id"
                     element={
                       <ProtectedRoute>
                         <TeamDashBoard />
                       </ProtectedRoute>
                     }
+                    path='/team/:id'
                   >
                     <Route
-                      path=":blockId"
                       element={
                         <ProtectedRoute>
                           <SidePage />
                         </ProtectedRoute>
                       }
+                      path=':blockId'
                     />
                   </Route>
 
                   <Route
-                    path="/createBoard"
                     element={
                       <ProtectedRoute>
                         <CreateBoard />
                       </ProtectedRoute>
                     }
+                    path='/createBoard'
                   />
                   <Route
-                    path="/createPersonalBoard"
                     element={
                       <ProtectedRoute>
                         <CreatePersonalBoard />
                       </ProtectedRoute>
                     }
+                    path='/createPersonalBoard'
                   />
                   <Route
-                    path="/createPersonalBoard/:id"
                     element={
                       <ProtectedRoute>
                         <CreatePersonalBoard />
                       </ProtectedRoute>
                     }
+                    path='/createPersonalBoard/:id'
                   />
                   <Route
-                    path="/createTeamBoard"
                     element={
                       <ProtectedRoute>
                         <CreateTeamBoard />
                       </ProtectedRoute>
                     }
+                    path='/createTeamBoard'
                   />
                   <Route
-                    path="/createTeamBoard/:id"
                     element={
                       <ProtectedRoute>
                         <CreateTeamBoard />
                       </ProtectedRoute>
                     }
+                    path='/createTeamBoard/:id'
                   />
                   <Route
-                    path="/mypage"
                     element={
                       <ProtectedRoute>
                         <MyPage />
                       </ProtectedRoute>
                     }
+                    path='/mypage'
                   />
                   <Route
-                    path="/friendpage/:id"
                     element={
                       <ProtectedRoute>
                         <FriendPage />
                       </ProtectedRoute>
                     }
+                    path='/friendpage/:id'
                   />
                   <Route
-                    path="/mypage/edit"
                     element={
                       <ProtectedRoute>
                         <ProfileEdit />
                       </ProtectedRoute>
                     }
+                    path='/mypage/edit'
                   />
 
                   <Route
-                    path="/:id/teamdocument"
                     element={
                       <ProtectedRoute>
                         <TeamDocumentBoard />
                       </ProtectedRoute>
                     }
+                    path='/:id/teamdocument'
                   >
                     <Route
-                      path=":documentId"
                       element={
                         <ProtectedRoute>
                           <TeamDocument />
                         </ProtectedRoute>
                       }
+                      path=':documentId'
                     />
                   </Route>
 
                   <Route
-                    path="/challenge"
                     element={
                       <ProtectedRoute>
                         <ChallengeCommunityPage />
                       </ProtectedRoute>
                     }
+                    path='/challenge'
                   />
                   <Route
-                    path="/challenge/create"
                     element={
                       <ProtectedRoute>
                         <CreateChallengePage />
                       </ProtectedRoute>
                     }
+                    path='/challenge/create'
                   />
                   <Route
-                    path="/challenge/create/:id"
                     element={
                       <ProtectedRoute>
                         <CreateChallengePage />
                       </ProtectedRoute>
                     }
+                    path='/challenge/create/:id'
                   />
                   <Route
-                    path="/challenge/:id"
                     element={
                       <ProtectedRoute>
                         <ChallengeDetailPage />
                       </ProtectedRoute>
                     }
+                    path='/challenge/:id'
                   />
                   <Route
-                    path="/tutorial"
                     element={
                       <ProtectedRoute>
                         <TutorialPage />
                       </ProtectedRoute>
                     }
+                    path='/tutorial'
                   />
 
                   <Route
-                    path="/friends"
                     element={
                       <ProtectedRoute>
                         <FriendsPage />
                       </ProtectedRoute>
                     }
+                    path='/friends'
                   />
 
                   <Route
-                    path="/friends/search"
                     element={
                       <ProtectedRoute>
                         <FriendsSearchPage />
                       </ProtectedRoute>
                     }
+                    path='/friends/search'
                   />
 
                   <Route
-                    path="/friends/recommend"
                     element={
                       <ProtectedRoute>
                         <RecommendedFriendsPage />
                       </ProtectedRoute>
                     }
+                    path='/friends/recommend'
                   />
 
                   <Route
-                    path="/notice"
                     element={
                       <ProtectedRoute>
                         <NoticePage />
                       </ProtectedRoute>
                     }
+                    path='/notice'
                   />
                 </Routes>
               </SSEProvider>
             }
-          ></Route>
+            path='/*'
+          />
         </Routes>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />

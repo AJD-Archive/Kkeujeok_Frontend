@@ -1,10 +1,11 @@
-import { FollowInfo } from '../../types/FriendType';
-import * as S from './FriendStyled';
-import CustomModal from '../CustomModal';
-import useModal from '../../hooks/useModal';
 import { useState } from 'react';
-import { useDeleteFollow, usePostFollow } from '../../hooks/useFollowersList';
 import { useNavigate } from 'react-router-dom';
+
+import { useDeleteFollow, usePostFollow } from '../../hooks/useFollowersList';
+import useModal from '../../hooks/useModal';
+import type { FollowInfo } from '../../types/FriendType';
+import CustomModal from '../CustomModal';
+import * as S from './FriendStyled';
 
 interface FriendProps {
   follower: FollowInfo;
@@ -40,8 +41,8 @@ const Friend = ({ follower }: FriendProps) => {
       <S.FriendLayout onClick={() => navigate(`/friendpage/${follower.memberId}`)}>
         <S.ProfileImageWrapper src={follower.profileImage} />
         <S.FriendUserWrapper>
-          <p className="name">{follower.name}</p>
-          <p className="nickName">{follower.nickname}</p>
+          <p className='name'>{follower.name}</p>
+          <p className='nickName'>{follower.nickname}</p>
         </S.FriendUserWrapper>
         {follower.isFollow ? (
           <S.FriendRequestButtonWrapper onClick={submitUnFollow}>
@@ -56,10 +57,10 @@ const Friend = ({ follower }: FriendProps) => {
 
       {isModalOpen && isDelModalOpen && (
         <CustomModal
-          title="친구를 삭제하시겠습니까?"
-          subTitle="한 번 삭제된 친구는 다시 추가해야 합니다."
-          onYesClick={handleYesClick}
+          subTitle='한 번 삭제된 친구는 다시 추가해야 합니다.'
+          title='친구를 삭제하시겠습니까?'
           onNoClick={handleNoClick}
+          onYesClick={handleYesClick}
         />
       )}
     </>

@@ -1,5 +1,6 @@
-import * as React from 'react';
 import Pagination from '@mui/material/Pagination';
+import * as React from 'react';
+
 import theme from '../styles/Theme/Theme';
 
 interface BasicPaginationProps {
@@ -13,7 +14,6 @@ const CustomPagination: React.FC<BasicPaginationProps> = ({ count, page, onChang
     <Pagination
       count={count}
       page={page}
-      onChange={onChange}
       sx={{
         '& .MuiPaginationItem-root': {
           color: `${theme.color.gray}`, // 원하는 색상
@@ -29,6 +29,7 @@ const CustomPagination: React.FC<BasicPaginationProps> = ({ count, page, onChang
           fill: `${theme.color.gray}`, // 화살표 등 아이콘 색상
         },
       }}
+      onChange={onChange}
     />
   );
 };

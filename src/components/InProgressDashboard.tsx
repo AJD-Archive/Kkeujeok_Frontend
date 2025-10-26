@@ -1,14 +1,14 @@
-import { useNavigate, Outlet } from 'react-router-dom';
-import Block from './Block';
-import * as S from '../styles/DashboardStyled';
-import { createPersonalBlock } from '../api/PersonalBlockApi';
-import SidePage from '../pages/SidePage';
-import { Droppable } from 'react-beautiful-dnd';
-import theme from '../styles/Theme/Theme';
-import main from '../img/main.png';
-import { BlockListResDto } from '../types/PersonalBlock';
 import { useEffect } from 'react';
+import { Droppable } from 'react-beautiful-dnd';
 import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom';
+
+import { createPersonalBlock } from '../api/PersonalBlockApi';
+import main from '../img/main.png';
+import * as S from '../styles/DashboardStyled';
+import theme from '../styles/Theme/Theme';
+import type { BlockListResDto } from '../types/PersonalBlock';
+import Block from './Block';
 
 type Props = {
   list: BlockListResDto[];
@@ -72,32 +72,28 @@ const InProgressDashboard = ({ list, id, dashboardId, onLoadMore }: Props) => {
           <span>{settings.progress}</span>
         </S.StatusBarContainer>
         <S.AddButtonWrapper onClick={handleAddBtn}>
-          <img src={settings.imgSrc} alt="블록 더하는 버튼" />
+          <img alt='블록 더하는 버튼' src={settings.imgSrc} />
         </S.AddButtonWrapper>
       </header>
       <Droppable droppableId={id}>
-        {provided => (
-          <S.BoxContainer
-            ref={provided.innerRef}
-            className="container"
-            {...provided.droppableProps}
-          >
+        {(provided) => (
+          <S.BoxContainer ref={provided.innerRef} className='container' {...provided.droppableProps}>
             {list?.map((block, index) => {
               const isLastBlock = index === list.length - 1;
               return (
                 <div key={block.blockId} ref={isLastBlock ? lastBlockRef : null}>
                   <Block
-                    dashboardId={dashboardId}
-                    index={index}
-                    title={block.title ?? ''}
-                    dDay={block.dDay ?? ''}
-                    contents={block.contents ?? ''}
                     blockId={block.blockId ?? '0'}
+                    contents={block.contents ?? ''}
+                    dDay={block.dDay ?? ''}
                     dType={block.dType ?? 'TeamDashboard'}
+                    dashboardId={dashboardId}
+                    highlightColor={settings.highlightColor ?? ''}
+                    index={index}
                     name={block.nickname ?? '이름 없음'}
                     picture={block.picture ?? ''}
                     progress={settings.progress ?? ''}
-                    highlightColor={settings.highlightColor ?? ''}
+                    title={block.title ?? ''}
                     type={block.type ?? ''}
                   />
                 </div>

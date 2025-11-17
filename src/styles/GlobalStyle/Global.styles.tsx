@@ -9,8 +9,8 @@ const resetStyle = css`
   }
 
   :root {
-    --black: #000000;
-    --white: #ffffff;
+    --black: #101010;
+    --white: #fdfdfd;
     --main: #4c8cff;
     --main2: #9847ff;
     --main3: #00d1ff;
@@ -45,6 +45,8 @@ const resetStyle = css`
       'Helvetica Neue',
       sans-serif;
     word-break: keep-all;
+    color: var(--text);
+    background-color: var(--white);
   }
 
   body {

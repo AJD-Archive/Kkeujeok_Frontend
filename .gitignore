@@ -24,3 +24,6 @@ dist-ssr
 .env.*
 .env
 stats.html
+
+*.md
+api-docs.html

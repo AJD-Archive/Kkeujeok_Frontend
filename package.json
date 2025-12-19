@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
+    "fix": "eslint . --fix && prettier . --write",
     "typecheck": "tsc -b --pretty",
     "lefthook": "pnpm exec lefthook install"
   },

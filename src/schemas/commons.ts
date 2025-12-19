@@ -2,12 +2,6 @@ import { z } from 'zod';
 
 /**
  * 페이지 정보 응답 스키마
- *
- * 페이징된 API 응답에서 페이지네이션 메타데이터를 나타냅니다.
- *
- * @property currentPage - 현재 페이지 번호 (0부터 시작)
- * @property totalPages - 전체 페이지 수
- * @property totalItems - 전체 아이템 수
  */
 export const pageInfoResponseSchema = z.object({
   currentPage: z.number(),
@@ -16,18 +10,14 @@ export const pageInfoResponseSchema = z.object({
 });
 
 /**
- * API 성공 응답 스키마
+ * nullable 페이지네이션 메타데이터 스키마
+ */
+export const nullablePageInfoResponseSchema = pageInfoResponseSchema.nullable();
+
+/**
+ * API 성공 응답 스키마 (data 있음)
  *
- * API 성공 응답(200, 201 등)을 Zod 스키마로 생성합니다.
- * data 필드는 제네릭 형태이며 nullable입니다.
- *
- * @property statusCode - HTTP 상태 코드
- * @property message - 응답 메시지
- * @property data - 실제 응답 데이터 (nullable)
- *
- * @template T - 응답 데이터의 Zod 스키마 타입
- * @param dataSchema - 성공 응답의 data 필드에 해당하는 Zod 스키마
- * @returns 성공 응답을 나타내는 Zod 스키마
+ * GET, POST 등 데이터를 반환하는 API에서 사용
  */
 export const apiSuccessResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
   z.object({
@@ -37,13 +27,19 @@ export const apiSuccessResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) 
   });
 
 /**
+ * API 성공 응답 스키마 (data 없음)
+ *
+ * DELETE, 일부 PATCH 등 데이터 없이 성공만 반환하는 API에서 사용
+ */
+export const apiSuccessResponseWithoutDataSchema = z.object({
+  statusCode: z.number(),
+  message: z.string(),
+});
+
+/**
  * API 에러 응답 스키마
  *
- * 400, 404 등 비즈니스 에러 시 사용되며,
- * data 필드가 존재하지 않습니다.
- *
- * @property statusCode - HTTP 상태 코드
- * @property message - 에러 메시지
+ * 400, 404, 500 등 에러 시 반환
  */
 export const apiErrorResponseSchema = z.object({
   statusCode: z.number(),
@@ -51,63 +47,66 @@ export const apiErrorResponseSchema = z.object({
 });
 
 /**
- * API 통합 응답 스키마
- *
- * 성공 응답과 에러 응답을 모두 처리할 수 있는 union 스키마입니다.
- *
- * @template T - 성공 응답 데이터의 Zod 스키마 타입
- * @param dataSchema - 성공 응답의 data 필드에 해당하는 Zod 스키마
- * @returns 성공 또는 에러 응답을 나타내는 Zod union 스키마
+ * API 통합 응답 스키마 (data 있는 API용)
  */
 export const apiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
   z.union([apiSuccessResponseSchema(dataSchema), apiErrorResponseSchema]);
 
-/** 페이지 정보 응답 타입 */
-export type PageInfoResponse = z.infer<typeof pageInfoResponseSchema>;
-
 /**
- * API 성공 응답 타입(제네릭)
+ * API 통합 응답 스키마 (data 없는 API용)
  *
- * API 요청 성공 시 반환되는 응답 구조입니다.
+ * 성공/에러 모두 같은 구조이므로 단일 스키마 사용
+ * statusCode로 성공/에러 구분
  */
+export const apiResponseWithoutDataSchema = z.object({
+  statusCode: z.number(),
+  message: z.string(),
+});
+
+/** API 성공 응답 타입 (data 있음) - 제네릭 함수 스키마이므로 수동 정의 */
 export type ApiSuccessResponse<T> = {
   statusCode: number;
   message: string;
   data: T | null;
 };
 
-/**
- * API 에러 응답 타입
- *
- * 서버에서 비즈니스 에러 또는 처리 실패 시 반환하는 응답 타입입니다.
- */
+/** 페이지 정보 응답 타입 */
+export type PageInfoResponse = z.infer<typeof pageInfoResponseSchema>;
+/** API 성공 응답 타입 (data 없음) */
+export type ApiSuccessResponseWithoutData = z.infer<typeof apiSuccessResponseWithoutDataSchema>;
+/** API 에러 응답 타입 */
 export type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>;
-
-/**
- * API 통합 응답 타입 (제네릭)
- *
- * 성공 응답 또는 에러 응답일 수 있는 통합 타입입니다.
- */
+/** API 통합 응답 타입 (data 있음) */
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+/** API 통합 응답 타입 (data 없음) */
+export type ApiResponseWithoutData = z.infer<typeof apiResponseWithoutDataSchema>;
 
 /**
- * API 성공 여부 타입 가드
+ * API 성공 여부 타입 가드 (data 있는 API용)
  *
- * @template T - 성공 응답의 data 타입
- * @param response - API 응답 객체
- * @returns 성공 응답이면 true, 타입이 ApiSuccessResponse<T>로 좁혀집니다.
+ * 'data' 필드 존재 여부로 판단
+ * GET, POST 등 데이터를 반환하는 API에서 사용
  */
 export function isApiSuccess<T>(response: ApiResponse<T>): response is ApiSuccessResponse<T> {
   return 'data' in response;
 }
 
 /**
+ * API 성공 여부 타입 가드 (data 없는 API용)
+ *
+ * statusCode 200~299면 성공으로 판단
+ * DELETE, 일부 PATCH 등에서 사용
+ */
+export function isApiSuccessWithoutData(response: ApiResponseWithoutData): response is ApiSuccessResponseWithoutData {
+  return response.statusCode >= 200 && response.statusCode < 300;
+}
+
+/**
  * API 에러 여부 타입 가드
  *
- * @template T - 성공 응답의 data 타입
- * @param response - API 응답 객체
- * @returns 에러 응답이면 true, 타입이 ApiErrorResponse로 좁혀집니다.
+ * statusCode 400 이상이면 에러로 판단
+ * data 있는 API, 없는 API 모두에서 사용 가능
  */
-export function isApiError<T>(response: ApiResponse<T>): response is ApiErrorResponse {
-  return !('data' in response);
+export function isApiError<T>(response: ApiResponse<T> | ApiResponseWithoutData): response is ApiErrorResponse {
+  return response.statusCode >= 400;
 }

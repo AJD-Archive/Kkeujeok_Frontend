@@ -1,3 +1,4 @@
+export * from './auth';
 export * from './block';
 export * from './challenge';
 export * from './commons';

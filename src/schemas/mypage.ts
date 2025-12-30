@@ -1,37 +1,63 @@
 import { z } from 'zod';
 
-import { challengeSummarySchema } from '@/schemas/challenge';
+import { challengeDetailSchema } from '@/schemas/challenge';
 import { nullablePageInfoResponseSchema } from '@/schemas/commons';
 import { personalDashboardItemSchema, teamDashboardItemSchema } from '@/schemas/dashboard';
 
-/** 마이페이지 대시보드 및 챌린지 응답 스키마 */
+/**
+ * 개인 대시보드 페이지 리스트 스키마
+ * 백엔드 PersonalDashboardPageListResDto 기준
+ */
+export const personalDashboardPageListSchema = z.object({
+  personalDashboardInfoResDto: z.array(personalDashboardItemSchema),
+  pageInfoResDto: nullablePageInfoResponseSchema,
+});
+
+/**
+ * 챌린지 리스트 스키마
+ * 백엔드 ChallengeListResDto 기준
+ * API 테스트 결과: challengeInfoResDto는 ChallengeSummary가 아닌 ChallengeInfoResDto(상세) 반환
+ */
+export const challengeListSchema = z.object({
+  challengeInfoResDto: z.array(challengeDetailSchema),
+  pageInfoResDto: nullablePageInfoResponseSchema,
+});
+
+/**
+ * 팀 대시보드 리스트 스키마
+ * 백엔드 TeamDashboardListResDto 기준
+ */
+export const teamDashboardListSchema = z.object({
+  teamDashboardInfoResDto: z.array(teamDashboardItemSchema),
+  pageInfoResDto: nullablePageInfoResponseSchema,
+});
+
+/**
+ * 마이페이지 대시보드 및 챌린지 응답 스키마
+ * 백엔드 TeamDashboardsAndChallengesResDto 기준 (내 마이페이지용)
+ */
 export const mypageDashboardChallengesResponseSchema = z.object({
-  personalDashboardList: z.object({
-    personalDashboardListResDto: z.array(personalDashboardItemSchema),
-    pageInfoResDto: nullablePageInfoResponseSchema,
-  }),
-  teamDashboardList: z.object({
-    teamDashboardInfoResDto: z.array(teamDashboardItemSchema),
-    pageInfoResDto: nullablePageInfoResponseSchema,
-  }),
-  challengeList: z.object({
-    challengeInfoResDto: z.array(challengeSummarySchema),
-    pageInfoResDto: nullablePageInfoResponseSchema,
-  }),
+  personalDashboardList: personalDashboardPageListSchema,
+  teamDashboardList: teamDashboardListSchema,
+  challengeList: challengeListSchema,
 });
 
-/** 친구 대시보드 및 챌린지 응답 스키마 */
+/**
+ * 친구 대시보드 및 챌린지 응답 스키마
+ * 백엔드 PersonalDashboardsAndChallengesResDto 기준 (친구 마이페이지용)
+ * 친구 조회 시 팀 대시보드는 제외됨
+ */
 export const friendDashboardChallengesResponseSchema = z.object({
-  personalDashboardList: z.object({
-    personalDashboardListResDto: z.array(personalDashboardItemSchema),
-    pageInfoResDto: nullablePageInfoResponseSchema,
-  }),
-  challengeList: z.object({
-    challengeInfoResDto: z.array(challengeSummarySchema),
-    pageInfoResDto: nullablePageInfoResponseSchema,
-  }),
+  personalDashboardList: personalDashboardPageListSchema,
+  challengeList: challengeListSchema,
 });
 
+/** 개인 대시보드 페이지 리스트 타입 */
+export type PersonalDashboardPageList = z.infer<typeof personalDashboardPageListSchema>;
+/** 챌린지 리스트 타입 */
+export type ChallengeList = z.infer<typeof challengeListSchema>;
+/** 팀 대시보드 리스트 타입 */
+export type TeamDashboardList = z.infer<typeof teamDashboardListSchema>;
 /** 마이페이지 대시보드 및 챌린지 응답 타입 */
 export type MypageDashboardChallengesResponse = z.infer<typeof mypageDashboardChallengesResponseSchema>;
 /** 친구 대시보드 및 챌린지 응답 타입 */

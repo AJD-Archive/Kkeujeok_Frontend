@@ -5,6 +5,7 @@ export * from './dashboard';
 export * from './enums';
 export * from './follow';
 export * from './mypage';
+export * from './notice';
 export * from './notification';
 export * from './teamDocument';
 export * from './user';

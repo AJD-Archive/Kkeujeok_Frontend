@@ -73,8 +73,11 @@ export const cycleDetailSchema = z.enum([
   'THIRTY_FIRST',
 ]);
 
-/** 소셜 로그인 타입 스키마 */
-export const socialTypeSchema = z.enum(['GOOGLE', 'KAKAO']);
+/**
+ * 소셜 로그인 타입 스키마
+ * 백엔드 API 응답 및 OAuth 경로 모두 소문자 사용
+ */
+export const socialTypeSchema = z.enum(['google', 'kakao']);
 
 /** 전역 상태 스키마 (백엔드 Status Enum 기준) */
 export const statusSchema = z.enum(['ACTIVE', 'UN_ACTIVE', 'DELETED']);
@@ -84,17 +87,6 @@ export const roleSchema = z.enum(['ROLE_ADMIN', 'ROLE_USER']);
 
 /** 팔로우 상태 스키마 (백엔드 FollowStatus Enum 기준) */
 export const followStatusSchema = z.enum(['ACCEPT', 'WAIT']);
-
-/**
- * 알림 타입 스키마
- * 주의: 백엔드 NotificationInfoResDto에는 type 필드가 없음 (SSE 미검증)
- */
-export const notificationTypeSchema = z.enum([
-  'FRIEND_REQUEST',
-  'TEAM_INVITATION',
-  'CHALLENGE_UPDATE',
-  'BLOCK_REMINDER',
-]);
 
 /** 블록 진행 상태 타입 */
 export type BlockProgress = z.infer<typeof blockProgressSchema>;
@@ -118,5 +110,3 @@ export type Status = z.infer<typeof statusSchema>;
 export type Role = z.infer<typeof roleSchema>;
 /** 팔로우 상태 타입 */
 export type FollowStatus = z.infer<typeof followStatusSchema>;
-/** 알림 타입 */
-export type NotificationType = z.infer<typeof notificationTypeSchema>;

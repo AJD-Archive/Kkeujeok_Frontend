@@ -2,34 +2,44 @@ import { z } from 'zod';
 
 import { pageInfoResponseSchema } from '@/schemas/commons';
 
-/** 팀 문서 아이템 스키마 */
+/**
+ * 팀 문서 아이템 스키마 (목록 조회용 - content 없음)
+ * 백엔드 TeamDocumentResDto 기준
+ */
 export const teamDocumentItemSchema = z.object({
   teamDocumentId: z.number(),
   title: z.string(),
-  category: z.string(),
-  content: z.string(),
+  category: z.string().nullable(),
   author: z.string(),
-  picture: z.string().url(),
+  picture: z.string().nullable(),
 });
 
-/** 팀 문서 목록 응답 스키마 */
+/**
+ * 팀 문서 목록 응답 스키마
+ * 백엔드 FindTeamDocumentResDto 기준
+ */
 export const teamDocumentListResponseSchema = z.object({
   teamDocuments: z.array(teamDocumentItemSchema),
   pageInfoResDto: pageInfoResponseSchema,
 });
 
-/** 팀 문서 상세 스키마 */
+/**
+ * 팀 문서 상세 스키마 (상세 조회용 - content 포함)
+ * 백엔드 TeamDocumentDetailResDto 기준
+ */
 export const teamDocumentDetailSchema = z.object({
   teamDocumentId: z.number(),
-  teamDashboardId: z.number(),
   title: z.string(),
-  category: z.string(),
+  category: z.string().nullable(),
   content: z.string(),
   author: z.string(),
-  picture: z.string().url(),
+  picture: z.string().nullable(),
 });
 
-/** 팀 문서 카테고리 응답 스키마 */
+/**
+ * 팀 문서 카테고리 응답 스키마
+ * 백엔드 TeamDocumentCategoriesResDto 기준
+ */
 export const teamDocumentCategoriesResponseSchema = z.object({
   categories: z.array(z.string()),
 });

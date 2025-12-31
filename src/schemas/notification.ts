@@ -7,7 +7,7 @@ import { z } from 'zod';
 export const notificationItemSchema = z.object({
   id: z.number(),
   message: z.string(),
-  isRead: z.boolean(),
+  isRead: z.boolean().nullable(),
 });
 
 /**

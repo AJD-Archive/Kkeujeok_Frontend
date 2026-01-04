@@ -12,7 +12,7 @@ export const dashboardTypeSchema = z.enum(['PersonalDashboard', 'TeamDashboard']
 /** 챌린지 주기 스키마 */
 export const challengeCycleSchema = z.enum(['DAILY', 'WEEKLY', 'MONTHLY']);
 
-/** 챌린지 카테고리 스키마 (백엔드 Category Enum 기준) */
+/** 챌린지 카테고리 스키마 */
 export const challengeCategorySchema = z.enum([
   'HEALTH_AND_FITNESS',
   'MENTAL_WELLNESS',
@@ -29,7 +29,8 @@ export const challengeCategorySchema = z.enum([
 export const weekDaySchema = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']);
 
 /**
- * 챌린지 주기 상세 스키마 (백엔드 CycleDetail Enum 기준 - 39개 값)
+ * 챌린지 주기 상세 스키마
+ * - DAILY: 매일
  */
 export const cycleDetailSchema = z.enum([
   'DAILY',
@@ -73,20 +74,14 @@ export const cycleDetailSchema = z.enum([
   'THIRTY_FIRST',
 ]);
 
-/**
- * 소셜 로그인 타입 스키마
- * 백엔드 API 응답 및 OAuth 경로 모두 소문자 사용
- */
-export const socialTypeSchema = z.enum(['google', 'kakao']);
+/** 소셜 로그인 타입 스키마 */
+export const socialTypeSchema = z.enum(['GOOGLE', 'KAKAO']);
 
-/** 전역 상태 스키마 (백엔드 Status Enum 기준) */
+/** OAuth2 Provider 스키마 */
+export const oauthProviderSchema = z.enum(['google', 'kakao']);
+
+/** 전역 상태 스키마 */
 export const statusSchema = z.enum(['ACTIVE', 'UN_ACTIVE', 'DELETED']);
-
-/** 사용자 역할 스키마 (백엔드 Role Enum 기준) */
-export const roleSchema = z.enum(['ROLE_ADMIN', 'ROLE_USER']);
-
-/** 팔로우 상태 스키마 (백엔드 FollowStatus Enum 기준) */
-export const followStatusSchema = z.enum(['ACCEPT', 'WAIT']);
 
 /** 블록 진행 상태 타입 */
 export type BlockProgress = z.infer<typeof blockProgressSchema>;
@@ -104,9 +99,7 @@ export type WeekDay = z.infer<typeof weekDaySchema>;
 export type CycleDetail = z.infer<typeof cycleDetailSchema>;
 /** 소셜 로그인 타입 */
 export type SocialType = z.infer<typeof socialTypeSchema>;
+/** OAuth2 Provider 타입 */
+export type OAuthProvider = z.infer<typeof oauthProviderSchema>;
 /** 전역 상태 타입 */
 export type Status = z.infer<typeof statusSchema>;
-/** 사용자 역할 타입 */
-export type Role = z.infer<typeof roleSchema>;
-/** 팔로우 상태 타입 */
-export type FollowStatus = z.infer<typeof followStatusSchema>;

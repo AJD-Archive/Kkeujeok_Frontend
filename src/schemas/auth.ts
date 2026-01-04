@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-import { socialTypeSchema } from '@/schemas/enums';
+import { oauthProviderSchema } from '@/schemas/enums';
 
 /** OAuth2 콜백 Path Parameter 스키마 */
 export const oauth2CallbackPathParamsSchema = z.object({
-  provider: socialTypeSchema,
+  provider: oauthProviderSchema,
 });
 
 /** OAuth2 콜백 Query Parameter 스키마 */

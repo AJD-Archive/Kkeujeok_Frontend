@@ -7,12 +7,14 @@ import { socialTypeSchema } from '@/schemas/enums';
 
 /**
  * 사용자 프로필 스키마
- * 백엔드 MyPageInfoResDto 기준
- * 주의: nickName (대문자 N)
+ * - nickName: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ * - picture: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ * - introduction: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ * - tag: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const userProfileSchema = z.object({
   memberId: z.number(),
-  email: z.string().email(),
+  email: z.string(),
   name: z.string(),
   nickName: z.string().nullable(),
   picture: z.string().nullable(),
@@ -39,20 +41,13 @@ export const personalDashboardPageListSchema = z.object({
   pageInfoResDto: nullablePageInfoResponseSchema,
 });
 
-/**
- * 챌린지 리스트 스키마
- * 백엔드 ChallengeListResDto 기준
- * API 테스트 결과: challengeInfoResDto는 ChallengeSummary가 아닌 ChallengeInfoResDto(상세) 반환
- */
+/** 챌린지 리스트 스키마 */
 export const challengeListSchema = z.object({
   challengeInfoResDto: z.array(challengeDetailSchema),
   pageInfoResDto: nullablePageInfoResponseSchema,
 });
 
-/**
- * 팀 대시보드 리스트 스키마
- * 백엔드 TeamDashboardListResDto 기준
- */
+/** 팀 대시보드 리스트 스키마 */
 export const teamDashboardListSchema = z.object({
   teamDashboardInfoResDto: z.array(teamDashboardItemSchema),
   pageInfoResDto: nullablePageInfoResponseSchema,

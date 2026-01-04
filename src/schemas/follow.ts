@@ -12,7 +12,11 @@ export const followResponseSchema = z.object({
   toMemberId: z.number(),
 });
 
-/** 팔로우 정보 스키마 */
+/**
+ * 팔로우 정보 스키마
+ * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ */
 export const followInfoSchema = z.object({
   memberId: z.number(),
   nickname: z.string().nullable(),
@@ -27,12 +31,19 @@ export const followListResponseSchema = z.object({
   pageInfoResDto: pageInfoResponseSchema,
 });
 
-/** 내 팔로우 수 응답 스키마 */
+/**
+ * 내 팔로우 수 응답 스키마
+ * - myFollowsCount: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ */
 export const myFollowsResponseSchema = z.object({
   myFollowsCount: z.number().nullable(),
 });
 
-/** 추천 팔로우 정보 스키마 */
+/**
+ * 추천 팔로우 정보 스키마
+ * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ */
 export const recommendedFollowInfoSchema = z.object({
   memberId: z.number(),
   nickname: z.string().nullable(),
@@ -47,7 +58,11 @@ export const recommendedFollowListResponseSchema = z.object({
   pageInfoResDto: pageInfoResponseSchema,
 });
 
-/** 회원 검색 정보 스키마 */
+/**
+ * 회원 검색 정보 스키마
+ * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
+ */
 export const memberInfoForFollowSchema = z.object({
   memberId: z.number(),
   nickname: z.string().nullable(),

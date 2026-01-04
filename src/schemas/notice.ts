@@ -14,7 +14,6 @@ export const noticeItemSchema = z.object({
 
 /**
  * 공지사항 목록 응답 스키마
- * 백엔드 NoticeListResDto 기준
  */
 export const noticeListResponseSchema = z.object({
   noticeListResDto: z.array(noticeItemSchema),

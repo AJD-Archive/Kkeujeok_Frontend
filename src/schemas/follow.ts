@@ -2,18 +2,26 @@ import { z } from 'zod';
 
 import { pageInfoResponseSchema } from '@/schemas/commons';
 
-/** 팔로우 요청 스키마 */
+/**
+ * 팔로우 요청 스키마
+ * - 백엔드 FollowReqDto 기준
+ */
 export const followRequestSchema = z.object({
   memberId: z.number(),
 });
 
-/** 팔로우 응답 스키마 */
+/**
+ * 팔로우 응답 스키마
+ * - 백엔드 FollowResDto 기준
+ */
 export const followResponseSchema = z.object({
   toMemberId: z.number(),
 });
 
 /**
  * 팔로우 정보 스키마
+ * - 백엔드 FollowInfoResDto 기준
+ *
  * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
@@ -25,7 +33,10 @@ export const followInfoSchema = z.object({
   isFollow: z.boolean(),
 });
 
-/** 팔로우 목록 응답 스키마 */
+/**
+ * 팔로우 목록 응답 스키마
+ * - 백엔드 FollowInfoListDto 기준
+ */
 export const followListResponseSchema = z.object({
   followInfoResDto: z.array(followInfoSchema),
   pageInfoResDto: pageInfoResponseSchema,
@@ -33,6 +44,8 @@ export const followListResponseSchema = z.object({
 
 /**
  * 내 팔로우 수 응답 스키마
+ * - 백엔드 MyFollowsResDto 기준
+ *
  * - myFollowsCount: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const myFollowsResponseSchema = z.object({
@@ -41,6 +54,8 @@ export const myFollowsResponseSchema = z.object({
 
 /**
  * 추천 팔로우 정보 스키마
+ * - 백엔드 RecommendedFollowInfoResDto 기준
+ *
  * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
@@ -52,7 +67,10 @@ export const recommendedFollowInfoSchema = z.object({
   isFollow: z.boolean(),
 });
 
-/** 추천 팔로우 목록 응답 스키마 */
+/**
+ * 추천 팔로우 목록 응답 스키마
+ * - 백엔드 RecommendedFollowInfoListDto 기준
+ */
 export const recommendedFollowListResponseSchema = z.object({
   recommendedFollowInfoResDtos: z.array(recommendedFollowInfoSchema),
   pageInfoResDto: pageInfoResponseSchema,
@@ -60,6 +78,8 @@ export const recommendedFollowListResponseSchema = z.object({
 
 /**
  * 회원 검색 정보 스키마
+ * - 백엔드 MemberInfoForFollowResDto 기준
+ *
  * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
@@ -71,7 +91,10 @@ export const memberInfoForFollowSchema = z.object({
   isFollow: z.boolean(),
 });
 
-/** 회원 검색 응답 스키마 */
+/**
+ * 회원 검색 응답 스키마
+ * - 백엔드 MemberInfoForFollowListDto 기준
+ */
 export const followSearchResponseSchema = z.object({
   memberInfoForFollowResDtos: z.array(memberInfoForFollowSchema),
   pageInfoResDto: pageInfoResponseSchema,

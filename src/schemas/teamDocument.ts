@@ -4,7 +4,7 @@ import { pageInfoResponseSchema } from '@/schemas/commons';
 
 /**
  * 팀 문서 생성 요청 스키마
- * 백엔드 TeamDocumentReqDto 기준
+ * - 백엔드 TeamDocumentReqDto 기준
  */
 export const teamDocumentCreateRequestSchema = z.object({
   title: z.string(),
@@ -15,7 +15,7 @@ export const teamDocumentCreateRequestSchema = z.object({
 
 /**
  * 팀 문서 수정 요청 스키마
- * 백엔드 TeamDocumentUpdateReqDto 기준
+ * - 백엔드 TeamDocumentUpdateReqDto 기준
  */
 export const teamDocumentUpdateRequestSchema = z.object({
   title: z.string().optional(),
@@ -25,7 +25,7 @@ export const teamDocumentUpdateRequestSchema = z.object({
 
 /**
  * 팀 문서 아이템 스키마
- * 백엔드 TeamDocumentResDto 기준
+ * - 백엔드 TeamDocumentResDto 기준
  */
 export const teamDocumentItemSchema = z.object({
   teamDocumentId: z.number(),
@@ -37,7 +37,7 @@ export const teamDocumentItemSchema = z.object({
 
 /**
  * 팀 문서 목록 응답 스키마
- * 백엔드 FindTeamDocumentResDto 기준
+ * - 백엔드 FindTeamDocumentResDto 기준
  */
 export const teamDocumentListResponseSchema = z.object({
   teamDocuments: z.array(teamDocumentItemSchema),
@@ -46,7 +46,7 @@ export const teamDocumentListResponseSchema = z.object({
 
 /**
  * 팀 문서 상세 스키마
- * 백엔드 TeamDocumentDetailResDto 기준
+ * - 백엔드 TeamDocumentDetailResDto 기준
  */
 export const teamDocumentDetailSchema = z.object({
   teamDocumentId: z.number(),
@@ -59,7 +59,7 @@ export const teamDocumentDetailSchema = z.object({
 
 /**
  * 팀 문서 카테고리 응답 스키마
- * 백엔드 TeamDocumentCategoriesResDto 기준
+ * - 백엔드 TeamDocumentCategoriesResDto 기준
  */
 export const teamDocumentCategoriesResponseSchema = z.object({
   categories: z.array(z.string()),

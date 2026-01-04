@@ -7,6 +7,8 @@ import { socialTypeSchema } from '@/schemas/enums';
 
 /**
  * 사용자 프로필 스키마
+ * - 백엔드 MyPageInfoResDto 기준
+ *
  * - nickName: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  * - picture: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  * - introduction: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
@@ -25,7 +27,7 @@ export const userProfileSchema = z.object({
 
 /**
  * 마이페이지 수정 요청 스키마
- * 백엔드 MyPageUpdateReqDto 기준
+ * - 백엔드 MyPageUpdateReqDto 기준
  */
 export const mypageUpdateRequestSchema = z.object({
   nickname: z.string().optional(),
@@ -34,20 +36,26 @@ export const mypageUpdateRequestSchema = z.object({
 
 /**
  * 개인 대시보드 페이지 리스트 스키마
- * 백엔드 PersonalDashboardPageListResDto 기준
+ * - 백엔드 PersonalDashboardPageListResDto 기준
  */
 export const personalDashboardPageListSchema = z.object({
   personalDashboardInfoResDto: z.array(personalDashboardItemSchema),
   pageInfoResDto: nullablePageInfoResponseSchema,
 });
 
-/** 챌린지 리스트 스키마 */
+/**
+ * 챌린지 리스트 스키마
+ * - 백엔드 ChallengeListResDto 기준
+ */
 export const challengeListSchema = z.object({
   challengeInfoResDto: z.array(challengeDetailSchema),
   pageInfoResDto: nullablePageInfoResponseSchema,
 });
 
-/** 팀 대시보드 리스트 스키마 */
+/**
+ * 팀 대시보드 리스트 스키마
+ * - 백엔드 TeamDashboardListResDto 기준
+ */
 export const teamDashboardListSchema = z.object({
   teamDashboardInfoResDto: z.array(teamDashboardItemSchema),
   pageInfoResDto: nullablePageInfoResponseSchema,
@@ -55,7 +63,7 @@ export const teamDashboardListSchema = z.object({
 
 /**
  * 마이페이지 대시보드 및 챌린지 응답 스키마
- * 백엔드 TeamDashboardsAndChallengesResDto 기준 (내 마이페이지용)
+ * - 백엔드 TeamDashboardsAndChallengesResDto 기준 (내 마이페이지용)
  */
 export const mypageDashboardChallengesResponseSchema = z.object({
   personalDashboardList: personalDashboardPageListSchema,
@@ -65,7 +73,7 @@ export const mypageDashboardChallengesResponseSchema = z.object({
 
 /**
  * 친구 대시보드 및 챌린지 응답 스키마
- * 백엔드 PersonalDashboardsAndChallengesResDto 기준 (친구 마이페이지용)
+ * - 백엔드 PersonalDashboardsAndChallengesResDto 기준 (친구 마이페이지용)
  * 친구 조회 시 팀 대시보드는 제외됨
  */
 export const friendDashboardChallengesResponseSchema = z.object({

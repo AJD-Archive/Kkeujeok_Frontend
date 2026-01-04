@@ -1,18 +1,30 @@
 import { z } from 'zod';
 
-/** 블록 진행 상태 스키마 */
+/**
+ * 블록 진행 상태 스키마
+ * - 백엔드 Progress 기준
+ */
 export const blockProgressSchema = z.enum(['NOT_STARTED', 'IN_PROGRESS', 'COMPLETED']);
 
-/** 블록 타입 스키마 */
+/**
+ * 블록 타입 스키마
+ * - 백엔드 Type 기준
+ */
 export const blockTypeSchema = z.enum(['BASIC', 'CHALLENGE']);
 
 /** 대시보드 타입 스키마 */
 export const dashboardTypeSchema = z.enum(['PersonalDashboard', 'TeamDashboard']);
 
-/** 챌린지 주기 스키마 */
+/**
+ * 챌린지 주기 스키마
+ * - 백엔드 Cycle 기준
+ */
 export const challengeCycleSchema = z.enum(['DAILY', 'WEEKLY', 'MONTHLY']);
 
-/** 챌린지 카테고리 스키마 */
+/**
+ * 챌린지 카테고리 스키마
+ * - 백엔드 Category 기준
+ */
 export const challengeCategorySchema = z.enum([
   'HEALTH_AND_FITNESS',
   'MENTAL_WELLNESS',
@@ -30,6 +42,7 @@ export const weekDaySchema = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', '
 
 /**
  * 챌린지 주기 상세 스키마
+ * - 백엔드 CycleDetail 기준
  * - DAILY: 매일
  */
 export const cycleDetailSchema = z.enum([
@@ -74,13 +87,19 @@ export const cycleDetailSchema = z.enum([
   'THIRTY_FIRST',
 ]);
 
-/** 소셜 로그인 타입 스키마 */
+/**
+ * 소셜 로그인 타입 스키마
+ * - 백엔드 SocialType 기준
+ */
 export const socialTypeSchema = z.enum(['GOOGLE', 'KAKAO']);
 
 /** OAuth2 Provider 스키마 */
 export const oauthProviderSchema = z.enum(['google', 'kakao']);
 
-/** 전역 상태 스키마 */
+/**
+ * 전역 상태 스키마
+ * - 백엔드 Status 기준
+ */
 export const statusSchema = z.enum(['ACTIVE', 'UN_ACTIVE', 'DELETED']);
 
 /** 블록 진행 상태 타입 */

@@ -9,4 +9,3 @@ export * from './mypage';
 export * from './notice';
 export * from './notification';
 export * from './teamDocument';
-export * from './user';

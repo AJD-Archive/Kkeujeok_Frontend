@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 /**
  * 공지사항 아이템 스키마
+ * - 백엔드 NoticeInfoResDto 기준
+ *
  * - content: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const noticeItemSchema = z.object({
@@ -14,6 +16,7 @@ export const noticeItemSchema = z.object({
 
 /**
  * 공지사항 목록 응답 스키마
+ * - 백엔드 NoticeListResDto 기준
  */
 export const noticeListResponseSchema = z.object({
   noticeListResDto: z.array(noticeItemSchema),

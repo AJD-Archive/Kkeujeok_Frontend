@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 /**
  * 페이지 정보 응답 스키마
+ * - 백엔드 PageInfoResDto 기준
  */
 export const pageInfoResponseSchema = z.object({
   currentPage: z.number(),
@@ -9,15 +10,14 @@ export const pageInfoResponseSchema = z.object({
   totalItems: z.number(),
 });
 
-/**
- * nullable 페이지네이션 메타데이터 스키마
- */
+/** nullable 페이지네이션 메타데이터 스키마 */
 export const nullablePageInfoResponseSchema = pageInfoResponseSchema.nullable();
 
 /**
  * API 성공 응답 스키마 (data 있음)
+ * - 백엔드 RspTemplate<T> 기준
  *
- * GET, POST 등 데이터를 반환하는 API에서 사용
+ * - GET, POST 등 데이터를 반환하는 API에서 사용
  */
 export const apiSuccessResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
   z.object({
@@ -29,7 +29,7 @@ export const apiSuccessResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) 
 /**
  * API 성공 응답 스키마 (data 없음)
  *
- * DELETE, 일부 PATCH 등 데이터 없이 성공만 반환하는 API에서 사용
+ * - DELETE, 일부 PATCH 등 데이터 없이 성공만 반환하는 API에서 사용
  */
 export const apiSuccessResponseWithoutDataSchema = z.object({
   statusCode: z.number(),
@@ -38,25 +38,24 @@ export const apiSuccessResponseWithoutDataSchema = z.object({
 
 /**
  * API 에러 응답 스키마
+ * - 백엔드 RspTemplate (Error) 기준
  *
- * 400, 404, 500 등 에러 시 반환
+ * - 400, 404, 500 등 에러 시 반환
  */
 export const apiErrorResponseSchema = z.object({
   statusCode: z.number(),
   message: z.string(),
 });
 
-/**
- * API 통합 응답 스키마 (data 있는 API용)
- */
+/** API 통합 응답 스키마 (data 있는 API용) */
 export const apiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
   z.union([apiSuccessResponseSchema(dataSchema), apiErrorResponseSchema]);
 
 /**
  * API 통합 응답 스키마 (data 없는 API용)
  *
- * 성공/에러 모두 같은 구조이므로 단일 스키마 사용
- * statusCode로 성공/에러 구분
+ * - 성공/에러 모두 같은 구조이므로 단일 스키마 사용
+ * - statusCode로 성공/에러 구분
  */
 export const apiResponseWithoutDataSchema = z.object({
   statusCode: z.number(),
@@ -84,8 +83,8 @@ export type ApiResponseWithoutData = z.infer<typeof apiResponseWithoutDataSchema
 /**
  * API 성공 여부 타입 가드 (data 있는 API용)
  *
- * 'data' 필드 존재 여부로 판단
- * GET, POST 등 데이터를 반환하는 API에서 사용
+ * - 'data' 필드 존재 여부로 판단
+ * - GET, POST 등 데이터를 반환하는 API에서 사용
  */
 export function isApiSuccess<T>(response: ApiResponse<T>): response is ApiSuccessResponse<T> {
   return 'data' in response;
@@ -94,7 +93,7 @@ export function isApiSuccess<T>(response: ApiResponse<T>): response is ApiSucces
 /**
  * API 성공 여부 타입 가드 (data 없는 API용)
  *
- * statusCode 200~299면 성공으로 판단
+ * - statusCode 200~299면 성공으로 판단
  * DELETE, 일부 PATCH 등에서 사용
  */
 export function isApiSuccessWithoutData(response: ApiResponseWithoutData): response is ApiSuccessResponseWithoutData {
@@ -104,8 +103,8 @@ export function isApiSuccessWithoutData(response: ApiResponseWithoutData): respo
 /**
  * API 에러 여부 타입 가드
  *
- * statusCode 400 이상이면 에러로 판단
- * data 있는 API, 없는 API 모두에서 사용 가능
+ * - statusCode 400 이상이면 에러로 판단
+ * - data 있는 API, 없는 API 모두에서 사용 가능
  */
 export function isApiError<T>(response: ApiResponse<T> | ApiResponseWithoutData): response is ApiErrorResponse {
   return response.statusCode >= 400;

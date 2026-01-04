@@ -12,26 +12,36 @@ export const oauth2CallbackQueryParamsSchema = z.object({
   code: z.string().min(1, 'OAuth2 인증 코드는 필수입니다'),
 });
 
-/** OAuth2 토큰 발급 요청 스키마 */
+/**
+ * OAuth2 토큰 발급 요청 스키마
+ * - 백엔드 TokenReqDto 기준
+ */
 export const tokenRequestSchema = z.object({
   authCode: z.string().min(1, 'OAuth2 인증 코드는 필수입니다'),
 });
 
-/** Access Token 갱신 요청 스키마 */
+/**
+ * Access Token 갱신 요청 스키마
+ * - 백엔드 RefreshTokenReqDto 기준
+ */
 export const refreshTokenRequestSchema = z.object({
   refreshToken: z.string().min(1, '리프레시 토큰은 필수입니다'),
 });
 
 /** IdToken 응답 스키마
+ * - 백엔드 IdTokenResDto 기준
  *
- * 백엔드는 `JsonNode` 타입으로 정의되어 있으나,
+ * - 백엔드는 `JsonNode` 타입으로 정의되어 있으나,
  * 실제 API 응답은 `JWT 문자열`로 반환됨 (JSON 객체 아님)
  */
 export const idTokenResponseSchema = z.object({
   idToken: z.string(),
 });
 
-/** OAuth2 토큰 응답 스키마 (Access Token + Refresh Token) */
+/**
+ * OAuth2 토큰 응답 스키마 (Access Token + Refresh Token)
+ * - 백엔드 TokenDto 기준
+ */
 export const tokenSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),

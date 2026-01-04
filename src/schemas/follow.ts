@@ -1,7 +1,18 @@
 import { z } from 'zod';
 
 import { pageInfoResponseSchema } from '@/schemas/commons';
-import { followInfoSchema } from '@/schemas/user';
+
+/**
+ * 팔로우 정보 스키마
+ * 백엔드 FollowInfoResDto 기준
+ */
+export const followInfoSchema = z.object({
+  memberId: z.number(),
+  nickname: z.string().nullable(),
+  name: z.string(),
+  profileImage: z.string().nullable(),
+  isFollow: z.boolean(),
+});
 
 /** 팔로우 목록 응답 스키마 */
 export const followListResponseSchema = z.object({
@@ -23,6 +34,8 @@ export const followSearchResponseSchema = z.object({
   pageInfoResDto: pageInfoResponseSchema,
 });
 
+/** 팔로우 정보 타입 */
+export type FollowInfo = z.infer<typeof followInfoSchema>;
 /** 팔로우 목록 응답 타입 */
 export type FollowListResponse = z.infer<typeof followListResponseSchema>;
 /** 추천 팔로우 목록 응답 타입 */

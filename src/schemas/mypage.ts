@@ -3,6 +3,32 @@ import { z } from 'zod';
 import { challengeDetailSchema } from '@/schemas/challenge';
 import { nullablePageInfoResponseSchema } from '@/schemas/commons';
 import { personalDashboardItemSchema, teamDashboardItemSchema } from '@/schemas/dashboard';
+import { socialTypeSchema } from '@/schemas/enums';
+
+/**
+ * 사용자 프로필 스키마
+ * 백엔드 MyPageInfoResDto 기준
+ * 주의: nickName (대문자 N)
+ */
+export const userProfileSchema = z.object({
+  memberId: z.number(),
+  email: z.string().email(),
+  name: z.string(),
+  nickName: z.string().nullable(),
+  picture: z.string().nullable(),
+  introduction: z.string().nullable(),
+  socialType: socialTypeSchema,
+  tag: z.string().nullable(),
+});
+
+/**
+ * 마이페이지 수정 요청 스키마
+ * 백엔드 MyPageUpdateReqDto 기준
+ */
+export const mypageUpdateRequestSchema = z.object({
+  nickname: z.string().optional(),
+  introduction: z.string().optional(),
+});
 
 /**
  * 개인 대시보드 페이지 리스트 스키마
@@ -52,6 +78,10 @@ export const friendDashboardChallengesResponseSchema = z.object({
   challengeList: challengeListSchema,
 });
 
+/** 사용자 프로필 타입 */
+export type UserProfile = z.infer<typeof userProfileSchema>;
+/** 마이페이지 수정 요청 타입 */
+export type MypageUpdateRequest = z.infer<typeof mypageUpdateRequestSchema>;
 /** 개인 대시보드 페이지 리스트 타입 */
 export type PersonalDashboardPageList = z.infer<typeof personalDashboardPageListSchema>;
 /** 챌린지 리스트 타입 */

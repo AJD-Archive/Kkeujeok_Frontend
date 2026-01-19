@@ -3,15 +3,15 @@ import { css } from '@emotion/react';
 export const COLUMN_CONFIG = {
   todo: {
     title: '시작 전',
-    dotColor: 'var(--main)',
+    dotColor: 'var(--main3)',
   },
   inProgress: {
     title: '진행 중',
-    dotColor: 'var(--main2)',
+    dotColor: 'var(--main)',
   },
   done: {
     title: '완료',
-    dotColor: 'var(--main3)',
+    dotColor: 'var(--main2)',
   },
 };
 

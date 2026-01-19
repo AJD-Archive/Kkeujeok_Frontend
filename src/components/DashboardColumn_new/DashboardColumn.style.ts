@@ -49,3 +49,9 @@ export const titleStyle = css({
   fontWeight: 'bold',
   color: '#858585',
 });
+
+export const blocksStyle = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.75rem',
+});

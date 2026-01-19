@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
 
+import Block from '../Block_new/Block';
 import {
   baseDotStyle,
+  blocksStyle,
   COLUMN_CONFIG,
   columnTitleStyle,
   containerStyle,
@@ -9,11 +11,20 @@ import {
   titleStyle,
 } from './DashboardColumn.style';
 
-interface DashboardColumnProps {
-  variant: 'todo' | 'inProgress' | 'done';
+interface BlockData {
+  id: string;
+  tagVariant: 'todo' | 'inProgress' | 'done' | 'challenge';
+  dDay?: string;
+  title?: string;
+  description?: string;
 }
 
-export default function DashboardColumn({ variant = 'todo' }: DashboardColumnProps) {
+interface DashboardColumnProps {
+  variant: 'todo' | 'inProgress' | 'done';
+  blocks?: BlockData[];
+}
+
+export default function DashboardColumn({ variant = 'todo', blocks }: DashboardColumnProps) {
   const config = COLUMN_CONFIG[variant];
 
   return (
@@ -28,7 +39,17 @@ export default function DashboardColumn({ variant = 'todo' }: DashboardColumnPro
         <div>+</div>
       </div>
 
-      <div>{/* Block 들어갈 div */}</div>
+      <div css={blocksStyle}>
+        {blocks?.map((block) => (
+          <Block
+            key={block.id}
+            dDay={block.dDay}
+            description={block.description}
+            tagVariant={block.tagVariant}
+            title={block.title}
+          />
+        ))}
+      </div>
     </div>
   );
 }

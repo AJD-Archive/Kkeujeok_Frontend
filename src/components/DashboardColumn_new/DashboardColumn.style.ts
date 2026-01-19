@@ -3,15 +3,15 @@ import { css } from '@emotion/react';
 export const COLUMN_CONFIG = {
   todo: {
     title: '시작 전',
-    dotColor: '#00D1FF',
+    dotColor: 'var(--main)',
   },
   inProgress: {
     title: '진행 중',
-    dotColor: '#4C8CFF',
+    dotColor: 'var(--main2)',
   },
   done: {
     title: '완료',
-    dotColor: '#9847FF',
+    dotColor: 'var(--main3)',
   },
 };
 
@@ -23,7 +23,7 @@ export const containerStyle = css({
   gap: '1.25rem',
   padding: '1.25rem',
   backgroundColor: '#FAFAFA',
-  border: '1px solid #eee',
+  border: '1px solid var(--stroke2)',
   borderRadius: '1rem',
 });
 
@@ -47,7 +47,7 @@ export const baseDotStyle = css({
 export const titleStyle = css({
   fontSize: '0.875rem',
   fontWeight: 'bold',
-  color: '#858585',
+  color: 'var(--gray)',
 });
 
 export const blocksStyle = css({

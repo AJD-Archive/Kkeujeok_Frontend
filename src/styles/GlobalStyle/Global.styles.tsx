@@ -11,6 +11,7 @@ const resetStyle = css`
   :root {
     --black: #101010;
     --white: #fdfdfd;
+    --red: #ff383c;
     --main: #4c8cff;
     --main2: #9847ff;
     --main3: #00d1ff;
@@ -20,7 +21,7 @@ const resetStyle = css`
     --navbar: #f5f5f5;
     --gradation: linear-gradient(90deg, #4c8cff 0%, #9847ff 100%);
     --border: #b0b0b0;
-    --stroke2: #f4f4f4;
+    --stroke2: #eeeeee;
     --toastify-color-progress-light: linear-gradient(to right, #4c8cff, #9847ff, #00d1ff);
   }
 

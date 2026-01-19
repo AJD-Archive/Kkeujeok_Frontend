@@ -5,7 +5,12 @@ import { defineConfig, type PluginOption } from 'vite';
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), visualizer() as PluginOption],
+    plugins: [
+      react({
+        jsxImportSource: '@emotion/react',
+      }),
+      visualizer() as PluginOption,
+    ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),

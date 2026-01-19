@@ -112,6 +112,9 @@ export default defineConfig(
       // ✅ 미사용 import 제거
       'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': 'off',
+
+      // emotion
+      'react/no-unknown-property': ['error', { ignore: ['css'] }],
     },
   },
 

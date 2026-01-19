@@ -5,9 +5,9 @@ import { z } from 'zod';
  * - 백엔드 PageInfoResDto 기준
  */
 export const pageInfoResponseSchema = z.object({
-  currentPage: z.number(),
-  totalPages: z.number(),
-  totalItems: z.number(),
+  currentPage: z.number().nullable(),
+  totalPages: z.number().nullable(),
+  totalItems: z.number().nullable(),
 });
 
 /** nullable 페이지네이션 메타데이터 스키마 */

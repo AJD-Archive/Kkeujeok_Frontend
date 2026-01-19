@@ -8,7 +8,7 @@ import { blockProgressSchema, blockTypeSchema, dashboardTypeSchema } from '@/sch
  * - 백엔드 BlockSaveReqDto 기준
  */
 export const blockCreateRequestSchema = z.object({
-  dashboardId: z.number(),
+  dashboardId: z.number().nullable(),
   title: z.string(),
   contents: z.string().optional(),
   progress: blockProgressSchema,
@@ -32,7 +32,7 @@ export const blockUpdateRequestSchema = z.object({
  * - 백엔드 BlockSequenceUpdateReqDto 기준
  */
 export const blockSequenceUpdateRequestSchema = z.object({
-  dashboardId: z.number(),
+  dashboardId: z.number().nullable(),
   notStartedList: z.array(z.number()).optional(),
   inProgressList: z.array(z.number()).optional(),
   completedList: z.array(z.number()).optional(),
@@ -43,12 +43,12 @@ export const blockSequenceUpdateRequestSchema = z.object({
  * - 백엔드 BlockInfoResDto 기준
  */
 export const blockItemSchema = z.object({
-  blockId: z.number(),
-  title: z.string(),
+  blockId: z.number().nullable(),
+  title: z.string().nullable(),
   contents: z.string().nullable(),
-  progress: blockProgressSchema,
-  type: blockTypeSchema,
-  dType: dashboardTypeSchema,
+  progress: blockProgressSchema.nullable(),
+  type: blockTypeSchema.nullable(),
+  dType: dashboardTypeSchema.nullable(),
   startDate: z.string().nullable(),
   deadLine: z.string().nullable(),
   nickname: z.string().nullable(),

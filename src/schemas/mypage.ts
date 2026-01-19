@@ -8,20 +8,15 @@ import { socialTypeSchema } from '@/schemas/enums';
 /**
  * 사용자 프로필 스키마
  * - 백엔드 MyPageInfoResDto 기준
- *
- * - nickName: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
- * - picture: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
- * - introduction: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
- * - tag: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const userProfileSchema = z.object({
-  memberId: z.number(),
-  email: z.string(),
-  name: z.string(),
+  memberId: z.number().nullable(),
+  email: z.string().nullable(),
+  name: z.string().nullable(),
   nickName: z.string().nullable(),
   picture: z.string().nullable(),
   introduction: z.string().nullable(),
-  socialType: socialTypeSchema,
+  socialType: socialTypeSchema.nullable(),
   tag: z.string().nullable(),
 });
 

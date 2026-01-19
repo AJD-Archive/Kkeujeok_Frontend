@@ -5,9 +5,9 @@ import { z } from 'zod';
  * - 백엔드 NotificationInfoResDto 기준
  */
 export const notificationItemSchema = z.object({
-  id: z.number(),
-  message: z.string(),
-  isRead: z.boolean().nullable(),
+  id: z.number().nullable(),
+  message: z.string().nullable(),
+  isRead: z.boolean(),
 });
 
 /**

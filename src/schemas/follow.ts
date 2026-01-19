@@ -7,7 +7,7 @@ import { pageInfoResponseSchema } from '@/schemas/commons';
  * - 백엔드 FollowReqDto 기준
  */
 export const followRequestSchema = z.object({
-  memberId: z.number(),
+  memberId: z.number().nullable(),
 });
 
 /**
@@ -15,22 +15,19 @@ export const followRequestSchema = z.object({
  * - 백엔드 FollowResDto 기준
  */
 export const followResponseSchema = z.object({
-  toMemberId: z.number(),
+  toMemberId: z.number().nullable(),
 });
 
 /**
  * 팔로우 정보 스키마
  * - 백엔드 FollowInfoResDto 기준
- *
- * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
- * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const followInfoSchema = z.object({
-  memberId: z.number(),
+  memberId: z.number().nullable(),
   nickname: z.string().nullable(),
-  name: z.string(),
+  name: z.string().nullable(),
   profileImage: z.string().nullable(),
-  isFollow: z.boolean(),
+  isFollow: z.boolean().nullable(),
 });
 
 /**
@@ -45,8 +42,6 @@ export const followListResponseSchema = z.object({
 /**
  * 내 팔로우 수 응답 스키마
  * - 백엔드 MyFollowsResDto 기준
- *
- * - myFollowsCount: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const myFollowsResponseSchema = z.object({
   myFollowsCount: z.number().nullable(),
@@ -55,16 +50,13 @@ export const myFollowsResponseSchema = z.object({
 /**
  * 추천 팔로우 정보 스키마
  * - 백엔드 RecommendedFollowInfoResDto 기준
- *
- * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
- * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const recommendedFollowInfoSchema = z.object({
-  memberId: z.number(),
+  memberId: z.number().nullable(),
   nickname: z.string().nullable(),
-  name: z.string(),
+  name: z.string().nullable(),
   profileImage: z.string().nullable(),
-  isFollow: z.boolean(),
+  isFollow: z.boolean().nullable(),
 });
 
 /**
@@ -79,16 +71,13 @@ export const recommendedFollowListResponseSchema = z.object({
 /**
  * 회원 검색 정보 스키마
  * - 백엔드 MemberInfoForFollowResDto 기준
- *
- * - nickname: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
- * - profileImage: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const memberInfoForFollowSchema = z.object({
-  memberId: z.number(),
+  memberId: z.number().nullable(),
   nickname: z.string().nullable(),
-  name: z.string(),
+  name: z.string().nullable(),
   profileImage: z.string().nullable(),
-  isFollow: z.boolean(),
+  isFollow: z.boolean().nullable(),
 });
 
 /**

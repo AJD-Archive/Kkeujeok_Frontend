@@ -30,14 +30,14 @@ export const personalDashboardUpdateRequestSchema = z.object({
  * 백엔드 PersonalDashboardInfoResDto 기준
  */
 export const personalDashboardItemSchema = z.object({
-  dashboardId: z.number(),
-  myId: z.number(),
-  creatorId: z.number(),
-  title: z.string(),
-  description: z.string(),
-  isPublic: z.boolean(),
+  dashboardId: z.number().nullable(),
+  myId: z.number().nullable(),
+  creatorId: z.number().nullable(),
+  title: z.string().nullable(),
+  description: z.string().nullable(),
+  isPublic: z.boolean().nullable(),
   category: z.string().nullable(),
-  blockProgress: z.number(),
+  blockProgress: z.number().nullable(),
 });
 
 /** 개인 대시보드 목록 응답 스키마 */
@@ -80,12 +80,12 @@ export const teamDashboardUpdateRequestSchema = z.object({
  * - 백엔드 Member Entity 기준
  */
 export const teamMemberSchema = z.object({
-  id: z.number(),
+  id: z.number().nullable(),
   picture: z.string().nullable(),
-  email: z.string().email(),
-  name: z.string(),
+  email: z.email().nullable(),
+  name: z.string().nullable(),
   nickName: z.string().nullable(),
-  socialType: socialTypeSchema,
+  socialType: socialTypeSchema.nullable(),
   introduction: z.string().nullable(),
 });
 
@@ -94,12 +94,12 @@ export const teamMemberSchema = z.object({
  * - 백엔드 TeamDashboardInfoResDto 기준
  */
 export const teamDashboardItemSchema = z.object({
-  dashboardId: z.number(),
-  myId: z.number(),
-  creatorId: z.number(),
-  title: z.string(),
-  description: z.string(),
-  blockProgress: z.number(),
+  dashboardId: z.number().nullable(),
+  myId: z.number().nullable(),
+  creatorId: z.number().nullable(),
+  title: z.string().nullable(),
+  description: z.string().nullable(),
+  blockProgress: z.number().nullable(),
   joinMembers: z.array(teamMemberSchema).nullable(),
 });
 

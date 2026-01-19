@@ -3,13 +3,11 @@ import { z } from 'zod';
 /**
  * 공지사항 아이템 스키마
  * - 백엔드 NoticeInfoResDto 기준
- *
- * - content: DTO 코드(@NotNull 부재)를 근거로 nullable 처리
  */
 export const noticeItemSchema = z.object({
-  id: z.number(),
-  version: z.string(),
-  title: z.string(),
+  id: z.number().nullable(),
+  version: z.string().nullable(),
+  title: z.string().nullable(),
   content: z.string().nullable(),
   createdAt: z.string(),
 });

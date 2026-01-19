@@ -10,7 +10,7 @@ export const teamDocumentCreateRequestSchema = z.object({
   title: z.string(),
   content: z.string().optional(),
   category: z.string().optional(),
-  teamDashboardId: z.number(),
+  teamDashboardId: z.number().nullable(),
 });
 
 /**
@@ -28,10 +28,10 @@ export const teamDocumentUpdateRequestSchema = z.object({
  * - 백엔드 TeamDocumentResDto 기준
  */
 export const teamDocumentItemSchema = z.object({
-  teamDocumentId: z.number(),
-  title: z.string(),
+  teamDocumentId: z.number().nullable(),
+  title: z.string().nullable(),
   category: z.string().nullable(),
-  author: z.string(),
+  author: z.string().nullable(),
   picture: z.string().nullable(),
 });
 
@@ -49,11 +49,11 @@ export const teamDocumentListResponseSchema = z.object({
  * - 백엔드 TeamDocumentDetailResDto 기준
  */
 export const teamDocumentDetailSchema = z.object({
-  teamDocumentId: z.number(),
-  title: z.string(),
+  teamDocumentId: z.number().nullable(),
+  title: z.string().nullable(),
   category: z.string().nullable(),
   content: z.string().nullable(),
-  author: z.string(),
+  author: z.string().nullable(),
   picture: z.string().nullable(),
 });
 

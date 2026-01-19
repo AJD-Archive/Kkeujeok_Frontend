@@ -28,10 +28,10 @@ export const cycleDetailsSchema = z.array(cycleDetailSchema);
  * 백엔드 ChallengeSummary 기준
  */
 export const challengeSummarySchema = z.object({
-  challengeId: z.number(),
-  title: z.string(),
-  cycle: challengeCycleSchema,
-  cycleDetails: cycleDetailsSchema,
+  challengeId: z.number().nullable(),
+  title: z.string().nullable(),
+  cycle: challengeCycleSchema.nullable(),
+  cycleDetails: cycleDetailsSchema.nullable(),
   representImage: z.string().nullable(),
   createdAt: z.string(),
 });
@@ -47,8 +47,8 @@ export const challengeSearchResponseSchema = z.object({
  * 백엔드 ChallengeCompletedMemberInfoResDto 기준
  */
 export const completedMemberSchema = z.object({
-  memberId: z.number(),
-  email: z.email(),
+  memberId: z.number().nullable(),
+  email: z.email().nullable(),
   picture: z.string().nullable(),
   nickname: z.string().nullable(),
 });
@@ -59,23 +59,23 @@ export const completedMemberSchema = z.object({
  * - authorId: 백엔드 Long 타입이지만 실제 API 테스트에서 null 반환 확인됨(재확인 필요)
  */
 export const challengeDetailSchema = z.object({
-  challengeId: z.number(),
+  challengeId: z.number().nullable(),
   authorId: z.number().nullable(),
-  title: z.string(),
-  contents: z.string(),
-  category: challengeCategorySchema,
-  cycle: challengeCycleSchema,
-  cycleDetails: cycleDetailsSchema,
-  startDate: z.string(),
-  endDate: z.string(),
+  title: z.string().nullable(),
+  contents: z.string().nullable(),
+  category: challengeCategorySchema.nullable(),
+  cycle: challengeCycleSchema.nullable(),
+  cycleDetails: cycleDetailsSchema.nullable(),
+  startDate: z.string().nullable(),
+  endDate: z.string().nullable(),
   representImage: z.string().nullable(),
-  authorName: z.string(),
+  authorName: z.string().nullable(),
   authorProfileImage: z.string().nullable(),
-  blockName: z.string(),
-  participantCount: z.number(),
-  isParticipant: z.boolean(),
-  isAuthor: z.boolean(),
-  completedMembers: z.array(completedMemberSchema),
+  blockName: z.string().nullable(),
+  participantCount: z.number().nullable(),
+  isParticipant: z.boolean().nullable(),
+  isAuthor: z.boolean().nullable(),
+  completedMembers: z.array(completedMemberSchema).nullable(),
   createdAt: z.string(),
 });
 
